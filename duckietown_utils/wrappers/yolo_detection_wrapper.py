@@ -9,9 +9,15 @@ License: MIT
 """
 
 import numpy as np
-import cv2
 from typing import Dict, List, Tuple, Optional
 import logging
+
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except ImportError:
+    print("Warning: cv2 not available, some visualization features will be disabled")
+    CV2_AVAILABLE = False
 
 try:
     import gym
@@ -212,7 +218,11 @@ class YOLODetectionWrapper(gym.Wrapper):
                 detection_image = image
             else:
                 # Handle grayscale or other formats
-                detection_image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+                if CV2_AVAILABLE:
+                    detection_image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+                else:
+                    # Fallback: repeat grayscale to create RGB
+                    detection_image = np.repeat(image[:, :, np.newaxis], 3, axis=2)
             
             # Run YOLO detection
             results = self.model(detection_image, conf=self.confidence_threshold, verbose=False)
@@ -306,6 +316,10 @@ class YOLODetectionWrapper(gym.Wrapper):
             detections = self.last_detections
         
         if not detections:
+            return observation
+        
+        if not CV2_AVAILABLE:
+            # Can't render without cv2, return original
             return observation
         
         # Create a copy to avoid modifying original
