@@ -1,0 +1,113 @@
+# Configuration for Dynamic Lane Changing and Object Avoidance System
+
+# YOLO Object Detection Configuration
+yolo_config:
+  # YOLO model to use (yolov5s, yolov5m, yolov5l, yolov5x)
+  yolo_model: 'yolov5s'
+  
+  # Confidence threshold for object detection (0.0 to 1.0)
+  confidence_threshold: 0.5
+  
+  # Device to run YOLO on ('cpu', 'cuda', 'auto')
+  device: 'cpu'
+  
+  # Enable visualization of detections
+  enable_visualization: false
+  
+  # Classes to detect for avoidance (null means all classes)
+  detection_classes: null
+  
+  # Maximum number of detection history frames to keep
+  max_history_length: 10
+  
+  # Object avoidance specific settings
+  avoidance_distance_threshold: 0.3
+  critical_classes: ['person', 'car', 'truck', 'bus', 'bicycle', 'motorcycle']
+  lane_change_trigger_threshold: 0.5
+
+# Dynamic Lane Changing Configuration
+lane_changing_config:
+  # Duration of lane change in simulation steps
+  lane_change_duration: 60
+  
+  # Steering intensity for lane changes (0.0 to 1.0)
+  lane_change_intensity: 0.7
+  
+  # Enable safety checks before lane changes
+  safety_check_enabled: true
+  
+  # Enable automatic triggering from object detection
+  auto_trigger_enabled: true
+  
+  # Minimum distance required for safe lane change
+  min_distance_for_lane_change: 0.5
+
+# Unified System Configuration
+unified_avoidance_config:
+  # Distance threshold for emergency braking
+  emergency_brake_threshold: 0.2
+  
+  # Speed reduction factor for cautious mode
+  speed_reduction_factor: 0.5
+  
+  # Priority order for avoidance actions
+  avoidance_priority: ['lane_change', 'speed_reduction', 'emergency_brake']
+  
+  # Number of steps to wait for consistent detection before acting
+  reaction_time_steps: 3
+
+# Environment Configuration for Testing
+test_environment:
+  # Map to use for testing
+  map_name: 'loop_empty'
+  
+  # Enable domain randomization for testing
+  domain_rand: false
+  
+  # Camera settings
+  camera_width: 640
+  camera_height: 480
+  
+  # Simulation settings
+  max_steps: 1000
+  frame_rate: 30
+  
+  # Enable obstacles for testing object avoidance
+  spawn_obstacles: true
+  obstacles:
+    duckie:
+      density: 0.3
+      static: false
+    duckiebot:
+      density: 0.1
+      static: false
+
+# Real Robot Configuration
+real_robot_config:
+  # Optimized settings for real Duckiebot performance
+  yolo_model: 'yolov5s'  # Fastest model for real-time performance
+  device: 'cpu'  # Most compatible
+  confidence_threshold: 0.6  # Higher threshold for false positive reduction
+  
+  # Conservative lane changing for safety
+  lane_change_duration: 90  # Slower lane changes
+  lane_change_intensity: 0.5  # Gentler steering
+  safety_check_enabled: true
+  
+  # Conservative avoidance thresholds
+  emergency_brake_threshold: 0.3
+  reaction_time_steps: 5
+
+# Logging and Monitoring
+logging_config:
+  # Log level (DEBUG, INFO, WARNING, ERROR)
+  level: 'INFO'
+  
+  # Enable performance monitoring
+  enable_performance_monitoring: true
+  
+  # Save detection images for debugging
+  save_detection_images: false
+  
+  # Log file path (null for console only)
+  log_file: null
