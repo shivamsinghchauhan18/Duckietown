@@ -5,6 +5,10 @@ __license__ = "MIT"
 __copyright__ = "Copyright (c) 2020 András Kalapos"
 
 import logging
+import gym
+import gym_duckietown
+import numpy as np
+from pathlib import Path
 from gym_duckietown.simulator import Simulator, DEFAULT_ROBOT_SPEED, DEFAULT_CAMERA_WIDTH, DEFAULT_CAMERA_HEIGHT
 
 from duckietown_utils.wrappers.observation_wrappers import *
@@ -12,7 +16,13 @@ from duckietown_utils.wrappers.action_wrappers import *
 from duckietown_utils.wrappers.reward_wrappers import *
 from duckietown_utils.wrappers.simulator_mod_wrappers import *
 from duckietown_utils.wrappers.aido_wrapper import AIDOWrapper
+from duckietown_utils.wrappers.yolo_detection_wrapper import YOLOObjectDetectionWrapper
+from duckietown_utils.wrappers.enhanced_observation_wrapper import EnhancedObservationWrapper
+from duckietown_utils.wrappers.object_avoidance_action_wrapper import ObjectAvoidanceActionWrapper
+from duckietown_utils.wrappers.lane_changing_action_wrapper import LaneChangingActionWrapper
+from duckietown_utils.wrappers.multi_objective_reward_wrapper import MultiObjectiveRewardWrapper
 from config.config import load_config
+from config.enhanced_config import EnhancedRLConfig, load_enhanced_config
 
 logger = logging.getLogger(__name__)
 
@@ -184,6 +194,237 @@ class DummyDuckietownGymLikeEnv(gym.Env):
         return obs, reward, done, info
 
 
+def launch_and_wrap_enhanced_env(env_config, enhanced_config=None, default_env_id=0):
+    """
+    Launch and wrap Duckietown environment with enhanced capabilities.
+    
+    This function extends the existing launch_and_wrap_env function to include
+    enhanced wrappers for object detection, avoidance, and lane changing.
+    
+    Args:
+        env_config: Standard environment configuration dictionary
+        enhanced_config: EnhancedRLConfig instance or path to enhanced config file
+        default_env_id: Default environment ID if not specified in config
+        
+    Returns:
+        Wrapped environment with enhanced capabilities
+        
+    Raises:
+        ValueError: If wrapper configuration is invalid
+        ImportError: If required dependencies are missing
+    """
+    # Load enhanced configuration
+    if enhanced_config is None:
+        enhanced_config = load_enhanced_config()
+    elif isinstance(enhanced_config, (str, Path)):
+        enhanced_config = load_enhanced_config(enhanced_config)
+    elif not isinstance(enhanced_config, EnhancedRLConfig):
+        raise ValueError("enhanced_config must be EnhancedRLConfig instance, path string, or None")
+    
+    # Start with standard environment setup
+    env = launch_and_wrap_env(env_config, default_env_id)
+    
+    # Apply enhanced wrappers in proper order
+    env = _apply_enhanced_wrappers(env, env_config, enhanced_config)
+    
+    logger.info("Enhanced Duckietown environment created successfully")
+    return env
+
+
+def _apply_enhanced_wrappers(env, env_config, enhanced_config):
+    """
+    Apply enhanced wrappers to environment with proper ordering and compatibility checks.
+    
+    Args:
+        env: Base environment to wrap
+        env_config: Standard environment configuration
+        enhanced_config: Enhanced configuration
+        
+    Returns:
+        Environment with enhanced wrappers applied
+        
+    Raises:
+        ValueError: If wrapper configuration is incompatible
+    """
+    # Validate wrapper compatibility
+    _validate_wrapper_compatibility(env_config, enhanced_config)
+    
+    # Apply observation wrappers first (YOLO detection and enhanced observation)
+    if enhanced_config.is_feature_enabled('yolo'):
+        try:
+            env = YOLOObjectDetectionWrapper(
+                env,
+                model_path=enhanced_config.yolo.model_path,
+                confidence_threshold=enhanced_config.yolo.confidence_threshold,
+                device=enhanced_config.yolo.device,
+                input_size=enhanced_config.yolo.input_size,
+                max_detections=enhanced_config.yolo.max_detections
+            )
+            logger.info("YOLO Object Detection Wrapper applied")
+        except Exception as e:
+            logger.error(f"Failed to apply YOLO wrapper: {e}")
+            if enhanced_config.debug_mode:
+                raise
+            logger.warning("Continuing without YOLO detection")
+    
+    # Apply enhanced observation wrapper to combine detection data
+    if enhanced_config.is_feature_enabled('yolo'):
+        try:
+            env = EnhancedObservationWrapper(
+                env,
+                include_detection_features=True,
+                flatten_observations=True
+            )
+            logger.info("Enhanced Observation Wrapper applied")
+        except Exception as e:
+            logger.error(f"Failed to apply Enhanced Observation wrapper: {e}")
+            if enhanced_config.debug_mode:
+                raise
+            logger.warning("Continuing without enhanced observations")
+    
+    # Apply action wrappers (object avoidance and lane changing)
+    if enhanced_config.is_feature_enabled('object_avoidance'):
+        try:
+            env = ObjectAvoidanceActionWrapper(
+                env,
+                safety_distance=enhanced_config.object_avoidance.safety_distance,
+                avoidance_strength=enhanced_config.object_avoidance.avoidance_strength,
+                min_clearance=enhanced_config.object_avoidance.min_clearance,
+                max_avoidance_angle=enhanced_config.object_avoidance.max_avoidance_angle,
+                smoothing_factor=enhanced_config.object_avoidance.smoothing_factor
+            )
+            logger.info("Object Avoidance Action Wrapper applied")
+        except Exception as e:
+            logger.error(f"Failed to apply Object Avoidance wrapper: {e}")
+            if enhanced_config.debug_mode:
+                raise
+            logger.warning("Continuing without object avoidance")
+    
+    if enhanced_config.is_feature_enabled('lane_changing'):
+        try:
+            env = LaneChangingActionWrapper(
+                env,
+                lane_change_threshold=enhanced_config.lane_changing.lane_change_threshold,
+                safety_margin=enhanced_config.lane_changing.safety_margin,
+                max_lane_change_time=enhanced_config.lane_changing.max_lane_change_time,
+                min_lane_width=enhanced_config.lane_changing.min_lane_width,
+                evaluation_distance=enhanced_config.lane_changing.evaluation_distance
+            )
+            logger.info("Lane Changing Action Wrapper applied")
+        except Exception as e:
+            logger.error(f"Failed to apply Lane Changing wrapper: {e}")
+            if enhanced_config.debug_mode:
+                raise
+            logger.warning("Continuing without lane changing")
+    
+    # Apply multi-objective reward wrapper last
+    if enhanced_config.is_feature_enabled('multi_objective_reward') or any(
+        enhanced_config.is_feature_enabled(f) for f in ['object_avoidance', 'lane_changing']
+    ):
+        try:
+            reward_weights = {
+                'lane_following': enhanced_config.reward.lane_following_weight,
+                'object_avoidance': enhanced_config.reward.object_avoidance_weight,
+                'lane_change': enhanced_config.reward.lane_change_weight,
+                'efficiency': enhanced_config.reward.efficiency_weight,
+                'safety_penalty': enhanced_config.reward.safety_penalty_weight,
+                'collision_penalty': enhanced_config.reward.collision_penalty
+            }
+            
+            env = MultiObjectiveRewardWrapper(
+                env,
+                reward_weights=reward_weights,
+                log_rewards=enhanced_config.logging.log_rewards
+            )
+            logger.info("Multi-Objective Reward Wrapper applied")
+        except Exception as e:
+            logger.error(f"Failed to apply Multi-Objective Reward wrapper: {e}")
+            if enhanced_config.debug_mode:
+                raise
+            logger.warning("Continuing without multi-objective rewards")
+    
+    return env
+
+
+def _validate_wrapper_compatibility(env_config, enhanced_config):
+    """
+    Validate compatibility between standard and enhanced wrapper configurations.
+    
+    Args:
+        env_config: Standard environment configuration
+        enhanced_config: Enhanced configuration
+        
+    Raises:
+        ValueError: If configurations are incompatible
+    """
+    # Check observation space compatibility
+    if enhanced_config.is_feature_enabled('yolo'):
+        if env_config.get('frame_stacking', False):
+            logger.warning("Frame stacking with YOLO detection may impact performance")
+        
+        if env_config.get('grayscale_image', False):
+            raise ValueError("YOLO detection requires RGB images, but grayscale_image is enabled")
+    
+    # Check action space compatibility
+    if enhanced_config.is_feature_enabled('object_avoidance') or enhanced_config.is_feature_enabled('lane_changing'):
+        if env_config.get('action_type') == 'discrete':
+            logger.warning("Enhanced action wrappers work best with continuous action spaces")
+    
+    # Check reward function compatibility
+    if enhanced_config.is_feature_enabled('multi_objective_reward'):
+        if env_config.get('reward_function') not in ['Posangle', 'posangle', 'default']:
+            logger.warning(f"Multi-objective rewards may conflict with reward_function: {env_config.get('reward_function')}")
+    
+    # Validate feature dependencies
+    if enhanced_config.is_feature_enabled('object_avoidance') and not enhanced_config.is_feature_enabled('yolo'):
+        logger.warning("Object avoidance without YOLO detection will use basic obstacle detection")
+    
+    if enhanced_config.is_feature_enabled('lane_changing') and not enhanced_config.is_feature_enabled('yolo'):
+        logger.warning("Lane changing without YOLO detection may have limited effectiveness")
+
+
+def get_enhanced_wrappers(wrapped_env):
+    """
+    Get lists of all wrappers applied to an enhanced environment.
+    
+    Args:
+        wrapped_env: Wrapped environment
+        
+    Returns:
+        Tuple of (obs_wrappers, action_wrappers, reward_wrappers, enhanced_wrappers)
+    """
+    obs_wrappers = []
+    action_wrappers = []
+    reward_wrappers = []
+    enhanced_wrappers = []
+    
+    orig_env = wrapped_env
+    while not (isinstance(orig_env, gym_duckietown.simulator.Simulator) or
+               isinstance(orig_env, DummyDuckietownGymLikeEnv)):
+        
+        # Check for enhanced wrappers
+        if isinstance(orig_env, (YOLOObjectDetectionWrapper, EnhancedObservationWrapper,
+                                ObjectAvoidanceActionWrapper, LaneChangingActionWrapper,
+                                MultiObjectiveRewardWrapper)):
+            enhanced_wrappers.append(orig_env)
+        
+        # Standard wrapper categorization
+        if isinstance(orig_env, gym.ObservationWrapper):
+            obs_wrappers.append(orig_env)
+        elif isinstance(orig_env, gym.ActionWrapper):
+            action_wrappers.append(orig_env)
+        elif isinstance(orig_env, gym.RewardWrapper):
+            reward_wrappers.append(orig_env)
+        elif isinstance(orig_env, gym.Wrapper):
+            None
+        else:
+            assert False, ("[duckietown_utils.env.get_enhanced_wrappers] - {} Wrapper type is none of these:"
+                           " gym.ObservationWrapper, gym.ActionWrapper, gym.RewardWrapper".format(orig_env))
+        orig_env = orig_env.env
+
+    return obs_wrappers[::-1], action_wrappers[::-1], reward_wrappers[::-1], enhanced_wrappers[::-1]
+
+
 def get_wrappers(wrapped_env):
     obs_wrappers = []
     action_wrappers = []
@@ -210,6 +451,9 @@ def get_wrappers(wrapped_env):
 if __name__ == "__main__":
     # execute only if run as a script to test some functionality
     config = load_config('./config/config.yml')
+    
+    # Test standard environment
+    print("=== Standard Environment ===")
     dummy_env = wrap_env(config['env_config'])
     obs_wrappers, action_wrappers, reward_wrappers = get_wrappers(dummy_env)
     print("Observation wrappers")
@@ -218,3 +462,21 @@ if __name__ == "__main__":
     print(*action_wrappers, sep="\n")
     print("\nReward wrappers")
     print(*reward_wrappers, sep="\n")
+    
+    # Test enhanced environment
+    print("\n=== Enhanced Environment ===")
+    try:
+        enhanced_env = launch_and_wrap_enhanced_env(config['env_config'])
+        obs_wrappers, action_wrappers, reward_wrappers, enhanced_wrappers = get_enhanced_wrappers(enhanced_env)
+        print("Enhanced wrappers")
+        print(*enhanced_wrappers, sep="\n")
+        print("\nAll observation wrappers")
+        print(*obs_wrappers, sep="\n")
+        print("\nAll action wrappers")
+        print(*action_wrappers, sep="\n")
+        print("\nAll reward wrappers")
+        print(*reward_wrappers, sep="\n")
+    except Exception as e:
+        print(f"Enhanced environment test failed: {e}")
+        import traceback
+        traceback.print_exc()

@@ -1,0 +1,289 @@
+# Enhanced PPO Training Configuration
+# Configuration for multi-objective RL training with object detection, avoidance, and lane changing
+
+# Experiment identification
+seed: &seed 1234
+experiment_name: &experiment_name 'EnhancedPPO'
+algo: 'PPO'
+
+# Algorithm configuration files
+algo_config_files:
+  PPO: "config/algo/ppo.yml"
+  general: "config/algo/general.yml"
+
+# Enhanced environment configuration
+env_config:
+  # Training mode
+  mode: 'train'
+  
+  # Episode configuration
+  episode_max_steps: 1000  # Longer episodes for complex scenarios
+  
+  # Image processing
+  resized_input_shape: '(84, 84)'
+  crop_image_top: true
+  top_crop_divider: 3
+  grayscale_image: false  # RGB required for YOLO
+  
+  # Frame stacking for temporal information
+  frame_stacking: true
+  frame_stacking_depth: 4  # Increased for better temporal understanding
+  
+  # Action configuration
+  action_type: 'heading'  # Continuous control for smooth actions
+  
+  # Enhanced reward function
+  reward_function: 'posangle'  # Base reward, enhanced by multi-objective wrapper
+  
+  # Simulation parameters
+  distortion: true
+  accepted_start_angle_deg: 4
+  simulation_framerate: 30
+  frame_skip: 1
+  action_delay_ratio: 0.0
+  
+  # Training maps - progressive difficulty
+  training_map: 'multimap1'  # Multiple maps for diversity
+  
+  # Domain randomization for robustness
+  domain_rand: true
+  dynamics_rand: true
+  camera_rand: false  # Keep camera consistent for YOLO
+  
+  # Obstacle configuration for curriculum learning
+  spawn_obstacles: false  # Will be enabled by curriculum
+  obstacles:
+    duckie:
+      density: 0.3
+      static: true
+    duckiebot:
+      density: 0.1
+      static: false
+  
+  # Enhanced features
+  spawn_forward_obstacle: false
+  aido_wrapper: false
+  
+  # Motion blur for realism
+  motion_blur: true
+  frame_repeating: 0.1
+  
+  # Logging configuration
+  wandb:
+    project: 'enhanced-duckietown-rl'
+    enabled: true
+  experiment_name: *experiment_name
+  seed: *seed
+
+# Enhanced PPO configuration
+rllib_config:
+  # Worker configuration
+  num_workers: 4  # Parallel environments
+  num_envs_per_worker: 1
+  num_gpus: 1  # GPU for YOLO inference
+  num_gpus_per_worker: 0.25  # Shared GPU across workers
+  
+  # Training batch configuration
+  train_batch_size: 4000  # Larger batch for stable multi-objective learning
+  sgd_minibatch_size: 128
+  num_sgd_iter: 10  # More SGD iterations for complex policy
+  
+  # Learning rate schedule
+  lr: 3e-4
+  lr_schedule: [[0, 3e-4], [1000000, 1e-4], [2000000, 3e-5]]  # Decay over time
+  
+  # PPO hyperparameters
+  gamma: 0.995  # Higher discount for longer episodes
+  lambda: 0.95
+  clip_param: 0.2
+  vf_clip_param: 10.0
+  entropy_coeff: 0.01
+  entropy_coeff_schedule: [[0, 0.01], [500000, 0.005], [1000000, 0.001]]  # Decay exploration
+  
+  # Value function configuration
+  vf_loss_coeff: 0.5
+  use_critic: true
+  use_gae: true
+  
+  # Model configuration
+  model:
+    # CNN for image processing
+    conv_filters: [
+      [32, [8, 8], 4],
+      [64, [4, 4], 2],
+      [64, [3, 3], 1]
+    ]
+    conv_activation: 'relu'
+    
+    # Fully connected layers
+    fcnet_hiddens: [512, 256]
+    fcnet_activation: 'relu'
+    
+    # LSTM for temporal modeling
+    use_lstm: true
+    lstm_cell_size: 256
+    lstm_use_prev_action: true
+    lstm_use_prev_reward: true
+    
+    # Frame stacking
+    framestack: true
+    
+    # Custom model options for multi-objective learning
+    custom_model_config:
+      multi_objective: true
+      reward_components: 5  # Number of reward components
+      attention_mechanism: true  # Attention over reward components
+  
+  # Exploration configuration
+  exploration_config:
+    type: "StochasticSampling"
+    random_timesteps: 10000  # Initial random exploration
+  
+  # Rollout configuration
+  rollout_fragment_length: 200
+  batch_mode: "truncate_episodes"
+  
+  # Evaluation configuration
+  evaluation_interval: 10  # Evaluate every 10 training iterations
+  evaluation_num_episodes: 5
+  evaluation_config:
+    explore: false
+    env_config:
+      mode: 'inference'
+  
+  # Multi-agent configuration for multi-objective rewards
+  multiagent:
+    policies:
+      default_policy:
+        - null  # Use default policy class
+        - null  # Use default observation space
+        - null  # Use default action space
+        - {}    # Policy config (will be filled by enhanced trainer)
+    policy_mapping_fn: null  # Single agent
+
+# Ray configuration
+ray_init_config:
+  num_cpus: 8
+  num_gpus: 1
+  memory: 8000000000  # 8GB memory
+  object_store_memory: 2000000000  # 2GB object store
+  webui_host: '127.0.0.1'
+
+# Training configuration
+timesteps_total: 2000000  # 2M timesteps for complex learning
+
+# Curriculum learning configuration
+curriculum_learning:
+  enabled: true
+  stages:
+    - name: 'basic_lane_following'
+      min_timesteps: 200000
+      criteria:
+        episode_reward_mean: 0.5
+        deviation_centerline: 0.3
+      env_config:
+        spawn_obstacles: false
+        domain_rand: false
+        training_map: 'small_loop'
+    
+    - name: 'static_obstacles'
+      min_timesteps: 300000
+      criteria:
+        episode_reward_mean: 0.7
+        safety_score: 0.8
+        objects_detected_total: 5
+      env_config:
+        spawn_obstacles: true
+        obstacles:
+          duckie:
+            density: 0.3
+            static: true
+        domain_rand: true
+        training_map: 'multimap1'
+    
+    - name: 'dynamic_obstacles'
+      min_timesteps: 400000
+      criteria:
+        episode_reward_mean: 0.8
+        safety_score: 0.85
+        avoidance_actions_total: 3
+      env_config:
+        spawn_obstacles: true
+        obstacles:
+          duckie:
+            density: 0.4
+            static: false
+          duckiebot:
+            density: 0.1
+            static: false
+        domain_rand: true
+        training_map: 'multimap1'
+    
+    - name: 'complex_scenarios'
+      min_timesteps: 500000
+      criteria:
+        episode_reward_mean: 0.85
+        safety_score: 0.9
+        lane_change_success_rate: 0.7
+      env_config:
+        spawn_obstacles: true
+        spawn_forward_obstacle: true
+        obstacles:
+          duckie:
+            density: 0.5
+            static: false
+          duckiebot:
+            density: 0.2
+            static: false
+        domain_rand: true
+        dynamics_rand: true
+        training_map: 'multimap_aido5'
+
+# Checkpoint configuration
+checkpoint_config:
+  checkpoint_freq: 5  # Save checkpoint every 5 iterations
+  keep_checkpoints_num: 5  # Keep 5 best checkpoints
+  checkpoint_score_attr: "custom_metrics/overall_performance_score"
+  
+  # Enhanced checkpoint criteria
+  save_on_improvement:
+    - metric: "episode_reward_mean"
+      threshold: 0.05  # Save if reward improves by 5%
+    - metric: "custom_metrics/safety_score"
+      threshold: 0.02  # Save if safety improves by 2%
+    - metric: "custom_metrics/overall_performance_score"
+      threshold: 0.03  # Save if overall performance improves by 3%
+
+# Model restoration
+restore_seed: -1  # -1 for no restoration
+restore_experiment_idx: 0
+restore_checkpoint_idx: 0  # 0 for best, 1 for final
+
+# Debug configuration (for development)
+debug_hparams:
+  rllib_config:
+    num_workers: 1
+    num_gpus: 0
+    train_batch_size: 200
+    sgd_minibatch_size: 64
+    num_sgd_iter: 2
+    evaluation_interval: 5
+  ray_init_config:
+    num_cpus: 2
+    memory: 2000000000
+    object_store_memory: 500000000
+    local_mode: true
+  timesteps_total: 10000  # Short training for debugging
+
+# Inference configuration
+inference_hparams:
+  rllib_config:
+    explore: false
+    num_workers: 0
+    num_gpus: 0
+    callbacks: {}
+  ray_init_config:
+    num_cpus: 1
+    memory: 2000000000
+    object_store_memory: 500000000
+    local_mode: true

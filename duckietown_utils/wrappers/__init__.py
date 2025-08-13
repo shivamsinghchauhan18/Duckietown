@@ -19,6 +19,8 @@ from .observation_wrappers import (
 from .yolo_detection_wrapper import YOLOObjectDetectionWrapper
 from .enhanced_observation_wrapper import EnhancedObservationWrapper
 from .object_avoidance_action_wrapper import ObjectAvoidanceActionWrapper
+from .lane_changing_action_wrapper import LaneChangingActionWrapper
+from .multi_objective_reward_wrapper import MultiObjectiveRewardWrapper
 
 __all__ = [
     # Observation wrappers
@@ -38,5 +40,9 @@ __all__ = [
     'EnhancedObservationWrapper',
     
     # Action wrappers
-    'ObjectAvoidanceActionWrapper'
+    'ObjectAvoidanceActionWrapper',
+    'LaneChangingActionWrapper',
+    
+    # Reward wrappers
+    'MultiObjectiveRewardWrapper'
 ]

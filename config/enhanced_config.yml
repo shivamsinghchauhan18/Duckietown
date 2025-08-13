@@ -1,0 +1,62 @@
+# Enhanced Duckietown RL Configuration
+# This file contains configuration parameters for the enhanced RL system
+# with YOLO object detection, object avoidance, and lane changing capabilities
+
+# Global settings
+enabled_features:
+  - "yolo"
+  - "object_avoidance" 
+  - "lane_changing"
+  - "multi_objective_reward"
+
+debug_mode: false
+
+# YOLO Object Detection Configuration
+yolo:
+  model_path: "yolov5s.pt"
+  confidence_threshold: 0.5
+  device: "auto"  # "cuda", "cpu", or "auto"
+  input_size: 640
+  max_detections: 100
+
+# Object Avoidance Configuration
+object_avoidance:
+  safety_distance: 0.5      # meters
+  avoidance_strength: 1.0   # multiplier for avoidance force
+  min_clearance: 0.2        # minimum clearance from objects (meters)
+  max_avoidance_angle: 0.5  # maximum avoidance angle (radians)
+  smoothing_factor: 0.8     # action smoothing factor (0.0-1.0)
+
+# Lane Changing Configuration
+lane_changing:
+  lane_change_threshold: 0.3    # threshold for initiating lane change
+  safety_margin: 2.0            # safety margin for lane changes (meters)
+  max_lane_change_time: 3.0     # maximum time for lane change (seconds)
+  min_lane_width: 0.4           # minimum lane width (meters)
+  evaluation_distance: 5.0      # distance to evaluate for lane changes (meters)
+
+# Multi-Objective Reward Configuration
+reward:
+  lane_following_weight: 1.0      # weight for lane following reward
+  object_avoidance_weight: 0.5    # weight for object avoidance reward
+  lane_change_weight: 0.3         # weight for lane changing reward
+  efficiency_weight: 0.2          # weight for efficiency reward
+  safety_penalty_weight: -2.0     # weight for safety penalties
+  collision_penalty: -10.0        # penalty for collisions
+
+# Logging Configuration
+logging:
+  log_level: "INFO"               # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  log_detections: true            # log object detections
+  log_actions: true               # log action decisions
+  log_rewards: true               # log reward components
+  log_performance: true           # log performance metrics
+  log_file_path: null             # path to log file (null for no file logging)
+  console_logging: true           # enable console logging
+
+# Performance Configuration
+performance:
+  max_fps: 30.0                   # maximum frames per second
+  detection_batch_size: 1         # batch size for object detection
+  use_gpu_acceleration: true      # use GPU acceleration when available
+  memory_limit_gb: 4.0            # memory limit in GB
