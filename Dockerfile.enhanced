@@ -1,0 +1,157 @@
+# Enhanced Duckietown RL Docker Image with YOLO v5 Integration
+FROM nvidia/cuda:10.0-cudnn7-runtime-ubuntu16.04
+
+# Avoid user interaction with tzdata
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update -y && apt-get install -y software-properties-common && apt-get update -y
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    gcc \
+    libc-dev\
+    git \
+    bzip2 \
+    python3.6 \
+    python3-pip \
+    python3-setuptools \
+    python3-setuptools-git \
+    python3.6-dev \
+    xvfb \
+    ffmpeg \
+    ufw \
+    wget \
+    freeglut3-dev \
+    libgtk2.0-dev \
+    libglib2.0-0 \
+    libopenmpi-dev \
+    zlib1g-dev \
+    libsm6 \
+    libxext6 \
+    libfontconfig1 \
+    libxrender1 \
+    python3.6-tk && \
+    rm -rf /var/lib/apt/lists/*
+ 
+# Install and configure ssh server
+RUN apt-get update && apt-get install -y --no-install-recommends openssh-server vim nano htop xauth
+RUN echo 'PermitRootLogin yes\nSubsystem sftp internal-sftp\nX11Forwarding yes\nX11UseLocalhost no' > /etc/ssh/sshd_config
+EXPOSE 22
+RUN groupadd sshgroup
+RUN useradd -ms /bin/bash -g sshgroup duckie
+RUN echo 'duckie:dt2020' | chpasswd
+RUN echo 'root:dt2020' | chpasswd
+
+# Install and configure screen
+RUN apt-get update && apt-get install -y --no-install-recommends screen
+COPY .screenrc /root/.screenrc
+COPY .screenrc /home/duckie/.screenrc
+
+# Expose ports for tensorboard and additional services
+EXPOSE 7000
+EXPOSE 7001
+EXPOSE 8888
+
+# Set up user environment
+WORKDIR /home/duckie
+USER duckie
+
+# Install Miniconda
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+RUN bash Miniconda3-latest-Linux-x86_64.sh -b -p /home/duckie/miniconda3
+RUN rm Miniconda3-latest-Linux-x86_64.sh
+
+# Configure conda
+USER root
+RUN ln -s /home/duckie/miniconda3/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /home/duckie/miniconda3/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate dtaido5" >> ~/.bashrc && \
+    echo "conda activate dtaido5" >> /home/duckie/.bashrc
+
+# Set up conda shell
+SHELL ["/home/duckie/miniconda3/bin/conda", "run", "-n", "base", "/bin/bash", "-c"]
+
+# Copy enhanced environment file
+COPY "environment_aido5.yml" Duckietown-RL/
+RUN chown -R duckie:sshgroup /home/duckie/Duckietown-RL/
+
+# Create conda environment with enhanced dependencies
+USER duckie
+RUN conda env create -f Duckietown-RL/environment_aido5.yml
+
+# Switch to enhanced environment
+SHELL ["/home/duckie/miniconda3/bin/conda", "run", "-n", "dtaido5", "/bin/bash", "-c"]
+
+# Install gym-duckietown
+RUN git clone https://github.com/duckietown/gym-duckietown.git --branch v6.0.25
+RUN pip install -e gym-duckietown
+
+# Copy custom maps
+COPY maps/*.yaml gym-duckietown/src/gym_duckietown/maps/
+COPY maps/*.yaml /home/duckie/miniconda3/envs/dtaido5/lib/python3.6/site-packages/duckietown_world/data/gd1/maps/
+
+# Copy enhanced Duckietown RL code
+COPY config Duckietown-RL/config
+COPY duckietown_utils Duckietown-RL/duckietown_utils
+COPY experiments Duckietown-RL/experiments
+COPY maps Duckietown-RL/maps
+COPY tests Duckietown-RL/tests
+COPY artifacts Duckietown-RL/artifacts
+COPY examples Duckietown-RL/examples
+COPY docs Duckietown-RL/docs
+COPY requirements.txt Duckietown-RL/
+COPY setup_enhanced_environment.sh Duckietown-RL/
+COPY conda_setup_aido5.sh Duckietown-RL/
+
+# Install additional YOLO dependencies
+RUN pip install ultralytics>=8.0.0
+
+# Pre-download YOLO model to avoid download during runtime
+RUN python -c "
+import torch
+try:
+    from ultralytics import YOLO
+    print('Downloading YOLOv5s model...')
+    model = YOLO('yolov5s.pt')
+    print('YOLOv5s model downloaded successfully')
+except Exception as e:
+    print(f'Warning: Could not pre-download YOLO model: {e}')
+    print('Model will be downloaded on first use')
+"
+
+# Set working directory
+RUN echo "cd Duckietown-RL" >> /home/duckie/.bashrc
+
+# Fix permissions
+USER root
+RUN chown -R duckie:sshgroup /home/duckie/Duckietown-RL/
+RUN chown -R duckie:sshgroup /home/duckie/gym-duckietown/src/gym_duckietown/maps/
+RUN chown -R duckie:sshgroup /home/duckie/miniconda3/envs/dtaido5/lib/python3.6/site-packages/duckietown_world/data/gd1/maps
+
+# Create startup script
+RUN echo '#!/bin/bash\n\
+echo "================================================="\n\
+echo "Enhanced Duckietown RL Environment with YOLO v5"\n\
+echo "================================================="\n\
+echo "Environment: dtaido5"\n\
+echo "YOLO Integration: Enabled"\n\
+echo "GPU Support: $(nvidia-smi > /dev/null 2>&1 && echo "Available" || echo "Not Available")"\n\
+echo "================================================="\n\
+echo ""\n\
+echo "Available commands:"\n\
+echo "  python examples/yolo_integration_example.py  - Test YOLO integration"\n\
+echo "  python experiments/train_enhanced_rl.py      - Run enhanced RL training"\n\
+echo "  python -m pytest tests/                      - Run test suite"\n\
+echo ""\n\
+echo "Documentation: docs/YOLO_Integration.md"\n\
+echo "================================================="\n\
+' > /home/duckie/startup_info.sh && chmod +x /home/duckie/startup_info.sh
+
+# Add startup info to bashrc
+RUN echo "/home/duckie/startup_info.sh" >> /home/duckie/.bashrc
+
+# Prepare SSH
+RUN mkdir /var/run/sshd
+
+# Start SSH daemon
+CMD ["/usr/sbin/sshd", "-D"]

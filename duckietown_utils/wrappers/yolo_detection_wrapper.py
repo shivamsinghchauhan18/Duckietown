@@ -1,0 +1,447 @@
+"""
+YOLO Object Detection Wrapper for Duckietown RL Environment.
+
+This module implements a gym observation wrapper that integrates YOLO v5 object detection
+into the Duckietown RL environment, providing real-time object detection capabilities
+with configurable confidence thresholds and safety monitoring.
+"""
+
+import logging
+import time
+from typing import Dict, Any, Optional, Union
+import warnings
+
+import gym
+import numpy as np
+from gym import spaces
+
+from ..yolo_utils import create_yolo_inference_system, YOLOInferenceWrapper
+
+logger = logging.getLogger(__name__)
+
+
+class YOLOObjectDetectionWrapper(gym.ObservationWrapper):
+    """
+    Gym observation wrapper that adds YOLO v5 object detection to Duckietown environment.
+    
+    This wrapper extends the observation space to include object detection results,
+    providing real-time detection of objects in the robot's field of view with
+    configurable confidence thresholds and safety monitoring.
+    
+    The wrapper maintains compatibility with existing observation processing while
+    adding comprehensive object detection information that can be used by RL agents
+    for object avoidance and navigation decisions.
+    """
+    
+    def __init__(
+        self,
+        env: gym.Env,
+        model_path: str = "yolov5s.pt",
+        confidence_threshold: float = 0.5,
+        device: str = 'auto',
+        max_detections: int = 10,
+        safety_distance_threshold: float = 1.0,
+        include_image_in_obs: bool = True,
+        flatten_detections: bool = False,
+        detection_timeout: float = 0.1
+    ):
+        """
+        Initialize YOLO Object Detection Wrapper.
+        
+        Args:
+            env: Base gym environment to wrap
+            model_path: Path to YOLO model file (.pt format)
+            confidence_threshold: Minimum confidence threshold for detections (0.0-1.0)
+            device: Device for inference ('cpu', 'cuda', 'auto')
+            max_detections: Maximum number of detections to return
+            safety_distance_threshold: Distance threshold for safety-critical detection (meters)
+            include_image_in_obs: Whether to include original image in observation
+            flatten_detections: Whether to flatten detection data into feature vector
+            detection_timeout: Maximum time allowed for detection inference (seconds)
+        """
+        super().__init__(env)
+        
+        # Store configuration
+        self.model_path = model_path
+        self.confidence_threshold = confidence_threshold
+        self.device = device
+        self.max_detections = max_detections
+        self.safety_distance_threshold = safety_distance_threshold
+        self.include_image_in_obs = include_image_in_obs
+        self.flatten_detections = flatten_detections
+        self.detection_timeout = detection_timeout
+        
+        # Initialize YOLO system
+        self.yolo_system = None
+        self._detection_enabled = False
+        self._last_detection_result = None
+        self._detection_stats = {
+            'total_detections': 0,
+            'failed_detections': 0,
+            'timeout_detections': 0,
+            'safety_critical_detections': 0
+        }
+        
+        # Initialize YOLO inference system
+        self._initialize_yolo_system()
+        
+        # Update observation space
+        self._setup_observation_space()
+        
+        logger.info(f"YOLOObjectDetectionWrapper initialized with model: {model_path}")
+    
+    def _initialize_yolo_system(self) -> bool:
+        """
+        Initialize YOLO inference system with error handling.
+        
+        Returns:
+            bool: True if initialization successful, False otherwise
+        """
+        try:
+            self.yolo_system = create_yolo_inference_system(
+                model_path=self.model_path,
+                device=self.device,
+                confidence_threshold=self.confidence_threshold,
+                max_detections=self.max_detections
+            )
+            
+            if self.yolo_system is not None:
+                self._detection_enabled = True
+                logger.info("YOLO system initialized successfully")
+                return True
+            else:
+                logger.warning("YOLO system initialization failed - detections disabled")
+                self._detection_enabled = False
+                return False
+                
+        except Exception as e:
+            logger.error(f"Failed to initialize YOLO system: {str(e)}")
+            self._detection_enabled = False
+            return False
+    
+    def _setup_observation_space(self):
+        """Setup the observation space based on configuration."""
+        if self.flatten_detections:
+            # Create flattened observation space
+            self._setup_flattened_observation_space()
+        else:
+            # Create dictionary observation space
+            self._setup_dict_observation_space()
+    
+    def _setup_dict_observation_space(self):
+        """Setup dictionary-based observation space."""
+        obs_spaces = {}
+        
+        # Include original image if requested
+        if self.include_image_in_obs:
+            obs_spaces['image'] = self.env.observation_space
+        
+        # Detection results space (variable length list, represented as dict)
+        obs_spaces['detections'] = spaces.Box(
+            low=-np.inf,
+            high=np.inf,
+            shape=(self.max_detections, 9),  # [class_id, conf, x1, y1, x2, y2, rel_x, rel_y, distance]
+            dtype=np.float32
+        )
+        
+        # Detection metadata
+        obs_spaces['detection_count'] = spaces.Box(
+            low=0,
+            high=self.max_detections,
+            shape=(1,),
+            dtype=np.int32
+        )
+        
+        obs_spaces['safety_critical'] = spaces.Box(
+            low=0,
+            high=1,
+            shape=(1,),
+            dtype=np.int32
+        )
+        
+        obs_spaces['inference_time'] = spaces.Box(
+            low=0.0,
+            high=1.0,  # Max 1 second inference time
+            shape=(1,),
+            dtype=np.float32
+        )
+        
+        self.observation_space = spaces.Dict(obs_spaces)
+    
+    def _setup_flattened_observation_space(self):
+        """Setup flattened observation space for compatibility with simple RL algorithms."""
+        # Calculate total feature size
+        original_size = np.prod(self.env.observation_space.shape) if self.include_image_in_obs else 0
+        detection_features_size = self.max_detections * 9  # 9 features per detection
+        metadata_size = 3  # detection_count, safety_critical, inference_time
+        
+        total_size = original_size + detection_features_size + metadata_size
+        
+        self.observation_space = spaces.Box(
+            low=-np.inf,
+            high=np.inf,
+            shape=(total_size,),
+            dtype=np.float32
+        )
+    
+    def observation(self, observation: np.ndarray) -> Union[Dict[str, Any], np.ndarray]:
+        """
+        Process observation with YOLO object detection.
+        
+        Args:
+            observation: Original observation from environment
+            
+        Returns:
+            Enhanced observation with detection results
+        """
+        # Perform object detection
+        detection_result = self._detect_objects(observation)
+        
+        # Update statistics
+        self._update_detection_stats(detection_result)
+        
+        # Format observation based on configuration
+        if self.flatten_detections:
+            return self._create_flattened_observation(observation, detection_result)
+        else:
+            return self._create_dict_observation(observation, detection_result)
+    
+    def _detect_objects(self, image: np.ndarray) -> Dict[str, Any]:
+        """
+        Perform object detection with timeout and error handling.
+        
+        Args:
+            image: Input image for detection
+            
+        Returns:
+            Detection results dictionary
+        """
+        if not self._detection_enabled or self.yolo_system is None:
+            return self._get_empty_detection_result()
+        
+        try:
+            # Set timeout for detection
+            start_time = time.time()
+            
+            # Perform detection
+            result = self.yolo_system.detect_objects(image)
+            
+            # Check timeout
+            if time.time() - start_time > self.detection_timeout:
+                logger.warning(f"Detection timeout exceeded: {time.time() - start_time:.3f}s")
+                self._detection_stats['timeout_detections'] += 1
+                return self._get_empty_detection_result()
+            
+            # Update safety distance threshold in result
+            result['safety_critical'] = self._check_safety_critical(
+                result.get('detections', [])
+            )
+            
+            self._last_detection_result = result
+            return result
+            
+        except Exception as e:
+            logger.error(f"Object detection failed: {str(e)}")
+            self._detection_stats['failed_detections'] += 1
+            return self._get_empty_detection_result()
+    
+    def _check_safety_critical(self, detections: list) -> bool:
+        """
+        Check if any detections are safety critical based on distance and position.
+        
+        Args:
+            detections: List of detection dictionaries
+            
+        Returns:
+            bool: True if any detection is safety critical
+        """
+        for detection in detections:
+            distance = detection.get('distance', float('inf'))
+            rel_pos = detection.get('relative_position', [0, 0])
+            
+            # Check if object is close and in front of robot
+            if (distance < self.safety_distance_threshold and 
+                rel_pos[1] > -0.2):  # Allow some tolerance for objects slightly behind
+                return True
+        
+        return False
+    
+    def _get_empty_detection_result(self) -> Dict[str, Any]:
+        """Get empty detection result for error/timeout cases."""
+        return {
+            'detections': [],
+            'detection_count': 0,
+            'inference_time': 0.0,
+            'frame_shape': None,
+            'safety_critical': False
+        }
+    
+    def _create_dict_observation(
+        self, 
+        original_obs: np.ndarray, 
+        detection_result: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Create dictionary-based observation.
+        
+        Args:
+            original_obs: Original environment observation
+            detection_result: YOLO detection results
+            
+        Returns:
+            Dictionary observation with detection data
+        """
+        obs_dict = {}
+        
+        # Include original image if requested
+        if self.include_image_in_obs:
+            obs_dict['image'] = original_obs
+        
+        # Process detections into fixed-size array
+        detection_array = np.zeros((self.max_detections, 9), dtype=np.float32)
+        detections = detection_result.get('detections', [])
+        
+        for i, detection in enumerate(detections[:self.max_detections]):
+            # Map class name to ID (simple hash for now)
+            class_id = hash(detection.get('class', 'unknown')) % 1000
+            confidence = detection.get('confidence', 0.0)
+            bbox = detection.get('bbox', [0, 0, 0, 0])
+            rel_pos = detection.get('relative_position', [0.0, 0.0])
+            distance = detection.get('distance', 0.0)
+            
+            detection_array[i] = [
+                class_id, confidence, 
+                bbox[0], bbox[1], bbox[2], bbox[3],  # x1, y1, x2, y2
+                rel_pos[0], rel_pos[1], distance
+            ]
+        
+        obs_dict['detections'] = detection_array
+        obs_dict['detection_count'] = np.array([detection_result.get('detection_count', 0)], dtype=np.int32)
+        obs_dict['safety_critical'] = np.array([int(detection_result.get('safety_critical', False))], dtype=np.int32)
+        obs_dict['inference_time'] = np.array([detection_result.get('inference_time', 0.0)], dtype=np.float32)
+        
+        return obs_dict
+    
+    def _create_flattened_observation(
+        self, 
+        original_obs: np.ndarray, 
+        detection_result: Dict[str, Any]
+    ) -> np.ndarray:
+        """
+        Create flattened observation for simple RL algorithms.
+        
+        Args:
+            original_obs: Original environment observation
+            detection_result: YOLO detection results
+            
+        Returns:
+            Flattened numpy array with all observation data
+        """
+        components = []
+        
+        # Include flattened original image if requested
+        if self.include_image_in_obs:
+            components.append(original_obs.flatten())
+        
+        # Add detection features
+        detection_features = np.zeros(self.max_detections * 9, dtype=np.float32)
+        detections = detection_result.get('detections', [])
+        
+        for i, detection in enumerate(detections[:self.max_detections]):
+            start_idx = i * 9
+            class_id = hash(detection.get('class', 'unknown')) % 1000
+            confidence = detection.get('confidence', 0.0)
+            bbox = detection.get('bbox', [0, 0, 0, 0])
+            rel_pos = detection.get('relative_position', [0.0, 0.0])
+            distance = detection.get('distance', 0.0)
+            
+            detection_features[start_idx:start_idx+9] = [
+                class_id, confidence,
+                bbox[0], bbox[1], bbox[2], bbox[3],
+                rel_pos[0], rel_pos[1], distance
+            ]
+        
+        components.append(detection_features)
+        
+        # Add metadata
+        metadata = np.array([
+            detection_result.get('detection_count', 0),
+            int(detection_result.get('safety_critical', False)),
+            detection_result.get('inference_time', 0.0)
+        ], dtype=np.float32)
+        
+        components.append(metadata)
+        
+        return np.concatenate(components)
+    
+    def _update_detection_stats(self, detection_result: Dict[str, Any]):
+        """Update detection statistics."""
+        self._detection_stats['total_detections'] += 1
+        
+        if detection_result.get('safety_critical', False):
+            self._detection_stats['safety_critical_detections'] += 1
+    
+    def get_detection_stats(self) -> Dict[str, Any]:
+        """
+        Get detection performance statistics.
+        
+        Returns:
+            Dictionary with detection statistics
+        """
+        stats = self._detection_stats.copy()
+        
+        if self.yolo_system is not None:
+            yolo_stats = self.yolo_system.get_performance_stats()
+            stats.update(yolo_stats)
+        
+        # Calculate success rate
+        total = stats['total_detections']
+        if total > 0:
+            stats['success_rate'] = 1.0 - (stats['failed_detections'] + stats['timeout_detections']) / total
+            stats['safety_critical_rate'] = stats['safety_critical_detections'] / total
+        else:
+            stats['success_rate'] = 0.0
+            stats['safety_critical_rate'] = 0.0
+        
+        return stats
+    
+    def reset_detection_stats(self):
+        """Reset detection statistics."""
+        self._detection_stats = {
+            'total_detections': 0,
+            'failed_detections': 0,
+            'timeout_detections': 0,
+            'safety_critical_detections': 0
+        }
+        
+        if self.yolo_system is not None:
+            self.yolo_system.reset_stats()
+    
+    def is_detection_enabled(self) -> bool:
+        """Check if object detection is enabled and working."""
+        return self._detection_enabled and self.yolo_system is not None
+    
+    def get_last_detection_result(self) -> Optional[Dict[str, Any]]:
+        """Get the last detection result for debugging."""
+        return self._last_detection_result
+    
+    def reload_yolo_model(self) -> bool:
+        """
+        Reload YOLO model (useful for error recovery).
+        
+        Returns:
+            bool: True if reload successful
+        """
+        logger.info("Reloading YOLO model...")
+        return self._initialize_yolo_system()
+    
+    def reset(self, **kwargs):
+        """Reset environment and clear detection history."""
+        # Reset detection statistics for new episode
+        self._last_detection_result = None
+        
+        # Reset base environment
+        observation = self.env.reset(**kwargs)
+        
+        # Return processed observation
+        return self.observation(observation)

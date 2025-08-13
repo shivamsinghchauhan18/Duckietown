@@ -227,10 +227,21 @@ class YOLOInferenceWrapper:
             rel_x = (center_x - img_width / 2) / img_width
             rel_y = (center_y - img_height / 2) / img_height
             
-            # Estimate distance (simple heuristic based on bounding box size)
+            # Estimate distance (improved heuristic for Duckietown environment)
             bbox_area = (x2 - x1) * (y2 - y1)
             normalized_area = bbox_area / (img_width * img_height)
-            estimated_distance = max(0.1, 2.0 / (normalized_area + 0.1))  # Rough estimate
+            
+            # More sophisticated distance estimation for Duckietown
+            # Objects closer to bottom of image are typically closer to robot
+            bottom_position = y2 / img_height  # 0 = top, 1 = bottom
+            
+            # Combine area and vertical position for better distance estimate
+            # Larger objects and objects lower in frame are closer
+            area_factor = max(0.01, normalized_area)
+            position_factor = max(0.1, bottom_position)
+            
+            # Distance estimation: closer objects have larger area and lower position
+            estimated_distance = max(0.1, 3.0 / (area_factor * position_factor + 0.05))
             
             detection = {
                 'class': class_name,

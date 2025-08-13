@@ -222,4 +222,8 @@ dependencies:
     - yarl==1.5.1
     - zuper-commons-z6==6.1.5
     - zuper-typing-z6==6.1.8
+    # YOLO v5 dependencies for enhanced object detection
+    - torch>=1.7.0
+    - torchvision>=0.8.0
+    - ultralytics>=8.0.0
 
