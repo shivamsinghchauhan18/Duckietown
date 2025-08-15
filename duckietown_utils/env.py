@@ -5,11 +5,30 @@ __license__ = "MIT"
 __copyright__ = "Copyright (c) 2020 András Kalapos"
 
 import logging
-import gym
-import gym_duckietown
 import numpy as np
 from pathlib import Path
-from gym_duckietown.simulator import Simulator, DEFAULT_ROBOT_SPEED, DEFAULT_CAMERA_WIDTH, DEFAULT_CAMERA_HEIGHT
+import warnings
+
+try:
+    import gym
+    GYM_AVAILABLE = True
+except ImportError:
+    GYM_AVAILABLE = False
+    gym = None
+    warnings.warn("gym not available. Environment functionality will be limited.")
+
+try:
+    import gym_duckietown
+    from gym_duckietown.simulator import Simulator, DEFAULT_ROBOT_SPEED, DEFAULT_CAMERA_WIDTH, DEFAULT_CAMERA_HEIGHT
+    GYM_DUCKIETOWN_AVAILABLE = True
+except ImportError:
+    GYM_DUCKIETOWN_AVAILABLE = False
+    gym_duckietown = None
+    Simulator = None
+    DEFAULT_ROBOT_SPEED = 0.3
+    DEFAULT_CAMERA_WIDTH = 640
+    DEFAULT_CAMERA_HEIGHT = 480
+    warnings.warn("gym_duckietown not available. Duckietown environments will not be available.")
 
 from duckietown_utils.wrappers.observation_wrappers import *
 from duckietown_utils.wrappers.action_wrappers import *

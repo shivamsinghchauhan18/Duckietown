@@ -1,0 +1,33 @@
+{
+  "timestamp": "20250816_012315",
+  "loop": 5,
+  "loop_time_minutes": 0.003316450119018555,
+  "total_time_hours": 0.0003001407782236735,
+  "best_global_score": 62.251453220825695,
+  "plateau_counter": 0,
+  "population_size": 12,
+  "alive_trials": 12,
+  "hall_of_fame": [
+    [
+      62.251453220825695,
+      "trial_002"
+    ],
+    [
+      60.17855390982682,
+      "trial_000"
+    ],
+    [
+      57.140769141958586,
+      "trial_001"
+    ],
+    [
+      57.02207408478656,
+      "trial_009"
+    ],
+    [
+      56.86625480704371,
+      "trial_002"
+    ]
+  ],
+  "pareto_front_size": 15
+}

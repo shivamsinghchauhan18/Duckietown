@@ -1,0 +1,671 @@
+{
+  "timestamp": "20250816_011555",
+  "current_loop": 15,
+  "best_global_score": 62.55185313451464,
+  "plateau_counter": 1,
+  "population": [
+    {
+      "trial_id": "trial_000",
+      "hyperparams": {
+        "lr": 0.000400675978470615,
+        "gamma": 1.0324011439825018,
+        "gae_lambda": 0.9812417636696639,
+        "clip": 0.25696548888902204,
+        "entropy_coef": 0.04761367257239868,
+        "value_coef": 0.45975268982136486,
+        "grad_clip": 0.9176909848986603,
+        "batch_size": 65536,
+        "minibatches": 8,
+        "epochs": 4
+      },
+      "reward_weights": {
+        "centerline": 0.7065388163217262,
+        "heading": 0.23325355665383185,
+        "jerk": 0.02237772638116668,
+        "steering_change": 0.040001226793353
+      },
+      "current_score": 0.0,
+      "episodes_trained": 0,
+      "stage": "Foundation",
+      "alive": true
+    },
+    {
+      "trial_id": "trial_001",
+      "hyperparams": {
+        "lr": 0.0007344374594776163,
+        "gamma": 0.9732634314176085,
+        "gae_lambda": 1.0101459814470288,
+        "clip": 0.24591875708384053,
+        "entropy_coef": 0.03149201416390421,
+        "value_coef": 0.5142361884324367,
+        "grad_clip": 1.033636736651957,
+        "batch_size": 65536,
+        "minibatches": 8,
+        "epochs": 4
+      },
+      "reward_weights": {
+        "centerline": 0.7039214974459755,
+        "heading": 0.23731574163595107,
+        "jerk": 0.021684299668982256,
+        "steering_change": 0.023669816705383477
+      },
+      "current_score": 48.61206302814637,
+      "episodes_trained": 0,
+      "stage": "Foundation",
+      "alive": true
+    },
+    {
+      "trial_id": "trial_002",
+      "hyperparams": {
+        "lr": 0.0008959131522344938,
+        "gamma": 0.9909807952905785,
+        "gae_lambda": 0.989770541468132,
+        "clip": 0.2683479466404919,
+        "entropy_coef": 0.02987588346499112,
+        "value_coef": 0.5193955884024353,
+        "grad_clip": 1.0066744669946102,
+        "batch_size": 65536,
+        "minibatches": 8,
+        "epochs": 4
+      },
+      "reward_weights": {
+        "centerline": 0.7262171578910586,
+        "heading": 0.2826820042082893,
+        "jerk": 0.019031469538819474,
+        "steering_change": 0.021004422407682456
+      },
+      "current_score": 51.43278927442842,
+      "episodes_trained": 0,
+      "stage": "Foundation",
+      "alive": true
+    },
+    {
+      "trial_id": "trial_003",
+      "hyperparams": {
+        "lr": 0.000552458215246216,
+        "gamma": 1.0018055305411193,
+        "gae_lambda": 0.9593676169638043,
+        "clip": 0.2364658824214355,
+        "entropy_coef": 0.03445313477488375,
+        "value_coef": 0.48777890010684055,
+        "grad_clip": 0.9200521133158527,
+        "batch_size": 65536,
+        "minibatches": 8,
+        "epochs": 4
+      },
+      "reward_weights": {
+        "centerline": 0.5749153983429102,
+        "heading": 0.2330005177898715,
+        "jerk": 0.021579147834459647,
+        "steering_change": 0.03111593211378304
+      },
+      "current_score": 44.76303001087789,
+      "episodes_trained": 0,
+      "stage": "Foundation",
+      "alive": true
+    },
+    {
+      "trial_id": "trial_004",
+      "hyperparams": {
+        "lr": 0.000280501317947569,
+        "gamma": 1.022246813807109,
+        "gae_lambda": 0.9830343846367083,
+        "clip": 0.25816630879303637,
+        "entropy_coef": 0.05,
+        "value_coef": 0.4585473276588589,
+        "grad_clip": 0.9278329045138999,
+        "batch_size": 65536,
+        "minibatches": 8,
+        "epochs": 4
+      },
+      "reward_weights": {
+        "centerline": 0.7337117678727126,
+        "heading": 0.24972156860504446,
+        "jerk": 0.020183032549102368,
+        "steering_change": 0.03407317449035005
+      },
+      "current_score": 48.11312685795626,
+      "episodes_trained": 0,
+      "stage": "Foundation",
+      "alive": true
+    },
+    {
+      "trial_id": "trial_005",
+      "hyperparams": {
+        "lr": 0.0003217830576215199,
+        "gamma": 0.9909441914326581,
+        "gae_lambda": 0.9833834245248785,
+        "clip": 0.2580161845816316,
+        "entropy_coef": 0.05,
+        "value_coef": 0.4805055033751384,
+        "grad_clip": 0.9343342517779326,
+        "batch_size": 65536,
+        "minibatches": 8,
+        "epochs": 4
+      },
+      "reward_weights": {
+        "centerline": 0.5894576940099483,
+        "heading": 0.20434717799091073,
+        "jerk": 0.019625095916280692,
+        "steering_change": 0.03344853896256474
+      },
+      "current_score": 55.080076447603304,
+      "episodes_trained": 0,
+      "stage": "Foundation",
+      "alive": true
+    }
+  ],
+  "hall_of_fame": [
+    [
+      62.55185313451464,
+      {
+        "trial_id": "trial_005",
+        "hyperparams": {
+          "lr": 0.0009946711683563353,
+          "gamma": 0.9915021002414641,
+          "gae_lambda": 0.944757234734186,
+          "clip": 0.19104276145382848,
+          "entropy_coef": 0.010038471386924912,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.6072497295854653,
+          "heading": 0.3033794397105318,
+          "jerk": 0.020517701043931007,
+          "steering_change": 0.019275859984277995
+        },
+        "current_score": 62.55185313451464,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      59.957217601352724,
+      {
+        "trial_id": "trial_001",
+        "hyperparams": {
+          "lr": 0.0007591449717898348,
+          "gamma": 0.9934032692586389,
+          "gae_lambda": 0.9690326866124691,
+          "clip": 0.24795981636424994,
+          "entropy_coef": 0.005600160440940593,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.6760335491262665,
+          "heading": 0.27401043767981564,
+          "jerk": 0.017874503362140744,
+          "steering_change": 0.018374067443187283
+        },
+        "current_score": 59.957217601352724,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      58.92060505664777,
+      {
+        "trial_id": "trial_002",
+        "hyperparams": {
+          "lr": 0.0007306099398977169,
+          "gamma": 0.9983723995356125,
+          "gae_lambda": 0.9374794473393834,
+          "clip": 0.27288859706500634,
+          "entropy_coef": 0.006799403469688652,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.6564397431078147,
+          "heading": 0.2558867571327035,
+          "jerk": 0.01798104601393465,
+          "steering_change": 0.023585782088853702
+        },
+        "current_score": 58.92060505664777,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      58.35404444559242,
+      {
+        "trial_id": "trial_004",
+        "hyperparams": {
+          "lr": 0.001,
+          "gamma": 0.9595266514917923,
+          "gae_lambda": 0.9529597141444738,
+          "clip": 0.19913933703830305,
+          "entropy_coef": 0.009941863958516792,
+          "value_coef": 0.5114858205516543,
+          "grad_clip": 0.9899640385307196,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.5883940009045523,
+          "heading": 0.2955153299983163,
+          "jerk": 0.022575573236590395,
+          "steering_change": 0.021110863789666867
+        },
+        "current_score": 58.35404444559242,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      57.54587122369294,
+      {
+        "trial_id": "trial_001",
+        "hyperparams": {
+          "lr": 0.0007591449717898348,
+          "gamma": 0.9934032692586389,
+          "gae_lambda": 0.9690326866124691,
+          "clip": 0.24795981636424994,
+          "entropy_coef": 0.005600160440940593,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.6760335491262665,
+          "heading": 0.27401043767981564,
+          "jerk": 0.017874503362140744,
+          "steering_change": 0.018374067443187283
+        },
+        "current_score": 57.54587122369294,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      57.48262544313675,
+      {
+        "trial_id": "trial_000",
+        "hyperparams": {
+          "lr": 0.0003340470613922622,
+          "gamma": 1.035795604183803,
+          "gae_lambda": 0.9536661044733746,
+          "clip": 0.24407000930604864,
+          "entropy_coef": 0.044426220656678825,
+          "value_coef": 0.4769693349457824,
+          "grad_clip": 0.9343580635387578,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.6429614388817696,
+          "heading": 0.25115230683565515,
+          "jerk": 0.019232622174746968,
+          "steering_change": 0.033627065525262324
+        },
+        "current_score": 57.48262544313675,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      55.960707265268205,
+      {
+        "trial_id": "trial_003",
+        "hyperparams": {
+          "lr": 0.00016611779345279898,
+          "gamma": 0.9949726517733944,
+          "gae_lambda": 0.9016536373695992,
+          "clip": 0.2916983433272268,
+          "entropy_coef": 0.0027526367509834574,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.6465911336004717,
+          "heading": 0.2774226743065111,
+          "jerk": 0.02031641575926507,
+          "steering_change": 0.01887993471866139
+        },
+        "current_score": 55.960707265268205,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      55.72821326427102,
+      {
+        "trial_id": "trial_002",
+        "hyperparams": {
+          "lr": 0.0007306099398977169,
+          "gamma": 0.9983723995356125,
+          "gae_lambda": 0.9374794473393834,
+          "clip": 0.27288859706500634,
+          "entropy_coef": 0.010199105204532979,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.6564397431078147,
+          "heading": 0.2558867571327035,
+          "jerk": 0.01798104601393465,
+          "steering_change": 0.023585782088853702
+        },
+        "current_score": 55.72821326427102,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      55.71931046857425,
+      {
+        "trial_id": "trial_003",
+        "hyperparams": {
+          "lr": 0.00016611779345279898,
+          "gamma": 0.9949726517733944,
+          "gae_lambda": 0.9016536373695992,
+          "clip": 0.2916983433272268,
+          "entropy_coef": 0.0027526367509834574,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.6465911336004717,
+          "heading": 0.2774226743065111,
+          "jerk": 0.02031641575926507,
+          "steering_change": 0.01887993471866139
+        },
+        "current_score": 55.71931046857425,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      55.441834126010484,
+      {
+        "trial_id": "trial_002",
+        "hyperparams": {
+          "lr": 0.0007306099398977169,
+          "gamma": 0.9983723995356125,
+          "gae_lambda": 0.9374794473393834,
+          "clip": 0.27288859706500634,
+          "entropy_coef": 0.010199105204532979,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.6564397431078147,
+          "heading": 0.2558867571327035,
+          "jerk": 0.01798104601393465,
+          "steering_change": 0.023585782088853702
+        },
+        "current_score": 55.441834126010484,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ]
+  ],
+  "config": {
+    "action_space": "continuous",
+    "algorithm": {
+      "default": "PPO",
+      "ppo": {
+        "action_std_final": 0.1,
+        "action_std_init": 0.6,
+        "batch_size": 65536,
+        "clip_param": 0.2,
+        "entropy_coef": 0.01,
+        "epochs": 4,
+        "gae_lambda": 0.95,
+        "gamma": 0.995,
+        "grad_clip": 0.5,
+        "lr": 0.0003,
+        "minibatches": 8,
+        "value_coef": 0.5
+      }
+    },
+    "composite_score": {
+      "deviation_weight": 0.08,
+      "heading_weight": 0.06,
+      "jerk_weight": 0.06,
+      "length_weight": 0.1,
+      "reward_weight": 0.25,
+      "sr_weight": 0.45
+    },
+    "curriculum": {
+      "auto_advance": true,
+      "enabled": true,
+      "stages": [
+        {
+          "difficulty": 0.3,
+          "env_config": {
+            "domain_randomization": false,
+            "maps": [
+              "loop_empty"
+            ]
+          },
+          "episodes": 1000,
+          "name": "Foundation",
+          "success_criteria": {
+            "sr_threshold": 0.97
+          }
+        },
+        {
+          "difficulty": 0.5,
+          "env_config": {
+            "domain_randomization": true,
+            "maps": [
+              "small_loop",
+              "zigzag_dists"
+            ]
+          },
+          "episodes": 1500,
+          "name": "Basic_Curves",
+          "success_criteria": {
+            "sr_threshold": 0.92
+          }
+        },
+        {
+          "difficulty": 0.85,
+          "env_config": {
+            "domain_randomization": true,
+            "maps": [
+              "4way",
+              "udem1"
+            ]
+          },
+          "episodes": 2000,
+          "name": "Complex_Scenarios",
+          "success_criteria": {
+            "sr_threshold": 0.8
+          }
+        }
+      ]
+    },
+    "environment": {
+      "base_reward": 1.0,
+      "reward_shaping": {
+        "alpha": 0.6,
+        "beta": 0.3,
+        "delta": 0.02,
+        "gamma": 0.02,
+        "sigma_d": 0.25,
+        "sigma_theta": 10.0
+      },
+      "speed_target": {
+        "max_speed": 2.0,
+        "min_speed": 0.5,
+        "target_speed": 1.5
+      }
+    },
+    "evaluation": {
+      "deterministic": true,
+      "stress_tests": true
+    },
+    "evaluation_seeds": 20,
+    "logging": {
+      "log_level": "INFO",
+      "tensorboard": {
+        "enabled": true,
+        "log_dir": "logs/master_orchestrator/tensorboard"
+      },
+      "wandb": {
+        "enabled": false,
+        "project": "duckietown-master-orchestrator"
+      }
+    },
+    "max_outer_loops": 15,
+    "observation": {
+      "frame_stack": 4,
+      "size": [
+        64,
+        64
+      ],
+      "type": "rgb"
+    },
+    "optimization_loop": {
+      "adaptation": {
+        "adjust_reward_weights": true,
+        "increase_exploration": true,
+        "try_alternative_algorithms": true
+      },
+      "plateau_detection": {
+        "enabled": true,
+        "min_improvement": 0.01,
+        "patience": 3
+      }
+    },
+    "population_based_training": {
+      "enabled": true,
+      "exploit_threshold": 0.25,
+      "explore_threshold": 0.25,
+      "hyperparameter_ranges": {
+        "clip_param": [
+          0.1,
+          0.3
+        ],
+        "entropy_coef": [
+          0.001,
+          0.03
+        ],
+        "gae_lambda": [
+          0.9,
+          0.98
+        ],
+        "gamma": [
+          0.99,
+          0.999
+        ],
+        "lr": [
+          1e-05,
+          0.001
+        ]
+      }
+    },
+    "population_size": 6,
+    "project": {
+      "framework": "PyTorch",
+      "hardware": "CPU",
+      "max_daily_budget_hours": 24,
+      "name": "Duckietown Master RL Orchestrator"
+    },
+    "steps_per_loop": 2000000,
+    "success_thresholds": {
+      "curvy": {
+        "d_threshold": 0.15,
+        "h_threshold": 10.0,
+        "j_threshold": 0.1,
+        "r_threshold": 0.8,
+        "sr_threshold": 0.9
+      },
+      "easy_loop": {
+        "d_threshold": 0.12,
+        "h_threshold": 8.0,
+        "j_threshold": 0.08,
+        "r_threshold": 0.85,
+        "sr_threshold": 0.95
+      },
+      "intersection": {
+        "d_threshold": 0.2,
+        "h_threshold": 12.0,
+        "j_threshold": 0.12,
+        "r_threshold": 0.75,
+        "sr_threshold": 0.85,
+        "violations_threshold": 0.03
+      },
+      "town": {
+        "d_threshold": 0.2,
+        "h_threshold": 12.0,
+        "j_threshold": 0.12,
+        "r_threshold": 0.75,
+        "sr_threshold": 0.85,
+        "violations_threshold": 0.03
+      }
+    },
+    "system": {
+      "max_concurrent_evaluations": 8,
+      "num_cpus": 0,
+      "num_gpus": 0,
+      "parallel_trials": 4
+    },
+    "target_maps": [
+      {
+        "difficulty": "easy",
+        "name": "loop_empty",
+        "type": "easy_loop"
+      },
+      {
+        "difficulty": "easy",
+        "name": "small_loop",
+        "type": "easy_loop"
+      },
+      {
+        "difficulty": "moderate",
+        "name": "zigzag_dists",
+        "type": "curvy"
+      },
+      {
+        "difficulty": "hard",
+        "name": "4way",
+        "type": "intersection"
+      },
+      {
+        "difficulty": "hard",
+        "name": "udem1",
+        "type": "town"
+      }
+    ]
+  }
+}

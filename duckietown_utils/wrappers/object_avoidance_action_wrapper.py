@@ -15,10 +15,15 @@ import gym
 import numpy as np
 from gym import spaces
 
+from ..error_handling import (
+    ErrorHandlingMixin, ErrorContext, ErrorSeverity, RecoveryStrategy,
+    SafetyViolationError, ActionValidationError, SafetyOverrideSystem
+)
+
 logger = logging.getLogger(__name__)
 
 
-class ObjectAvoidanceActionWrapper(gym.ActionWrapper):
+class ObjectAvoidanceActionWrapper(ErrorHandlingMixin, gym.ActionWrapper):
     """
     Gym action wrapper that modifies actions to avoid detected objects.
     
@@ -75,6 +80,10 @@ class ObjectAvoidanceActionWrapper(gym.ActionWrapper):
         self.enable_emergency_brake = enable_emergency_brake
         self.debug_logging = debug_logging
         
+        # Initialize error handling and safety systems
+        super().__init__(env)  # Initialize ErrorHandlingMixin
+        self.safety_override = SafetyOverrideSystem()
+        
         # State tracking
         self.last_action = np.zeros(self.action_space.shape)
         self.last_avoidance_force = np.array([0.0, 0.0])  # [lateral, longitudinal]
@@ -114,44 +123,249 @@ class ObjectAvoidanceActionWrapper(gym.ActionWrapper):
     
     def action(self, action: np.ndarray) -> np.ndarray:
         """
-        Modify action to avoid detected objects using potential field algorithm.
+        Modify action to avoid detected objects with comprehensive error handling.
         
         Args:
             action: Original action from RL agent [left_wheel_vel, right_wheel_vel]
             
         Returns:
-            Modified action with object avoidance
+            Modified action with object avoidance and safety validation
         """
-        # Ensure action is numpy array
-        if isinstance(action, (list, tuple)):
-            action = np.array(action)
+        context = ErrorContext(
+            component="ObjectAvoidanceActionWrapper",
+            operation="action",
+            error_type="",
+            severity=ErrorSeverity.HIGH,
+            recovery_strategy=RecoveryStrategy.FALLBACK,
+            max_retries=1
+        )
         
-        # Get current observation for detection data
-        current_obs = self._get_current_observation()
+        try:
+            # Validate input action
+            validated_action = self._validate_input_action(action)
+            
+            # Get current observation for detection data
+            current_obs = self._get_current_observation()
+            
+            # Extract detection information with error handling
+            detections = self._extract_detections_safe(current_obs)
+            
+            # Calculate avoidance forces with error handling
+            avoidance_force = self._calculate_avoidance_force_safe(detections)
+            
+            # Apply emergency braking if needed
+            emergency_action = self._check_emergency_brake_safe(detections, validated_action)
+            if emergency_action is not None:
+                # Validate emergency action through safety system
+                is_safe, safe_action, violations = self.safety_override.validate_action(
+                    emergency_action, current_obs, self._get_system_state()
+                )
+                self._update_stats(emergency_brake=True)
+                return safe_action
+            
+            # Apply avoidance modifications
+            modified_action = self._apply_avoidance_force_safe(validated_action, avoidance_force)
+            
+            # Apply action smoothing
+            smoothed_action = self._apply_action_smoothing_safe(modified_action)
+            
+            # Final safety validation
+            is_safe, final_action, violations = self.safety_override.validate_action(
+                smoothed_action, current_obs, self._get_system_state()
+            )
+            
+            if not is_safe:
+                logger.warning(f"Safety violations detected: {violations}")
+                for violation in violations:
+                    logger.warning(f"  - {violation}")
+            
+            # Update state and statistics
+            self._update_state(final_action, avoidance_force)
+            self._update_stats(avoidance_active=np.linalg.norm(avoidance_force) > 0.01)
+            
+            return final_action
+            
+        except ActionValidationError as e:
+            # Handle action validation errors
+            recovery_result = self._handle_error(e, context, self._get_safe_action())
+            return recovery_result.fallback_value
+            
+        except SafetyViolationError as e:
+            # Handle safety violations with emergency stop
+            context.severity = ErrorSeverity.CRITICAL
+            context.recovery_strategy = RecoveryStrategy.EMERGENCY_STOP
+            recovery_result = self._handle_error(e, context, np.array([0.0, 0.0]))
+            return recovery_result.fallback_value
+            
+        except Exception as e:
+            # Handle all other errors
+            recovery_result = self._handle_error(e, context, self._get_safe_action())
+            logger.error(f"Unexpected error in object avoidance: {e}")
+            return recovery_result.fallback_value
+    
+    def _validate_input_action(self, action: Union[np.ndarray, list, tuple]) -> np.ndarray:
+        """
+        Validate and convert input action to proper format.
         
-        # Extract detection information
-        detections = self._extract_detections(current_obs)
+        Args:
+            action: Input action in various formats
+            
+        Returns:
+            Validated numpy array action
+            
+        Raises:
+            ActionValidationError: If action is invalid
+        """
+        try:
+            # Convert to numpy array
+            if isinstance(action, (list, tuple)):
+                action = np.array(action, dtype=np.float32)
+            elif not isinstance(action, np.ndarray):
+                raise ActionValidationError(f"Invalid action type: {type(action)}")
+            
+            # Check shape
+            if action.shape != self.action_space.shape:
+                raise ActionValidationError(f"Invalid action shape: {action.shape}, expected: {self.action_space.shape}")
+            
+            # Check for NaN or infinite values
+            if np.any(np.isnan(action)) or np.any(np.isinf(action)):
+                raise ActionValidationError("Action contains NaN or infinite values")
+            
+            # Check bounds
+            if hasattr(self.action_space, 'low') and hasattr(self.action_space, 'high'):
+                if np.any(action < self.action_space.low) or np.any(action > self.action_space.high):
+                    # Clip to bounds with warning
+                    logger.warning(f"Action out of bounds, clipping: {action}")
+                    action = np.clip(action, self.action_space.low, self.action_space.high)
+            
+            return action.astype(np.float32)
+            
+        except Exception as e:
+            raise ActionValidationError(f"Action validation failed: {e}")
+    
+    def _extract_detections_safe(self, observation: Union[Dict[str, Any], np.ndarray]) -> List[Dict[str, Any]]:
+        """
+        Safely extract detection information from observation.
         
-        # Calculate avoidance forces
-        avoidance_force = self._calculate_avoidance_force(detections)
+        Args:
+            observation: Environment observation containing detection data
+            
+        Returns:
+            List of detection dictionaries (empty list if extraction fails)
+        """
+        try:
+            return self._extract_detections(observation)
+        except Exception as e:
+            logger.warning(f"Failed to extract detections: {e}")
+            return []
+    
+    def _calculate_avoidance_force_safe(self, detections: List[Dict[str, Any]]) -> np.ndarray:
+        """
+        Safely calculate avoidance forces with error handling.
         
-        # Apply emergency braking if needed
-        emergency_action = self._check_emergency_brake(detections, action)
-        if emergency_action is not None:
-            self._update_stats(emergency_brake=True)
-            return emergency_action
+        Args:
+            detections: List of detection dictionaries
+            
+        Returns:
+            Avoidance force vector [lateral, longitudinal]
+        """
+        try:
+            force = self._calculate_avoidance_force(detections)
+            
+            # Validate force vector
+            if not isinstance(force, np.ndarray) or force.shape != (2,):
+                logger.warning("Invalid avoidance force shape, using zero force")
+                return np.array([0.0, 0.0])
+            
+            if np.any(np.isnan(force)) or np.any(np.isinf(force)):
+                logger.warning("Avoidance force contains NaN/inf, using zero force")
+                return np.array([0.0, 0.0])
+            
+            # Limit force magnitude
+            force_magnitude = np.linalg.norm(force)
+            if force_magnitude > self.max_avoidance_action:
+                force = force * (self.max_avoidance_action / force_magnitude)
+            
+            return force
+            
+        except Exception as e:
+            logger.error(f"Error calculating avoidance force: {e}")
+            return np.array([0.0, 0.0])
+    
+    def _check_emergency_brake_safe(self, detections: List[Dict[str, Any]], action: np.ndarray) -> Optional[np.ndarray]:
+        """
+        Safely check for emergency brake conditions.
         
-        # Apply avoidance modifications
-        modified_action = self._apply_avoidance_force(action, avoidance_force)
+        Args:
+            detections: List of detection dictionaries
+            action: Current action
+            
+        Returns:
+            Emergency brake action if needed, None otherwise
+        """
+        try:
+            return self._check_emergency_brake(detections, action)
+        except Exception as e:
+            logger.error(f"Error in emergency brake check: {e}")
+            # If emergency brake check fails, assume emergency and return stop action
+            return np.array([0.0, 0.0])
+    
+    def _apply_avoidance_force_safe(self, action: np.ndarray, avoidance_force: np.ndarray) -> np.ndarray:
+        """
+        Safely apply avoidance force to action.
         
-        # Apply action smoothing
-        smoothed_action = self._apply_action_smoothing(modified_action)
+        Args:
+            action: Original action
+            avoidance_force: Avoidance force to apply
+            
+        Returns:
+            Modified action with avoidance
+        """
+        try:
+            return self._apply_avoidance_force(action, avoidance_force)
+        except Exception as e:
+            logger.error(f"Error applying avoidance force: {e}")
+            return action  # Return original action if modification fails
+    
+    def _apply_action_smoothing_safe(self, action: np.ndarray) -> np.ndarray:
+        """
+        Safely apply action smoothing.
         
-        # Update state and statistics
-        self._update_state(smoothed_action, avoidance_force)
-        self._update_stats(avoidance_active=np.linalg.norm(avoidance_force) > 0.01)
+        Args:
+            action: Action to smooth
+            
+        Returns:
+            Smoothed action
+        """
+        try:
+            return self._apply_action_smoothing(action)
+        except Exception as e:
+            logger.error(f"Error in action smoothing: {e}")
+            return action  # Return unsmoothed action if smoothing fails
+    
+    def _get_safe_action(self) -> np.ndarray:
+        """
+        Get a safe fallback action.
         
-        return smoothed_action
+        Returns:
+            Safe action (slow forward movement)
+        """
+        return np.array([0.1, 0.1])  # Slow forward movement
+    
+    def _get_system_state(self) -> Dict[str, Any]:
+        """
+        Get current system state for safety validation.
+        
+        Returns:
+            Dictionary with system state information
+        """
+        return {
+            'error_count': self.get_error_stats().get('total_errors', 0),
+            'emergency_brake_active': self.emergency_brake_active,
+            'avoidance_active': self.avoidance_active,
+            'memory_usage': 0.0,  # Could be enhanced with actual memory monitoring
+            'critical_failure': False
+        }
     
     def _get_current_observation(self) -> Union[Dict[str, Any], np.ndarray]:
         """

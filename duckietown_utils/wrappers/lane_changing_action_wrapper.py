@@ -18,6 +18,11 @@ import gym
 import numpy as np
 from gym import spaces
 
+from ..error_handling import (
+    ErrorHandlingMixin, ErrorContext, ErrorSeverity, RecoveryStrategy,
+    SafetyViolationError, ActionValidationError, SafetyOverrideSystem
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -53,7 +58,7 @@ class LaneInfo:
     is_available: bool = True
 
 
-class LaneChangingActionWrapper(gym.ActionWrapper):
+class LaneChangingActionWrapper(ErrorHandlingMixin, gym.ActionWrapper):
     """
     Gym action wrapper that enables dynamic lane changing decisions.
     

@@ -1,0 +1,172 @@
+action_space: continuous
+algorithm:
+  default: PPO
+  ppo:
+    action_std_final: 0.1
+    action_std_init: 0.6
+    batch_size: 65536
+    clip_param: 0.2
+    entropy_coef: 0.01
+    epochs: 4
+    gae_lambda: 0.95
+    gamma: 0.995
+    grad_clip: 0.5
+    lr: 0.0003
+    minibatches: 8
+    value_coef: 0.5
+composite_score:
+  deviation_weight: 0.08
+  heading_weight: 0.06
+  jerk_weight: 0.06
+  length_weight: 0.1
+  reward_weight: 0.25
+  sr_weight: 0.45
+curriculum:
+  auto_advance: true
+  enabled: true
+  stages:
+  - difficulty: 0.3
+    env_config:
+      domain_randomization: false
+      maps:
+      - loop_empty
+    episodes: 1000
+    name: Foundation
+    success_criteria:
+      sr_threshold: 0.97
+  - difficulty: 0.5
+    env_config:
+      domain_randomization: true
+      maps:
+      - small_loop
+      - zigzag_dists
+    episodes: 1500
+    name: Basic_Curves
+    success_criteria:
+      sr_threshold: 0.92
+  - difficulty: 0.85
+    env_config:
+      domain_randomization: true
+      maps:
+      - 4way
+      - udem1
+    episodes: 2000
+    name: Complex_Scenarios
+    success_criteria:
+      sr_threshold: 0.8
+environment:
+  base_reward: 1.0
+  reward_shaping:
+    alpha: 0.6
+    beta: 0.3
+    delta: 0.02
+    gamma: 0.02
+    sigma_d: 0.25
+    sigma_theta: 10.0
+  speed_target:
+    max_speed: 2.0
+    min_speed: 0.5
+    target_speed: 1.5
+evaluation:
+  deterministic: true
+  stress_tests: true
+evaluation_seeds: 10
+logging:
+  log_level: INFO
+  tensorboard:
+    enabled: true
+    log_dir: logs/master_orchestrator/tensorboard
+  wandb:
+    enabled: false
+    project: duckietown-master-orchestrator
+max_outer_loops: 5
+observation:
+  frame_stack: 4
+  size:
+  - 64
+  - 64
+  type: rgb
+optimization_loop:
+  adaptation:
+    adjust_reward_weights: true
+    increase_exploration: true
+    try_alternative_algorithms: true
+  plateau_detection:
+    enabled: true
+    min_improvement: 0.01
+    patience: 3
+population_based_training:
+  enabled: true
+  exploit_threshold: 0.25
+  explore_threshold: 0.25
+  hyperparameter_ranges:
+    clip_param:
+    - 0.1
+    - 0.3
+    entropy_coef:
+    - 0.001
+    - 0.03
+    gae_lambda:
+    - 0.9
+    - 0.98
+    gamma:
+    - 0.99
+    - 0.999
+    lr:
+    - 1.0e-05
+    - 0.001
+population_size: 4
+project:
+  framework: PyTorch
+  hardware: CPU
+  max_daily_budget_hours: 24
+  name: Duckietown Master RL Orchestrator
+steps_per_loop: 2000000
+success_thresholds:
+  curvy:
+    d_threshold: 0.15
+    h_threshold: 10.0
+    j_threshold: 0.1
+    r_threshold: 0.8
+    sr_threshold: 0.9
+  easy_loop:
+    d_threshold: 0.12
+    h_threshold: 8.0
+    j_threshold: 0.08
+    r_threshold: 0.85
+    sr_threshold: 0.95
+  intersection:
+    d_threshold: 0.2
+    h_threshold: 12.0
+    j_threshold: 0.12
+    r_threshold: 0.75
+    sr_threshold: 0.85
+    violations_threshold: 0.03
+  town:
+    d_threshold: 0.2
+    h_threshold: 12.0
+    j_threshold: 0.12
+    r_threshold: 0.75
+    sr_threshold: 0.85
+    violations_threshold: 0.03
+system:
+  max_concurrent_evaluations: 8
+  num_cpus: 0
+  num_gpus: 0
+  parallel_trials: 4
+target_maps:
+- difficulty: easy
+  name: loop_empty
+  type: easy_loop
+- difficulty: easy
+  name: small_loop
+  type: easy_loop
+- difficulty: moderate
+  name: zigzag_dists
+  type: curvy
+- difficulty: hard
+  name: 4way
+  type: intersection
+- difficulty: hard
+  name: udem1
+  type: town

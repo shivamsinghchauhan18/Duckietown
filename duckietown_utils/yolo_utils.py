@@ -17,11 +17,36 @@ from PIL import Image
 try:
     from ultralytics import YOLO
     YOLO_AVAILABLE = True
+    print("✅ ultralytics available")
 except ImportError:
     YOLO_AVAILABLE = False
-    YOLO = None
-    warnings.warn("ultralytics not available. YOLO functionality will be disabled.")
-
+    print("⚠️ ultralytics not available - using mock implementation")
+    
+    # Mock YOLO class for when ultralytics is not available
+    class MockYOLO:
+        def __init__(self, model_path=None):
+            self.model_path = model_path
+            print(f"🔧 Mock YOLO initialized with model: {model_path}")
+        
+        def __call__(self, image, *args, **kwargs):
+            # Return empty results
+            return MockYOLOResults()
+        
+        def predict(self, image, *args, **kwargs):
+            return [MockYOLOResults()]
+    
+    class MockYOLOResults:
+        def __init__(self):
+            self.boxes = MockBoxes()
+    
+    class MockBoxes:
+        def __init__(self):
+            self.data = []
+            self.xyxy = []
+            self.conf = []
+            self.cls = []
+    
+    YOLO = MockYOLO
 logger = logging.getLogger(__name__)
 
 

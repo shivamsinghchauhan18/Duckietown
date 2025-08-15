@@ -1,0 +1,26 @@
+{
+  "timestamp": "20250816_011530",
+  "rank": 3,
+  "global_score": 60.08722588021102,
+  "trial_id": "trial_002",
+  "hyperparameters": {
+    "lr": 0.00018537387832312112,
+    "gamma": 0.9924586258707351,
+    "gae_lambda": 0.937905717016371,
+    "clip": 0.1502895733005066,
+    "entropy_coef": 0.019932445945420624,
+    "value_coef": 0.5,
+    "grad_clip": 1.0,
+    "batch_size": 65536,
+    "minibatches": 8,
+    "epochs": 4
+  },
+  "reward_weights": {
+    "centerline": 0.509203180765752,
+    "heading": 0.26527568520789835,
+    "jerk": 0.023302008159098112,
+    "steering_change": 0.020678409372892
+  },
+  "episodes_trained": 0,
+  "stage": "Foundation"
+}

@@ -1,0 +1,416 @@
+# 🏆 MASTER RL ORCHESTRATOR CONFIGURATION 🏆
+# Continuous, Results-Oriented RL Training for Duckietown
+# Based on the master prompt for state-of-the-art performance
+
+# Project Context
+project:
+  name: "Duckietown Master RL Orchestrator"
+  framework: "PyTorch"
+  hardware: "CPU"  # Can be changed to GPU
+  max_daily_budget_hours: 24
+
+# Action and Observation Space
+action_space: "continuous"  # continuous throttle+steer | discrete 5-7 actions
+observation:
+  type: "rgb"  # RGB 64×64 + proprioceptive | state features
+  size: [64, 64]
+  frame_stack: 4
+
+# Target Maps with Difficulty Ratings
+target_maps:
+  - name: "loop_empty"
+    difficulty: "easy"
+    type: "easy_loop"
+  - name: "small_loop" 
+    difficulty: "easy"
+    type: "easy_loop"
+  - name: "zigzag_dists"
+    difficulty: "moderate"
+    type: "curvy"
+  - name: "4way"
+    difficulty: "hard"
+    type: "intersection"
+  - name: "udem1"
+    difficulty: "hard"
+    type: "town"
+
+# Evaluation Configuration
+evaluation:
+  seeds_per_map: 50  # Fixed seeds per map for reproducibility
+  deterministic_policy: true
+  stress_tests: true
+
+# Primary Objectives & Success Gates
+success_thresholds:
+  # Easy loop maps
+  easy_loop:
+    sr_threshold: 0.95    # Success Rate ≥ 95%
+    r_threshold: 0.85     # Mean reward ≥ 0.85
+    d_threshold: 0.12     # Mean lateral deviation ≤ 0.12 m
+    h_threshold: 8.0      # Mean heading error ≤ 8°
+    j_threshold: 0.08     # Smoothness/Jerk ≤ 0.08
+  
+  # Curvy maps
+  curvy:
+    sr_threshold: 0.90
+    r_threshold: 0.80
+    d_threshold: 0.15
+    h_threshold: 10.0
+    j_threshold: 0.10
+  
+  # Intersection/town maps
+  intersection:
+    sr_threshold: 0.85
+    r_threshold: 0.75
+    d_threshold: 0.20
+    h_threshold: 12.0
+    j_threshold: 0.12
+    violations_threshold: 0.03  # Traffic-law violations < 3%
+  
+  # Heavy randomization/night
+  heavy_randomization:
+    sr_threshold: 0.80
+    r_threshold: 0.70
+    d_threshold: 0.25
+    h_threshold: 15.0
+    j_threshold: 0.15
+
+# Global Pass Criteria
+global_pass:
+  maps_pass_rate: 0.90  # ≥ 90% of maps meet their thresholds
+  min_sr_threshold: 0.75  # No map below SR < 75%
+
+# Composite Evaluation Score Weights
+composite_score:
+  sr_weight: 0.45      # Success Rate (45%)
+  reward_weight: 0.25  # Mean Reward (25%)
+  length_weight: 0.10  # Episode Length (10%)
+  deviation_weight: 0.08  # Lateral Deviation (8%)
+  heading_weight: 0.06    # Heading Error (6%)
+  jerk_weight: 0.06      # Smoothness/Jerk (6%)
+
+# Environment & Reward Shaping
+environment:
+  # Base reward configuration
+  base_reward: 1.0  # +1 per step alive (or +progress per meter)
+  
+  # Reward shaping parameters
+  reward_shaping:
+    # Centerline alignment: r_c = α * exp(-d²/σ_d²)
+    alpha: 0.6
+    sigma_d: 0.25  # meters
+    
+    # Heading alignment: r_h = β * exp(-θ²/σ_θ²)
+    beta: 0.3
+    sigma_theta: 10.0  # degrees
+    
+    # Smoothness penalty: r_j = -γ * |Δa| - δ * |Δsteer|
+    gamma: 0.02
+    delta: 0.02
+    
+    # Hard penalties
+    collision_penalty: -1.0
+    off_lane_penalty: -0.5
+    reversing_penalty: -0.1  # κ value
+  
+  # Speed targets
+  speed_target:
+    min_speed: 0.5
+    max_speed: 2.0
+    target_speed: 1.5
+
+# Algorithm Configuration (Default: PPO)
+algorithm:
+  default: "PPO"
+  
+  # PPO Configuration
+  ppo:
+    # Learning parameters
+    lr: 3.0e-4
+    lr_schedule: "constant"  # constant | linear | cosine
+    gamma: 0.995
+    gae_lambda: 0.95
+    
+    # PPO-specific
+    clip_param: 0.2
+    entropy_coef: 0.01
+    value_coef: 0.5
+    grad_clip: 0.5
+    
+    # Training configuration
+    batch_size: 65536  # ≥ 64k steps/iter
+    minibatches: 8     # 4–8 minibatches
+    epochs: 4          # 3–10 epochs
+    
+    # Action std annealing
+    action_std_init: 0.6
+    action_std_final: 0.1
+    action_std_decay_rate: 0.05
+    
+    # Normalization
+    obs_normalization: true
+    reward_normalization: true
+    advantage_normalization: true
+  
+  # SAC Alternative (for continuous actions)
+  sac:
+    lr: 3.0e-4
+    gamma: 0.99
+    tau: 0.005
+    alpha: 0.2
+    target_update_interval: 1
+    automatic_entropy_tuning: true
+  
+  # DQN Alternative (for discrete actions)
+  dqn:
+    lr: 1.0e-4
+    gamma: 0.99
+    epsilon_start: 1.0
+    epsilon_end: 0.01
+    epsilon_decay: 0.995
+    target_update_freq: 1000
+    dueling: true
+    double_dqn: true
+    prioritized_replay: true
+
+# Architecture Configuration
+model:
+  # CNN Encoder (IMPALA or ResNet style)
+  encoder: "impala"  # impala | resnet
+  
+  # IMPALA CNN
+  impala_cnn:
+    depths: [16, 32, 32]
+    
+  # ResNet CNN  
+  resnet_cnn:
+    layers: [2, 2, 2, 2]
+    
+  # Fully connected layers
+  fc_layers: [512, 512]
+  
+  # Recurrent layers
+  use_lstm: true
+  lstm_hidden_size: 256
+  
+  # Normalization
+  layer_norm: true
+  
+  # Activation
+  activation: "tanh"  # tanh | relu | elu
+
+# Population-Based Training Configuration
+population_based_training:
+  enabled: true
+  population_size: 8
+  
+  # Evolution parameters
+  exploit_threshold: 0.25  # Bottom 25% killed
+  explore_threshold: 0.25  # Top 25% cloned
+  
+  # Hyperparameter ranges for perturbation
+  hyperparameter_ranges:
+    lr: [1.0e-5, 1.0e-3]
+    entropy_coef: [0.001, 0.03]
+    clip_param: [0.1, 0.3]
+    gamma: [0.99, 0.999]
+    gae_lambda: [0.9, 0.98]
+  
+  # Reward weight perturbation
+  reward_weight_perturbation: 0.2  # ±20%
+
+# Curriculum Learning Configuration
+curriculum:
+  enabled: true
+  auto_advance: true
+  
+  stages:
+    - name: "Foundation"
+      episodes: 1000
+      difficulty: 0.3
+      success_criteria:
+        sr_threshold: 0.97
+      env_config:
+        maps: ["loop_empty"]
+        domain_randomization: false
+        weather: false
+        obstacles: false
+    
+    - name: "Basic_Curves"
+      episodes: 1500
+      difficulty: 0.5
+      success_criteria:
+        sr_threshold: 0.92
+      env_config:
+        maps: ["small_loop", "zigzag_dists"]
+        domain_randomization: true
+        weather: false
+        obstacles: false
+    
+    - name: "Intersections"
+      episodes: 2000
+      difficulty: 0.7
+      success_criteria:
+        sr_threshold: 0.88
+        violations_rate: 0.03
+      env_config:
+        maps: ["4way"]
+        domain_randomization: true
+        weather: false
+        obstacles: true
+    
+    - name: "Complex_Scenarios"
+      episodes: 2000
+      difficulty: 0.85
+      success_criteria:
+        sr_threshold: 0.80
+      env_config:
+        maps: ["udem1"]
+        domain_randomization: true
+        weather: true
+        obstacles: true
+
+# Exploration & Generalization
+exploration:
+  # Domain randomization per episode
+  domain_randomization:
+    lighting_variation: 0.3
+    texture_variation: 0.2
+    camera_pose_variation: 0.1
+    friction_variation: 0.15
+    wheel_noise: 0.1
+    spawn_pose_variation: 0.2
+    obstacle_density: 0.1
+    traffic_density: 0.15
+  
+  # Parameter noise (early stages)
+  parameter_noise:
+    enabled: true
+    initial_stddev: 0.1
+    final_stddev: 0.01
+    decay_rate: 0.99
+
+# Optimization Loop Configuration
+optimization_loop:
+  max_outer_loops: 50
+  steps_per_loop: 2_000_000  # 2-5M per outer loop
+  
+  # Plateau detection
+  plateau_detection:
+    enabled: true
+    patience: 3  # loops without improvement
+    min_improvement: 0.01  # 1% minimum improvement
+  
+  # Adaptation strategies
+  adaptation:
+    increase_exploration: true
+    try_alternative_algorithms: true
+    adjust_reward_weights: true
+    increase_randomization: true
+
+# Checkpointing & Evaluation
+checkpointing:
+  save_every_loops: 5
+  keep_top_k: 5
+  save_best_per_map: true
+  
+  # Multi-champion archive
+  hall_of_fame_size: 10
+  pareto_archive_enabled: true
+
+# Logging & Monitoring
+logging:
+  log_level: "INFO"
+  log_interval: 100
+  
+  # Tensorboard
+  tensorboard:
+    enabled: true
+    log_dir: "logs/master_orchestrator/tensorboard"
+    log_images: true
+    log_histograms: true
+  
+  # Weights & Biases
+  wandb:
+    enabled: false  # Set to true if using W&B
+    project: "duckietown-master-orchestrator"
+    entity: "your-entity"
+    tags: ["master", "orchestrator", "pbt", "multi-map"]
+  
+  # Advanced logging
+  log_gradients: false
+  log_policy_entropy: true
+  log_value_estimates: true
+  log_attention_maps: false
+
+# Reporting Configuration
+reporting:
+  # Report generation
+  generate_reports: true
+  report_interval: 5  # Every 5 loops
+  
+  # Report contents
+  include_plots: true
+  include_videos: false
+  include_detailed_metrics: true
+  
+  # Performance breakdown
+  per_map_analysis: true
+  failure_analysis: true
+  learning_curve_analysis: true
+  
+  # Visualization
+  plot_learning_curves: true
+  plot_pareto_front: true
+  plot_hyperparameter_evolution: true
+
+# Reproducibility & Safety
+reproducibility:
+  # Seed management
+  global_seed: 42
+  deterministic_cudnn: true
+  
+  # Validation
+  holdout_seed_set: true
+  holdout_seeds: 100
+  
+  # Safety
+  emergency_stop_enabled: true
+  max_training_time_hours: 48
+  auto_save_on_interrupt: true
+
+# System Configuration
+system:
+  # Resource allocation
+  num_cpus: 0  # Use all available
+  num_gpus: 0  # CPU training by default
+  
+  # Memory management
+  memory_limit_gb: 16
+  
+  # Parallel training
+  parallel_trials: 4
+  max_concurrent_evaluations: 8
+  
+  # Ray configuration (if using distributed training)
+  ray_config:
+    ignore_reinit_error: true
+    include_dashboard: false
+    object_store_memory: 2000000000  # 2GB
+
+# Export Configuration
+export:
+  # Model formats
+  formats:
+    - "pytorch"
+    - "onnx"
+    - "json"  # Hyperparameters and config
+  
+  # Export triggers
+  export_on_improvement: true
+  export_final_champions: true
+  export_pareto_solutions: true
+  
+  # Deployment preparation
+  quantization: false
+  optimization: "speed"  # speed | accuracy | balanced

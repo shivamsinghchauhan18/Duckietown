@@ -1,0 +1,505 @@
+# 🏆 LEGENDARY CHAMPION CONFIGURATION 🏆
+# Ultimate configuration for achieving 95+ performance
+# Deploying the best of the best strategies
+
+# Project Context - Elite Level
+project:
+  name: "Legendary Champion Quest"
+  framework: "PyTorch"
+  hardware: "CPU"  # Optimized for maximum performance
+  max_daily_budget_hours: 48  # Extended for legendary training
+
+# Elite Population-Based Training
+population_size: 12  # Larger population for maximum diversity
+max_outer_loops: 100  # Extended training for legendary performance
+steps_per_loop: 5_000_000  # Increased steps per loop for deeper learning
+evaluation_seeds: 100  # More seeds for robust evaluation
+
+# Action and Observation Space - Optimized
+action_space: "continuous"
+observation:
+  type: "rgb"
+  size: [64, 64]
+  frame_stack: 4
+
+# Target Maps - Complete Coverage
+target_maps:
+  - name: "loop_empty"
+    difficulty: "easy"
+    type: "easy_loop"
+    weight: 1.0
+  - name: "small_loop" 
+    difficulty: "easy"
+    type: "easy_loop"
+    weight: 1.0
+  - name: "zigzag_dists"
+    difficulty: "moderate"
+    type: "curvy"
+    weight: 1.2  # Higher weight for challenging maps
+  - name: "4way"
+    difficulty: "hard"
+    type: "intersection"
+    weight: 1.5
+  - name: "udem1"
+    difficulty: "hard"
+    type: "town"
+    weight: 1.5
+
+# LEGENDARY SUCCESS THRESHOLDS (Stricter than standard)
+success_thresholds:
+  easy_loop:
+    sr_threshold: 0.98    # 98% success rate for easy maps
+    r_threshold: 0.90     # 90% reward efficiency
+    d_threshold: 0.08     # Tighter deviation tolerance
+    h_threshold: 5.0      # Precise heading control
+    j_threshold: 0.05     # Ultra-smooth driving
+  
+  curvy:
+    sr_threshold: 0.95    # 95% success on curves
+    r_threshold: 0.85
+    d_threshold: 0.10
+    h_threshold: 6.0
+    j_threshold: 0.06
+  
+  intersection:
+    sr_threshold: 0.92    # 92% success at intersections
+    r_threshold: 0.80
+    d_threshold: 0.12
+    h_threshold: 8.0
+    j_threshold: 0.08
+    violations_threshold: 0.01  # Virtually no violations
+  
+  town:
+    sr_threshold: 0.90    # 90% success in complex town
+    r_threshold: 0.78
+    d_threshold: 0.15
+    h_threshold: 10.0
+    j_threshold: 0.10
+    violations_threshold: 0.01
+
+# LEGENDARY GLOBAL PASS CRITERIA
+global_pass:
+  maps_pass_rate: 0.95  # 95% of maps must meet thresholds
+  min_sr_threshold: 0.85  # No map below 85% success rate
+  legendary_threshold: 95.0  # Overall score must be 95+
+
+# ELITE COMPOSITE SCORING (Optimized weights)
+composite_score:
+  sr_weight: 0.50      # Higher weight on success rate (50%)
+  reward_weight: 0.20  # Reward performance (20%)
+  length_weight: 0.08  # Episode efficiency (8%)
+  deviation_weight: 0.12  # Precision is critical (12%)
+  heading_weight: 0.06    # Heading accuracy (6%)
+  jerk_weight: 0.04      # Smoothness (4%)
+
+# ADVANCED REWARD SHAPING
+environment:
+  base_reward: 1.0
+  reward_shaping:
+    # Precision-focused parameters
+    alpha: 0.8           # Higher centerline reward
+    beta: 0.4            # Strong heading alignment
+    gamma: 0.01          # Reduced jerk penalty (allow some aggressiveness)
+    delta: 0.015         # Moderate steering penalty
+    sigma_d: 0.15        # Tighter deviation tolerance
+    sigma_theta: 6.0     # Tighter heading tolerance
+    
+    # Elite penalties
+    collision_penalty: -2.0      # Severe collision penalty
+    off_lane_penalty: -1.0       # Strong lane penalty
+    reversing_penalty: -0.5      # Prevent backing up
+    
+    # Performance bonuses
+    speed_bonus: 0.2             # Reward optimal speed
+    precision_bonus: 0.3         # Bonus for precise driving
+    consistency_bonus: 0.1       # Reward consistent performance
+  
+  speed_target:
+    min_speed: 0.8
+    max_speed: 2.2
+    target_speed: 1.8    # Aggressive but safe target
+
+# ELITE ALGORITHM CONFIGURATION
+algorithm:
+  default: "PPO"
+  
+  # LEGENDARY PPO SETTINGS
+  ppo:
+    # Optimized learning parameters
+    lr: 1.0e-4           # Conservative learning rate for stability
+    lr_schedule: "cosine_annealing"  # Advanced scheduling
+    gamma: 0.998         # High discount for long-term planning
+    gae_lambda: 0.97     # Optimized advantage estimation
+    
+    # Elite PPO parameters
+    clip_param: 0.15     # Tighter clipping for stability
+    entropy_coef: 0.008  # Balanced exploration
+    value_coef: 0.8      # Higher value function weight
+    grad_clip: 0.3       # Aggressive gradient clipping
+    
+    # Large-scale training
+    batch_size: 131072   # Large batch for stability
+    minibatches: 16      # More minibatches
+    epochs: 8            # More epochs per update
+    
+    # Advanced features
+    action_std_init: 0.4
+    action_std_final: 0.05  # Very low final exploration
+    action_std_decay_rate: 0.02
+    
+    # Normalization
+    obs_normalization: true
+    reward_normalization: true
+    advantage_normalization: true
+    
+    # Advanced optimizations
+    use_gae: true
+    normalize_advantages: true
+    clip_value_loss: true
+    max_grad_norm: 0.5
+
+# ELITE POPULATION-BASED TRAINING
+population_based_training:
+  enabled: true
+  
+  # Aggressive evolution
+  exploit_threshold: 0.30  # Kill bottom 30%
+  explore_threshold: 0.20  # Clone top 20%
+  
+  # Elite hyperparameter ranges
+  hyperparameter_ranges:
+    lr: [5.0e-5, 3.0e-4]           # Narrower, optimized range
+    entropy_coef: [0.003, 0.015]   # Focused exploration range
+    clip_param: [0.1, 0.25]        # Optimized clipping range
+    gamma: [0.995, 0.999]          # High discount factors
+    gae_lambda: [0.95, 0.98]       # Optimized GAE range
+    value_coef: [0.5, 1.0]         # Value function importance
+  
+  # Advanced perturbation
+  reward_weight_perturbation: 0.15  # ±15% perturbation
+  mutation_strength: 0.1            # Controlled mutations
+  crossover_probability: 0.3        # Genetic algorithm features
+
+# ADVANCED CURRICULUM LEARNING
+curriculum:
+  enabled: true
+  auto_advance: true
+  adaptive_difficulty: true
+  
+  stages:
+    - name: "Precision_Foundation"
+      episodes: 2000
+      difficulty: 0.2
+      success_criteria:
+        sr_threshold: 0.99
+        d_threshold: 0.05
+      description: "Perfect precision on simple tracks"
+      env_config:
+        maps: ["loop_empty"]
+        domain_randomization: false
+        weather: false
+        obstacles: false
+        precision_mode: true
+    
+    - name: "Speed_Precision_Balance"
+      episodes: 3000
+      difficulty: 0.4
+      success_criteria:
+        sr_threshold: 0.96
+        d_threshold: 0.08
+        speed_efficiency: 0.85
+      description: "Balance speed and precision"
+      env_config:
+        maps: ["small_loop"]
+        domain_randomization: true
+        weather: false
+        obstacles: false
+        speed_targets: [1.2, 1.8]
+    
+    - name: "Curve_Mastery"
+      episodes: 4000
+      difficulty: 0.6
+      success_criteria:
+        sr_threshold: 0.94
+        d_threshold: 0.10
+      description: "Master complex curves with precision"
+      env_config:
+        maps: ["zigzag_dists"]
+        domain_randomization: true
+        weather: true
+        obstacles: false
+        curve_difficulty: "high"
+    
+    - name: "Intersection_Excellence"
+      episodes: 5000
+      difficulty: 0.8
+      success_criteria:
+        sr_threshold: 0.90
+        violations_rate: 0.005
+      description: "Navigate intersections flawlessly"
+      env_config:
+        maps: ["4way"]
+        domain_randomization: true
+        weather: true
+        obstacles: true
+        traffic: true
+        traffic_density: "medium"
+    
+    - name: "Urban_Legendary"
+      episodes: 6000
+      difficulty: 1.0
+      success_criteria:
+        sr_threshold: 0.88
+        violations_rate: 0.005
+        composite_score: 90.0
+      description: "Achieve legendary performance in complex urban environments"
+      env_config:
+        maps: ["udem1"]
+        domain_randomization: true
+        weather: true
+        obstacles: true
+        traffic: true
+        pedestrians: true
+        traffic_density: "high"
+        weather_severity: "high"
+
+# ADVANCED OPTIMIZATION STRATEGIES
+optimization_loop:
+  # Elite plateau detection
+  plateau_detection:
+    enabled: true
+    patience: 2           # Faster adaptation
+    min_improvement: 0.005  # Smaller improvement threshold
+    rolling_window: 5     # Consider last 5 loops
+  
+  # Multi-strategy adaptation
+  adaptation:
+    increase_exploration: true
+    try_alternative_algorithms: true
+    adjust_reward_weights: true
+    increase_randomization: true
+    curriculum_acceleration: true
+    ensemble_methods: true
+    
+    # Advanced strategies
+    learning_rate_scheduling: true
+    batch_size_adaptation: true
+    architecture_search: true
+    multi_objective_optimization: true
+
+# ELITE EXPLORATION & GENERALIZATION
+exploration:
+  # Advanced domain randomization
+  domain_randomization:
+    lighting_variation: 0.4      # Strong lighting changes
+    texture_variation: 0.3       # Texture diversity
+    camera_pose_variation: 0.15  # Camera perturbations
+    friction_variation: 0.2      # Surface variations
+    wheel_noise: 0.15           # Actuator noise
+    spawn_pose_variation: 0.25   # Start position variety
+    obstacle_density: 0.2        # Dynamic obstacles
+    traffic_density: 0.25        # Traffic variations
+    weather_intensity: 0.3       # Weather effects
+  
+  # Elite parameter noise
+  parameter_noise:
+    enabled: true
+    initial_stddev: 0.05
+    final_stddev: 0.005
+    decay_rate: 0.995
+    
+  # Curiosity-driven exploration
+  curiosity:
+    enabled: true
+    intrinsic_reward_weight: 0.1
+    prediction_error_threshold: 0.1
+
+# ADVANCED MODEL ARCHITECTURE
+model:
+  # Elite CNN encoder
+  encoder: "resnet"  # ResNet for better feature extraction
+  
+  # Advanced ResNet configuration
+  resnet_cnn:
+    layers: [3, 4, 6, 3]  # Deeper network
+    channels: [64, 128, 256, 512]
+    use_attention: true
+    dropout: 0.1
+  
+  # Elite fully connected layers
+  fc_layers: [1024, 512, 256]  # Larger capacity
+  
+  # Advanced recurrent processing
+  use_lstm: true
+  lstm_hidden_size: 512  # Larger LSTM
+  lstm_layers: 2         # Multi-layer LSTM
+  
+  # Elite normalization and regularization
+  layer_norm: true
+  batch_norm: true
+  dropout: 0.1
+  weight_decay: 1e-4
+  
+  # Advanced activation
+  activation: "swish"  # Advanced activation function
+
+# COMPREHENSIVE EVALUATION
+evaluation:
+  # Rigorous evaluation
+  num_episodes: 200      # More episodes for accuracy
+  deterministic: true
+  
+  # Elite stress testing
+  stress_tests:
+    enabled: true
+    severity_levels: ["mild", "moderate", "severe", "extreme"]
+    test_types:
+      - "weather_stress"
+      - "lighting_stress" 
+      - "obstacle_stress"
+      - "sensor_noise_stress"
+      - "actuator_delay_stress"
+      - "communication_lag_stress"
+  
+  # Advanced metrics
+  elite_metrics:
+    - "legendary_performance_score"
+    - "multi_map_consistency"
+    - "stress_robustness_rating"
+    - "precision_excellence_score"
+    - "speed_efficiency_rating"
+    - "safety_perfection_score"
+
+# ELITE LOGGING & MONITORING
+logging:
+  log_level: "DEBUG"  # Detailed logging
+  log_interval: 25    # Frequent updates
+  
+  # Advanced tensorboard
+  tensorboard:
+    enabled: true
+    log_dir: "logs/legendary_champion/tensorboard"
+    log_images: true
+    log_histograms: true
+    log_embeddings: true
+    log_graph: true
+  
+  # Elite W&B integration
+  wandb:
+    enabled: true
+    project: "legendary-duckietown-champion"
+    entity: "elite-ai-research"
+    tags: ["legendary", "champion", "elite", "95plus"]
+    
+    # Advanced logging
+    log_gradients: true
+    log_parameters: true
+    log_topology: true
+    log_frequency: 100
+
+# ELITE SYSTEM CONFIGURATION
+system:
+  # Maximum resource utilization
+  num_cpus: 0  # Use all available
+  num_gpus: 0  # CPU optimized
+  
+  # Elite memory management
+  memory_limit_gb: 32
+  swap_usage: true
+  
+  # Advanced parallel processing
+  parallel_trials: 8           # More parallel trials
+  max_concurrent_evaluations: 12
+  async_evaluation: true
+  
+  # Elite optimizations
+  optimization:
+    use_multiprocessing: true
+    multiprocessing_method: "spawn"
+    pin_memory: true
+    num_workers: 8
+    prefetch_factor: 4
+    persistent_workers: true
+
+# LEGENDARY CHECKPOINTING
+checkpointing:
+  # Frequent saves for legendary training
+  save_every_loops: 2
+  keep_top_k: 10
+  save_best_per_map: true
+  save_pareto_front: true
+  
+  # Elite archiving
+  hall_of_fame_size: 20
+  pareto_archive_enabled: true
+  ensemble_archive_size: 5
+  
+  # Advanced model formats
+  export_formats:
+    - "pytorch"
+    - "onnx" 
+    - "tensorrt"
+    - "torchscript"
+    - "quantized"
+
+# LEGENDARY DEPLOYMENT PREPARATION
+deployment:
+  # Elite model optimization
+  quantization: true
+  pruning: true
+  knowledge_distillation: true
+  
+  # Multi-platform support
+  target_platforms:
+    - "raspberry_pi_4"
+    - "jetson_nano"
+    - "jetson_xavier"
+    - "intel_nuc"
+    - "generic_cpu"
+  
+  # Performance optimization
+  inference_optimization: "speed"
+  batch_inference: true
+  model_caching: true
+  
+  # Safety features
+  safety_monitoring: true
+  performance_monitoring: true
+  automatic_fallback: true
+
+# REPRODUCIBILITY & VALIDATION
+reproducibility:
+  # Elite seed management
+  global_seed: 2025
+  deterministic_cudnn: true
+  deterministic_algorithms: true
+  
+  # Rigorous validation
+  holdout_seed_set: true
+  holdout_seeds: 200
+  cross_validation_folds: 5
+  
+  # Elite safety
+  emergency_stop_enabled: true
+  max_training_time_hours: 72
+  auto_save_on_interrupt: true
+  backup_frequency: "hourly"
+
+# LEGENDARY SUCCESS METRICS
+legendary_metrics:
+  # Core legendary thresholds
+  min_global_score: 95.0
+  min_map_pass_rate: 0.95
+  min_stress_test_score: 0.90
+  
+  # Elite performance indicators
+  precision_excellence: 0.95    # 95% precision across all maps
+  speed_efficiency: 0.90        # 90% speed efficiency
+  safety_perfection: 0.99       # 99% safety record
+  consistency_rating: 0.95      # 95% consistency across runs
+  
+  # Legendary deployment readiness
+  physical_world_ready: true
+  competition_ready: true
+  production_ready: true
+  legendary_certified: true

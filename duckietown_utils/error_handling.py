@@ -12,7 +12,7 @@ import traceback
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Type, Union, Tuple
 import warnings
 
 import numpy as np
@@ -333,7 +333,7 @@ class ErrorHandler:
         if context.retry_count >= context.max_retries:
             logger.warning(
                 f"Max retries ({context.max_retries}) exceeded for "
-                f"{context.component}.{context.operation}"
+                f"{context.component}.{context.operation}, falling back"
             )
             return self._handle_fallback(error, context, fallback_value)
         

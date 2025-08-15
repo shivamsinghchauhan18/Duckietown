@@ -1,0 +1,679 @@
+{
+  "timestamp": "20250816_011530",
+  "training_type": "master_rl_orchestrator",
+  "status": "\ud83c\udfc1 ADVANCED LEVEL",
+  "best_global_score": 60.993227760082746,
+  "loops_completed": 5,
+  "total_training_hours": 0.0001305818557739258,
+  "global_pass_achieved": false,
+  "hall_of_fame": [
+    [
+      60.993227760082746,
+      "trial_003",
+      {
+        "trial_id": "trial_003",
+        "hyperparams": {
+          "lr": 5.622956289785491e-05,
+          "gamma": 0.9915242662959239,
+          "gae_lambda": 0.9661882342228698,
+          "clip": 0.17349885068321244,
+          "entropy_coef": 0.023318165868931894,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.5494410151538764,
+          "heading": 0.313328599745293,
+          "jerk": 0.016305810546491536,
+          "steering_change": 0.023711881314829885
+        },
+        "current_score": 60.993227760082746,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      60.130003476002365,
+      "trial_002",
+      {
+        "trial_id": "trial_002",
+        "hyperparams": {
+          "lr": 0.00018537387832312112,
+          "gamma": 0.9924586258707351,
+          "gae_lambda": 0.937905717016371,
+          "clip": 0.1502895733005066,
+          "entropy_coef": 0.029898668918130936,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.509203180765752,
+          "heading": 0.26527568520789835,
+          "jerk": 0.023302008159098112,
+          "steering_change": 0.020678409372892
+        },
+        "current_score": 60.130003476002365,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      60.08722588021102,
+      "trial_002",
+      {
+        "trial_id": "trial_002",
+        "hyperparams": {
+          "lr": 0.00018537387832312112,
+          "gamma": 0.9924586258707351,
+          "gae_lambda": 0.937905717016371,
+          "clip": 0.1502895733005066,
+          "entropy_coef": 0.019932445945420624,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.509203180765752,
+          "heading": 0.26527568520789835,
+          "jerk": 0.023302008159098112,
+          "steering_change": 0.020678409372892
+        },
+        "current_score": 60.08722588021102,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      57.432528024983455,
+      "trial_001",
+      {
+        "trial_id": "trial_001",
+        "hyperparams": {
+          "lr": 0.0004866520946267319,
+          "gamma": 0.9912231837322242,
+          "gae_lambda": 0.9289556812432532,
+          "clip": 0.12070958245787222,
+          "entropy_coef": 0.02677727092816537,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.5807513871671388,
+          "heading": 0.2601434677539842,
+          "jerk": 0.017737166800731965,
+          "steering_change": 0.019444265297904006
+        },
+        "current_score": 57.432528024983455,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      55.45321282331182,
+      "trial_002",
+      {
+        "trial_id": "trial_002",
+        "hyperparams": {
+          "lr": 0.00018537387832312112,
+          "gamma": 0.9924586258707351,
+          "gae_lambda": 0.937905717016371,
+          "clip": 0.1502895733005066,
+          "entropy_coef": 0.019932445945420624,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.509203180765752,
+          "heading": 0.26527568520789835,
+          "jerk": 0.023302008159098112,
+          "steering_change": 0.020678409372892
+        },
+        "current_score": 55.45321282331182,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      55.449200612079416,
+      "trial_003",
+      {
+        "trial_id": "trial_003",
+        "hyperparams": {
+          "lr": 0.0005053350072304105,
+          "gamma": 1.0050779789784292,
+          "gae_lambda": 0.9333270556285417,
+          "clip": 0.11894505874486537,
+          "entropy_coef": 0.04399613005835261,
+          "value_coef": 0.47835127132680066,
+          "grad_clip": 0.9829953690506948,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.5058599927530678,
+          "heading": 0.24669596636121477,
+          "jerk": 0.019560814680123675,
+          "steering_change": 0.02036452944425995
+        },
+        "current_score": 55.449200612079416,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      54.34180530819067,
+      "trial_001",
+      {
+        "trial_id": "trial_001",
+        "hyperparams": {
+          "lr": 0.0004866520946267319,
+          "gamma": 0.9912231837322242,
+          "gae_lambda": 0.9289556812432532,
+          "clip": 0.12070958245787222,
+          "entropy_coef": 0.02677727092816537,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.5807513871671388,
+          "heading": 0.2601434677539842,
+          "jerk": 0.017737166800731965,
+          "steering_change": 0.019444265297904006
+        },
+        "current_score": 54.34180530819067,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      53.05305137494962,
+      "trial_003",
+      {
+        "trial_id": "trial_003",
+        "hyperparams": {
+          "lr": 5.622956289785491e-05,
+          "gamma": 0.9915242662959239,
+          "gae_lambda": 0.9661882342228698,
+          "clip": 0.17349885068321244,
+          "entropy_coef": 0.023318165868931894,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.5494410151538764,
+          "heading": 0.313328599745293,
+          "jerk": 0.016305810546491536,
+          "steering_change": 0.023711881314829885
+        },
+        "current_score": 53.05305137494962,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      52.297961502158046,
+      "trial_001",
+      {
+        "trial_id": "trial_001",
+        "hyperparams": {
+          "lr": 0.0004866520946267319,
+          "gamma": 0.9912231837322242,
+          "gae_lambda": 0.9289556812432532,
+          "clip": 0.12070958245787222,
+          "entropy_coef": 0.02677727092816537,
+          "value_coef": 0.5,
+          "grad_clip": 1.0,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.5807513871671388,
+          "heading": 0.2601434677539842,
+          "jerk": 0.017737166800731965,
+          "steering_change": 0.019444265297904006
+        },
+        "current_score": 52.297961502158046,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ],
+    [
+      52.18300468716404,
+      "trial_000",
+      {
+        "trial_id": "trial_000",
+        "hyperparams": {
+          "lr": 0.00010895879216504474,
+          "gamma": 1.0214650011616242,
+          "gae_lambda": 0.932025512012722,
+          "clip": 0.1359479743655963,
+          "entropy_coef": 0.05980883608995008,
+          "value_coef": 0.4986113928615089,
+          "grad_clip": 1.0077729887282194,
+          "batch_size": 65536,
+          "minibatches": 8,
+          "epochs": 4
+        },
+        "reward_weights": {
+          "centerline": 0.46080229978615933,
+          "heading": 0.24053867874156773,
+          "jerk": 0.022370107921509966,
+          "steering_change": 0.022946456565322088
+        },
+        "current_score": 52.18300468716404,
+        "episodes_trained": 0,
+        "stage": "Foundation",
+        "alive": true
+      }
+    ]
+  ],
+  "pareto_archive_size": 9,
+  "final_population": [
+    {
+      "trial_id": "trial_000",
+      "hyperparams": {
+        "lr": 0.00010895879216504474,
+        "gamma": 1.0214650011616242,
+        "gae_lambda": 0.932025512012722,
+        "clip": 0.1359479743655963,
+        "entropy_coef": 0.05980883608995008,
+        "value_coef": 0.4986113928615089,
+        "grad_clip": 1.0077729887282194,
+        "batch_size": 65536,
+        "minibatches": 8,
+        "epochs": 4
+      },
+      "reward_weights": {
+        "centerline": 0.46080229978615933,
+        "heading": 0.24053867874156773,
+        "jerk": 0.022370107921509966,
+        "steering_change": 0.022946456565322088
+      },
+      "current_score": 52.18300468716404,
+      "episodes_trained": 0,
+      "stage": "Foundation",
+      "alive": true
+    },
+    {
+      "trial_id": "trial_001",
+      "hyperparams": {
+        "lr": 0.00022120480154731994,
+        "gamma": 1.0163493142375117,
+        "gae_lambda": 0.8954907533261196,
+        "clip": 0.16080796620190155,
+        "entropy_coef": 0.0326255822654996,
+        "value_coef": 0.4896607322171095,
+        "grad_clip": 1.0379585594456369,
+        "batch_size": 65536,
+        "minibatches": 8,
+        "epochs": 4
+      },
+      "reward_weights": {
+        "centerline": 0.4446096915299286,
+        "heading": 0.3030719652357749,
+        "jerk": 0.022181945812805616,
+        "steering_change": 0.023456970758872958
+      },
+      "current_score": 0.0,
+      "episodes_trained": 0,
+      "stage": "Foundation",
+      "alive": true
+    },
+    {
+      "trial_id": "trial_002",
+      "hyperparams": {
+        "lr": 0.00018537387832312112,
+        "gamma": 0.9924586258707351,
+        "gae_lambda": 0.937905717016371,
+        "clip": 0.1502895733005066,
+        "entropy_coef": 0.029898668918130936,
+        "value_coef": 0.5,
+        "grad_clip": 1.0,
+        "batch_size": 65536,
+        "minibatches": 8,
+        "epochs": 4
+      },
+      "reward_weights": {
+        "centerline": 0.509203180765752,
+        "heading": 0.26527568520789835,
+        "jerk": 0.023302008159098112,
+        "steering_change": 0.020678409372892
+      },
+      "current_score": 60.130003476002365,
+      "episodes_trained": 0,
+      "stage": "Foundation",
+      "alive": true
+    },
+    {
+      "trial_id": "trial_003",
+      "hyperparams": {
+        "lr": 0.0005053350072304105,
+        "gamma": 1.0050779789784292,
+        "gae_lambda": 0.9333270556285417,
+        "clip": 0.11894505874486537,
+        "entropy_coef": 0.04399613005835261,
+        "value_coef": 0.47835127132680066,
+        "grad_clip": 0.9829953690506948,
+        "batch_size": 65536,
+        "minibatches": 8,
+        "epochs": 4
+      },
+      "reward_weights": {
+        "centerline": 0.5058599927530678,
+        "heading": 0.24669596636121477,
+        "jerk": 0.019560814680123675,
+        "steering_change": 0.02036452944425995
+      },
+      "current_score": 55.449200612079416,
+      "episodes_trained": 0,
+      "stage": "Foundation",
+      "alive": true
+    }
+  ],
+  "config": {
+    "action_space": "continuous",
+    "algorithm": {
+      "default": "PPO",
+      "ppo": {
+        "action_std_final": 0.1,
+        "action_std_init": 0.6,
+        "batch_size": 65536,
+        "clip_param": 0.2,
+        "entropy_coef": 0.01,
+        "epochs": 4,
+        "gae_lambda": 0.95,
+        "gamma": 0.995,
+        "grad_clip": 0.5,
+        "lr": 0.0003,
+        "minibatches": 8,
+        "value_coef": 0.5
+      }
+    },
+    "composite_score": {
+      "deviation_weight": 0.08,
+      "heading_weight": 0.06,
+      "jerk_weight": 0.06,
+      "length_weight": 0.1,
+      "reward_weight": 0.25,
+      "sr_weight": 0.45
+    },
+    "curriculum": {
+      "auto_advance": true,
+      "enabled": true,
+      "stages": [
+        {
+          "difficulty": 0.3,
+          "env_config": {
+            "domain_randomization": false,
+            "maps": [
+              "loop_empty"
+            ]
+          },
+          "episodes": 1000,
+          "name": "Foundation",
+          "success_criteria": {
+            "sr_threshold": 0.97
+          }
+        },
+        {
+          "difficulty": 0.5,
+          "env_config": {
+            "domain_randomization": true,
+            "maps": [
+              "small_loop",
+              "zigzag_dists"
+            ]
+          },
+          "episodes": 1500,
+          "name": "Basic_Curves",
+          "success_criteria": {
+            "sr_threshold": 0.92
+          }
+        },
+        {
+          "difficulty": 0.85,
+          "env_config": {
+            "domain_randomization": true,
+            "maps": [
+              "4way",
+              "udem1"
+            ]
+          },
+          "episodes": 2000,
+          "name": "Complex_Scenarios",
+          "success_criteria": {
+            "sr_threshold": 0.8
+          }
+        }
+      ]
+    },
+    "environment": {
+      "base_reward": 1.0,
+      "reward_shaping": {
+        "alpha": 0.6,
+        "beta": 0.3,
+        "delta": 0.02,
+        "gamma": 0.02,
+        "sigma_d": 0.25,
+        "sigma_theta": 10.0
+      },
+      "speed_target": {
+        "max_speed": 2.0,
+        "min_speed": 0.5,
+        "target_speed": 1.5
+      }
+    },
+    "evaluation": {
+      "deterministic": true,
+      "stress_tests": true
+    },
+    "evaluation_seeds": 10,
+    "logging": {
+      "log_level": "INFO",
+      "tensorboard": {
+        "enabled": true,
+        "log_dir": "logs/master_orchestrator/tensorboard"
+      },
+      "wandb": {
+        "enabled": false,
+        "project": "duckietown-master-orchestrator"
+      }
+    },
+    "max_outer_loops": 5,
+    "observation": {
+      "frame_stack": 4,
+      "size": [
+        64,
+        64
+      ],
+      "type": "rgb"
+    },
+    "optimization_loop": {
+      "adaptation": {
+        "adjust_reward_weights": true,
+        "increase_exploration": true,
+        "try_alternative_algorithms": true
+      },
+      "plateau_detection": {
+        "enabled": true,
+        "min_improvement": 0.01,
+        "patience": 3
+      }
+    },
+    "population_based_training": {
+      "enabled": true,
+      "exploit_threshold": 0.25,
+      "explore_threshold": 0.25,
+      "hyperparameter_ranges": {
+        "clip_param": [
+          0.1,
+          0.3
+        ],
+        "entropy_coef": [
+          0.001,
+          0.03
+        ],
+        "gae_lambda": [
+          0.9,
+          0.98
+        ],
+        "gamma": [
+          0.99,
+          0.999
+        ],
+        "lr": [
+          1e-05,
+          0.001
+        ]
+      }
+    },
+    "population_size": 4,
+    "project": {
+      "framework": "PyTorch",
+      "hardware": "CPU",
+      "max_daily_budget_hours": 24,
+      "name": "Duckietown Master RL Orchestrator"
+    },
+    "steps_per_loop": 2000000,
+    "success_thresholds": {
+      "curvy": {
+        "d_threshold": 0.15,
+        "h_threshold": 10.0,
+        "j_threshold": 0.1,
+        "r_threshold": 0.8,
+        "sr_threshold": 0.9
+      },
+      "easy_loop": {
+        "d_threshold": 0.12,
+        "h_threshold": 8.0,
+        "j_threshold": 0.08,
+        "r_threshold": 0.85,
+        "sr_threshold": 0.95
+      },
+      "intersection": {
+        "d_threshold": 0.2,
+        "h_threshold": 12.0,
+        "j_threshold": 0.12,
+        "r_threshold": 0.75,
+        "sr_threshold": 0.85,
+        "violations_threshold": 0.03
+      },
+      "town": {
+        "d_threshold": 0.2,
+        "h_threshold": 12.0,
+        "j_threshold": 0.12,
+        "r_threshold": 0.75,
+        "sr_threshold": 0.85,
+        "violations_threshold": 0.03
+      }
+    },
+    "system": {
+      "max_concurrent_evaluations": 8,
+      "num_cpus": 0,
+      "num_gpus": 0,
+      "parallel_trials": 4
+    },
+    "target_maps": [
+      {
+        "difficulty": "easy",
+        "name": "loop_empty",
+        "type": "easy_loop"
+      },
+      {
+        "difficulty": "easy",
+        "name": "small_loop",
+        "type": "easy_loop"
+      },
+      {
+        "difficulty": "moderate",
+        "name": "zigzag_dists",
+        "type": "curvy"
+      },
+      {
+        "difficulty": "hard",
+        "name": "4way",
+        "type": "intersection"
+      },
+      {
+        "difficulty": "hard",
+        "name": "udem1",
+        "type": "town"
+      }
+    ]
+  },
+  "maps_evaluated": [
+    "loop_empty",
+    "small_loop",
+    "zigzag_dists",
+    "4way",
+    "udem1"
+  ],
+  "success_thresholds": {
+    "loop_empty": {
+      "sr_threshold": 0.95,
+      "r_threshold": 0.85,
+      "d_threshold": 0.12,
+      "h_threshold": 8.0,
+      "j_threshold": 0.08
+    },
+    "small_loop": {
+      "sr_threshold": 0.95,
+      "r_threshold": 0.85,
+      "d_threshold": 0.12,
+      "h_threshold": 8.0,
+      "j_threshold": 0.08
+    },
+    "zigzag_dists": {
+      "sr_threshold": 0.9,
+      "r_threshold": 0.8,
+      "d_threshold": 0.15,
+      "h_threshold": 10.0,
+      "j_threshold": 0.1
+    },
+    "4way": {
+      "sr_threshold": 0.85,
+      "r_threshold": 0.75,
+      "d_threshold": 0.2,
+      "h_threshold": 12.0,
+      "j_threshold": 0.12
+    },
+    "udem1": {
+      "sr_threshold": 0.85,
+      "r_threshold": 0.75,
+      "d_threshold": 0.2,
+      "h_threshold": 12.0,
+      "j_threshold": 0.12
+    }
+  }
+}
