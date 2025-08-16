@@ -464,23 +464,25 @@ class EvaluationSystemIntegrator:
         try:
             self.logger.info("Testing model evaluation pipeline integration...")
             
-            # Create complete evaluation pipeline
-            eval_config = {
-                'results_dir': str(self.results_dir / 'pipeline_test'),
-                'bootstrap_samples': 100,
-                'confidence_level': 0.95
-            }
+            # Create complete evaluation pipeline with proper configs
+            base_dir = self.results_dir / 'pipeline_test'
             
-            # Initialize all components
-            orchestrator = EvaluationOrchestrator(eval_config)
-            suite_manager = SuiteManager(eval_config)
-            metrics_calculator = MetricsCalculator(eval_config)
-            statistical_analyzer = StatisticalAnalyzer(eval_config)
-            failure_analyzer = FailureAnalyzer(eval_config)
-            robustness_analyzer = RobustnessAnalyzer(eval_config)
-            champion_selector = ChampionSelector(eval_config)
-            report_generator = ReportGenerator(eval_config)
-            artifact_manager = ArtifactManager(eval_config)
+            # Import configuration classes
+            from duckietown_utils.failure_analyzer import FailureAnalysisConfig
+            from duckietown_utils.artifact_manager import ArtifactManagerConfig
+            
+            # Initialize components with proper configurations
+            orchestrator = EvaluationOrchestrator()
+            suite_manager = SuiteManager()
+            metrics_calculator = MetricsCalculator()
+            statistical_analyzer = StatisticalAnalyzer()
+            
+            # Components that need specific config classes
+            failure_analyzer = FailureAnalyzer(FailureAnalysisConfig())
+            robustness_analyzer = RobustnessAnalyzer()
+            champion_selector = ChampionSelector()
+            report_generator = ReportGenerator({'generate_html': True})
+            artifact_manager = ArtifactManager(ArtifactManagerConfig(base_path=str(base_dir)))
             
             # Test component integration
             components = {
@@ -941,17 +943,53 @@ class EvaluationSystemIntegrator:
                     'parameter_value': lighting
                 }
             
-            # Analyze robustness
-            robustness_analysis = analyzer.analyze_robustness(
-                parameter_sweep_results,
+            # Create proper parameter sweep configuration and results
+            from duckietown_utils.robustness_analyzer import ParameterSweepConfig, ParameterType
+            from duckietown_utils.suite_manager import EpisodeResult
+            
+            # Create sweep config
+            sweep_config = ParameterSweepConfig(
+                parameter_type=ParameterType.ENVIRONMENTAL,
                 parameter_name="lighting_intensity",
-                model_id="test_model"
+                baseline_value=1.0,
+                sweep_range=(0.5, 1.5),
+                num_points=5,
+                sweep_method="linear"
+            )
+            
+            # Create mock episode results for each parameter value
+            parameter_results = {}
+            for lighting in lighting_values:
+                episodes = []
+                success_rate = parameter_sweep_results[f"lighting_{lighting}"]['success_rate']
+                for i in range(10):  # 10 episodes per parameter value
+                    episode = EpisodeResult(
+                        episode_id=f"ep_{i}",
+                        model_id="test_model",
+                        suite_name="test",
+                        map_name="test_map",
+                        seed=i,
+                        success=i < (success_rate * 10),
+                        episode_length=100,
+                        reward=success_rate * 0.8,
+                        termination_reason="success" if i < (success_rate * 10) else "failure",
+                        completion_time=10.0,
+                        metrics={}
+                    )
+                    episodes.append(episode)
+                parameter_results[lighting] = episodes
+            
+            # Analyze robustness using correct method
+            robustness_curve = analyzer.analyze_parameter_sweep(
+                model_id="test_model",
+                parameter_results=parameter_results,
+                sweep_config=sweep_config
             )
             
             # Verify analysis
-            assert robustness_analysis is not None
-            assert 'auc_robustness' in robustness_analysis
-            assert 0.0 <= robustness_analysis['auc_robustness'] <= 1.0
+            assert robustness_curve is not None
+            assert robustness_curve.auc_success_rate is not None
+            assert 0.0 <= robustness_curve.auc_success_rate <= 1.0
             
             duration = time.time() - start_time
             end_memory = psutil.Process().memory_info().rss / 1024 / 1024
@@ -964,8 +1002,9 @@ class EvaluationSystemIntegrator:
                 memory_usage_mb=memory_usage,
                 details={
                     'parameter_values_tested': len(lighting_values),
-                    'auc_robustness': robustness_analysis['auc_robustness'],
-                    'analysis_components': list(robustness_analysis.keys())
+                    'auc_success_rate': robustness_curve.auc_success_rate,
+                    'parameter_name': robustness_curve.parameter_name,
+                    'model_id': robustness_curve.model_id
                 }
             )
             
@@ -1030,7 +1069,7 @@ class EvaluationSystemIntegrator:
             
             # Verify champion selection
             assert champion_result is not None
-            assert champion_result.champion_model_id == 'champion'  # Highest performance
+            assert champion_result.new_champion_id == 'champion'  # Highest performance
             
             duration = time.time() - start_time
             end_memory = psutil.Process().memory_info().rss / 1024 / 1024
@@ -1043,7 +1082,7 @@ class EvaluationSystemIntegrator:
                 memory_usage_mb=memory_usage,
                 details={
                     'models_evaluated': len(model_metrics_list),
-                    'champion_selected': champion_result.champion_model_id,
+                    'champion_selected': champion_result.new_champion_id,
                     'selection_criteria_applied': True
                 }
             )
@@ -1072,43 +1111,46 @@ class EvaluationSystemIntegrator:
             self.logger.info("Testing report generation...")
             
             config = {
-                'results_dir': str(self.results_dir / 'report_test'),
                 'generate_plots': True,
-                'export_formats': ['json', 'html']
+                'generate_html': True,
+                'save_plots': True
             }
             generator = ReportGenerator(config)
             
-            # Create mock evaluation results
-            mock_results = {
-                'model_id': 'test_model',
-                'evaluation_timestamp': datetime.now().isoformat(),
-                'global_metrics': {
-                    'success_rate': 0.85,
-                    'mean_reward': 0.78,
-                    'composite_score': 82.5
-                },
-                'suite_results': {
-                    'base': {'success_rate': 0.9, 'mean_reward': 0.8},
-                    'hard_randomization': {'success_rate': 0.8, 'mean_reward': 0.75}
-                }
+            # Create mock model metrics for report generation
+            from duckietown_utils.metrics_calculator import ModelMetrics, MetricResult
+            
+            primary_metrics = {
+                'success_rate': MetricResult('success_rate', 0.85, sample_size=100),
+                'mean_reward': MetricResult('mean_reward', 0.78, sample_size=100)
             }
             
-            # Generate report
-            report_path = generator.generate_evaluation_report(
-                mock_results,
-                report_name="integration_test_report"
+            secondary_metrics = {
+                'lateral_deviation': MetricResult('lateral_deviation', 0.15, sample_size=100),
+                'heading_error': MetricResult('heading_error', 5.2, sample_size=100)
+            }
+            
+            model_metrics = ModelMetrics(
+                model_id='test_model',
+                primary_metrics=primary_metrics,
+                secondary_metrics=secondary_metrics,
+                safety_metrics={},
+                per_suite_metrics={},
+                per_map_metrics={},
+                metadata={'total_episodes': 100}
+            )
+            
+            # Generate comprehensive report
+            report = generator.generate_comprehensive_report(
+                model_metrics_list=[model_metrics],
+                report_id="integration_test_report"
             )
             
             # Verify report was created
-            assert report_path.exists()
-            
-            # Verify report content
-            with open(report_path, 'r') as f:
-                report_content = json.load(f)
-            
-            assert 'model_id' in report_content
-            assert 'global_metrics' in report_content
-            assert report_content['model_id'] == 'test_model'
+            assert report is not None
+            assert report.leaderboard is not None
+            assert len(report.leaderboard) == 1
+            assert report.leaderboard[0].model_id == 'test_model'
             
             duration = time.time() - start_time
             end_memory = psutil.Process().memory_info().rss / 1024 / 1024
@@ -1121,6 +1163,9 @@ class EvaluationSystemIntegrator:
                 memory_usage_mb=memory_usage,
                 details={
                     'report_generated': True,
+                    'leaderboard_entries': len(report.leaderboard),
+                    'report_sections': ['leaderboard', 'performance_tables', 'executive_summary']
+                }
                     'report_path': str(report_path),
                     'report_size_bytes': report_path.stat().st_size,
                     'content_verified': True
@@ -1150,11 +1195,13 @@ class EvaluationSystemIntegrator:
         try:
             self.logger.info("Testing artifact management...")
             
-            config = {
-                'results_dir': str(self.results_dir / 'artifact_test'),
-                'compression_enabled': True,
-                'max_artifacts': 1000
-            }
+            from duckietown_utils.artifact_manager import ArtifactManagerConfig
+            
+            config = ArtifactManagerConfig(
+                base_path=str(self.results_dir / 'artifact_test'),
+                compression_enabled=True,
+                max_artifacts_per_type=1000
+            )
             manager = ArtifactManager(config)
             
             # Test artifact storage
