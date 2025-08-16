@@ -484,7 +484,15 @@ class EvaluationSystemIntegrator:
             failure_analyzer = FailureAnalyzer(FailureAnalysisConfig())
             robustness_analyzer = RobustnessAnalyzer(eval_config)
             champion_selector = ChampionSelector(eval_config)
-            report_generator = ReportGenerator(eval_config)
+            
+            # ReportGenerator needs ReportConfig parameters
+            report_config = {
+                'include_confidence_intervals': True,
+                'include_statistical_tests': True,
+                'plot_format': 'png'
+            }
+            report_generator = ReportGenerator(report_config)
+            
             artifact_manager = ArtifactManager(ArtifactManagerConfig(
                 base_path=eval_config['results_dir']
             ))
@@ -1078,10 +1086,11 @@ class EvaluationSystemIntegrator:
         try:
             self.logger.info("Testing report generation...")
             
+            # Use correct ReportConfig parameters
             config = {
-                'results_dir': str(self.results_dir / 'report_test'),
-                'generate_plots': True,
-                'export_formats': ['json', 'html']
+                'include_confidence_intervals': True,
+                'include_statistical_tests': True,
+                'plot_format': 'png'
             }
             generator = ReportGenerator(config)
             

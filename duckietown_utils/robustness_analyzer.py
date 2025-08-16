@@ -999,6 +999,15 @@ class RobustnessAnalyzer:
         # Get first parameter for analysis
         param_name, param_values = next(iter(parameter_ranges.items()))
         
+        # Ensure we have at least 3 points for analysis
+        if len(param_values) < 3:
+            # Add intermediate points if needed
+            min_val, max_val = min(param_values), max(param_values)
+            if len(param_values) == 2:
+                param_values = [min_val, (min_val + max_val) / 2, max_val]
+            else:  # len == 1
+                param_values = [min_val * 0.8, min_val, min_val * 1.2]
+        
         # Create mock parameter sweep results for API compatibility
         # In real implementation, this would run actual evaluations
         parameter_results = {}
