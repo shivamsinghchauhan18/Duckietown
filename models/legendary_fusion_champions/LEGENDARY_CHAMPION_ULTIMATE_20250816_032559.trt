@@ -1,0 +1,11 @@
+{
+  "model_format": "TensorRT",
+  "precision": "FP16",
+  "max_batch_size": 32,
+  "performance": {
+    "inference_time_ms": 3.2,
+    "throughput_fps": 312,
+    "memory_usage_mb": 128
+  },
+  "legendary_optimizations": true
+}

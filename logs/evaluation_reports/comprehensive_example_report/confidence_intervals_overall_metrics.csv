@@ -1,0 +1,6 @@
+,champion_model_v5,runner_up_v3,solid_performer_v2,baseline_v4,experimental_v2,legacy_model
+success_rate,"[0.882, 0.982]","[0.834, 0.934]","[0.799, 0.899]","[0.810, 0.910]","[0.742, 0.842]","[0.729, 0.829]"
+mean_reward,"[0.723, 0.783]","[0.697, 0.757]","[0.664, 0.724]","[0.623, 0.683]","[0.596, 0.656]","[0.556, 0.616]"
+lateral_deviation,,,,,,
+smoothness,,,,,,
+stability,,,,,,

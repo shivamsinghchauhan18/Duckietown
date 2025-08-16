@@ -1,0 +1,157 @@
+{
+  "report_metadata": {
+    "generation_time": "2025-08-16T14:56:22.054056",
+    "analyzer_config": {
+      "stuck_threshold": 0.1,
+      "stuck_duration": 2.0,
+      "oscillation_threshold": 0.5,
+      "oscillation_window": 10,
+      "overspeed_threshold": 2.0,
+      "lane_deviation_threshold": 0.3,
+      "record_worst_k": 3,
+      "video_fps": 30,
+      "video_quality": "high",
+      "heatmap_resolution": 100,
+      "heatmap_smoothing": 0.1,
+      "min_trace_length": 10,
+      "confidence_threshold": 0.95
+    },
+    "analyzed_models": [
+      "demo_model_v1"
+    ],
+    "analyzed_maps": [
+      "loop_empty"
+    ]
+  },
+  "failure_statistics": {
+    "summary": {
+      "total_episodes": 5,
+      "failed_episodes": 2,
+      "success_rate": 0.6,
+      "total_failures": 3
+    },
+    "failure_types": {
+      "collision_static": 1,
+      "stuck": 1,
+      "off_lane_right": 1
+    },
+    "failure_by_model": {
+      "demo_model_v1": {
+        "collision_static": 1,
+        "stuck": 1,
+        "off_lane_right": 1
+      }
+    },
+    "failure_by_map": {
+      "loop_empty": {
+        "collision_static": 1,
+        "stuck": 1,
+        "off_lane_right": 1
+      }
+    },
+    "failure_by_suite": {
+      "base": {
+        "collision_static": 1,
+        "stuck": 1,
+        "off_lane_right": 1
+      }
+    },
+    "severity_distribution": {
+      "critical": 1,
+      "high": 2
+    },
+    "analysis_timestamp": "2025-08-16T14:56:20.911874"
+  },
+  "spatial_analysis": {
+    "heatmaps_generated": {
+      "loop_empty": {
+        "lane_deviation": "logs/failure_analysis/heatmaps/lane_deviation_heatmap_loop_empty_20250816_145620.png",
+        "failure_locations": "logs/failure_analysis/heatmaps/failure_location_heatmap_loop_empty_20250816_145621.png",
+        "contact_points": "logs/failure_analysis/heatmaps/contact_point_heatmap_loop_empty_20250816_145621.png"
+      }
+    },
+    "total_heatmaps": 3
+  },
+  "episode_summaries": [
+    {
+      "episode_id": "demo_model_v1_loop_empty_42",
+      "model_id": "demo_model_v1",
+      "map_name": "loop_empty",
+      "suite": "base",
+      "success": false,
+      "failure_count": 2,
+      "failure_types": [
+        "collision_static",
+        "stuck"
+      ],
+      "performance_metrics": {
+        "mean_lane_deviation": 0.06484642903465695,
+        "max_lane_deviation": 0.09999902065507035,
+        "std_lane_deviation": 0.030740323630195267,
+        "mean_heading_error": 0.03176146677436063,
+        "max_heading_error": 0.04999951032753518,
+        "mean_reward": 0.33666666666666667,
+        "total_reward": 50.5,
+        "reward_std": 0.33499585403736304,
+        "steering_smoothness": 0.009764713506438226,
+        "episode_length": 150
+      },
+      "video_available": true,
+      "video_path": "logs/failure_analysis/videos/demo_model_v1_loop_empty_42_20250816_145618.mp4"
+    },
+    {
+      "episode_id": "demo_model_v1_loop_empty_43",
+      "model_id": "demo_model_v1",
+      "map_name": "loop_empty",
+      "suite": "base",
+      "success": false,
+      "failure_count": 1,
+      "failure_types": [
+        "off_lane_right"
+      ],
+      "performance_metrics": {
+        "mean_lane_deviation": 0.415,
+        "max_lane_deviation": 0.5,
+        "std_lane_deviation": 0.14625890286292545,
+        "mean_heading_error": 0.03176146677436063,
+        "max_heading_error": 0.04999951032753518,
+        "mean_reward": 0.33666666666666667,
+        "total_reward": 50.5,
+        "reward_std": 0.33499585403736304,
+        "steering_smoothness": 0.012446435229498017,
+        "episode_length": 150
+      },
+      "video_available": true,
+      "video_path": "logs/failure_analysis/videos/demo_model_v1_loop_empty_43_20250816_145619.mp4"
+    },
+    {
+      "episode_id": "demo_model_v1_loop_empty_44",
+      "model_id": "demo_model_v1",
+      "map_name": "loop_empty",
+      "suite": "base",
+      "success": true,
+      "failure_count": 0,
+      "failure_types": [],
+      "performance_metrics": {
+        "mean_lane_deviation": 0.06368320476731242,
+        "max_lane_deviation": 0.09999937428570208,
+        "std_lane_deviation": 0.030878722145987324,
+        "mean_heading_error": 0.03168502931405438,
+        "max_heading_error": 0.04999951032753518,
+        "mean_reward": 1.0,
+        "total_reward": 300.0,
+        "reward_std": 0.0,
+        "steering_smoothness": 0.18867760647259316,
+        "episode_length": 300
+      },
+      "video_available": false,
+      "video_path": null
+    }
+  ],
+  "recommendations": [
+    "High collision rate with static obstacles (33.3% of failures). Consider improving object detection sensitivity or avoidance algorithms.",
+    "Stuck behavior detected (33.3% of failures). Consider adding exploration bonuses or improving action space coverage.",
+    "Frequent lane departures (33.3% of failures). Consider tuning lane-following reward weights or improving lane detection.",
+    "Low success rate (60.0%). Consider extending training time or adjusting reward function balance."
+  ]
+}

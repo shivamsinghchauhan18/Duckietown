@@ -1,0 +1,182 @@
+{
+  "success_rate": {
+    "value": 0.82,
+    "sample_size": 50,
+    "confidence_interval": {
+      "lower": 0.6920368054529739,
+      "upper": 0.902299172675462,
+      "method": "wilson"
+    },
+    "metadata": {
+      "std": 0.3841874542459709,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 1.0
+    }
+  },
+  "mean_reward": {
+    "value": 0.7137773701769728,
+    "sample_size": 50,
+    "confidence_interval": {
+      "lower": 0.6462240351389176,
+      "upper": 0.7727652776630385,
+      "method": "bootstrap"
+    },
+    "metadata": {
+      "std": 0.22697571877276082,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 0.7746756800432191
+    }
+  },
+  "episode_length": {
+    "value": 455.78,
+    "sample_size": 50,
+    "confidence_interval": {
+      "lower": 424.559,
+      "upper": 483.26149999999996,
+      "method": "bootstrap"
+    },
+    "metadata": {
+      "std": 106.29718528728783,
+      "min": 50.0,
+      "max": 605.0,
+      "median": 466.5
+    }
+  },
+  "lateral_deviation": {
+    "value": 0.11447693858909233,
+    "sample_size": 50,
+    "confidence_interval": {
+      "lower": 0.0743983463009026,
+      "upper": 0.16734097987372487,
+      "method": "bootstrap"
+    },
+    "metadata": {
+      "std": 0.17004947665328438,
+      "min": 0.01,
+      "max": 1.091068867055042,
+      "median": 0.06182018924668966
+    }
+  },
+  "heading_error": {
+    "value": 6.086512139166506,
+    "sample_size": 50,
+    "confidence_interval": {
+      "lower": 4.478034541022708,
+      "upper": 7.839277649726128,
+      "method": "bootstrap"
+    },
+    "metadata": {
+      "std": 6.0951593040301235,
+      "min": 0.5,
+      "max": 22.01210637618133,
+      "median": 3.594378281421286
+    }
+  },
+  "smoothness": {
+    "value": 0.050690203646084814,
+    "sample_size": 50,
+    "confidence_interval": {
+      "lower": 0.03418133858852342,
+      "upper": 0.07091863239465827,
+      "method": "bootstrap"
+    },
+    "metadata": {
+      "std": 0.06621928360970238,
+      "min": 0.005,
+      "max": 0.3963444127502293,
+      "median": 0.025253685570651673
+    }
+  },
+  "stability": {
+    "value": 0.7329770269006768,
+    "sample_size": 50,
+    "confidence_interval": {
+      "lower": 0.6640239496320954,
+      "upper": 0.795545671954594,
+      "method": "bootstrap"
+    },
+    "metadata": {
+      "std": 0.23539824312207516,
+      "min": 0.0827745159369155,
+      "max": 0.9730460618478446,
+      "median": 0.8176401757850253
+    }
+  },
+  "lap_time": {
+    "value": 28.05568603516956,
+    "sample_size": 50,
+    "confidence_interval": {
+      "lower": 24.093701398618176,
+      "upper": 31.832896005812202,
+      "method": "bootstrap"
+    },
+    "metadata": {
+      "std": 14.094180077104747,
+      "min": 0.0,
+      "max": 51.86148126813336,
+      "median": 32.63895075726023
+    }
+  },
+  "completion_rate": {
+    "value": 0.82,
+    "sample_size": 50,
+    "confidence_interval": {
+      "lower": 0.6920368054529739,
+      "upper": 0.902299172675462,
+      "method": "wilson"
+    },
+    "metadata": {
+      "std": 0.3841874542459709,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 1.0
+    }
+  },
+  "collision_rate": {
+    "value": 0.12,
+    "sample_size": 50,
+    "confidence_interval": {
+      "lower": 0.05617523710624647,
+      "upper": 0.2380507888662358,
+      "method": "wilson"
+    },
+    "metadata": {
+      "std": 0.3249615361854384,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 0.0
+    }
+  },
+  "off_lane_rate": {
+    "value": 0.06,
+    "sample_size": 50,
+    "confidence_interval": {
+      "lower": 0.020614596364630478,
+      "upper": 0.16217343370877002,
+      "method": "wilson"
+    },
+    "metadata": {
+      "std": 0.23748684174075835,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 0.0
+    }
+  },
+  "violation_rate": {
+    "value": 0.046000000000000006,
+    "sample_size": 50,
+    "confidence_interval": {
+      "lower": 0.022000000000000002,
+      "upper": 0.074,
+      "method": "bootstrap"
+    },
+    "metadata": {
+      "std": 0.09210863151735564,
+      "min": 0.0,
+      "max": 0.3,
+      "median": 0.0
+    }
+  }
+}

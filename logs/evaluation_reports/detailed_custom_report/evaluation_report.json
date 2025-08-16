@@ -1,0 +1,298 @@
+{
+  "report_id": "detailed_custom_report",
+  "generation_timestamp": "2025-08-16T15:44:55.383705",
+  "config": {
+    "include_confidence_intervals": true,
+    "include_statistical_tests": true,
+    "include_pareto_analysis": true,
+    "include_robustness_analysis": true,
+    "include_failure_analysis": true,
+    "plot_style": "ggplot",
+    "plot_dpi": 300,
+    "plot_format": "pdf",
+    "color_palette": "viridis",
+    "figure_size": [
+      14,
+      10
+    ],
+    "font_size": 12,
+    "save_plots": true,
+    "generate_html": true,
+    "generate_pdf": false
+  },
+  "executive_summary": {
+    "champion_model": "custom_model_a",
+    "total_models_evaluated": 3,
+    "evaluation_timestamp": "2025-08-16T15:44:55.383687",
+    "key_findings": [
+      "Champion model 'custom_model_a' achieved 0.800 composite score with 88.9% success rate",
+      "Performance spread: 0.044 composite score difference between best and worst models",
+      "Statistical analysis: 0/3 (0.0%) model comparisons show significant differences"
+    ],
+    "performance_highlights": {
+      "champion_composite_score": 0.8001621204483929,
+      "champion_success_rate": 0.8892627790619213,
+      "total_models_evaluated": 3,
+      "models_above_threshold": 3,
+      "champion_validation_status": "valid"
+    },
+    "recommendations": [
+      "Champion model shows good performance but requires additional validation"
+    ],
+    "risk_assessment": {
+      "performance": "Low - Good success rate achieved",
+      "validation": "Low - Model passes validation criteria"
+    },
+    "deployment_readiness": "conditional"
+  },
+  "leaderboard": [
+    {
+      "rank": 1,
+      "model_id": "custom_model_a",
+      "composite_score": 0.8001621204483929,
+      "success_rate": 0.8892627790619213,
+      "mean_reward": 0.7108320080652678,
+      "lateral_deviation": 0.06830898338997113,
+      "smoothness": 0.06150345278945698,
+      "stability": 0.887968457873726,
+      "composite_score_ci": [
+        0.7801621204483928,
+        0.8201621204483929
+      ],
+      "success_rate_ci": [
+        0.8392627790619213,
+        0.9392627790619213
+      ],
+      "pareto_rank": null,
+      "champion_status": "candidate",
+      "validation_status": "valid",
+      "metadata": {
+        "total_episodes": 0,
+        "total_suites": 0
+      }
+    },
+    {
+      "rank": 2,
+      "model_id": "custom_model_b",
+      "composite_score": 0.7819697160751451,
+      "success_rate": 0.8682064050807319,
+      "mean_reward": 0.6875555927723149,
+      "lateral_deviation": 0.07303861298636849,
+      "smoothness": 0.06517501081828952,
+      "stability": 0.8578099436907164,
+      "composite_score_ci": [
+        0.7619697160751451,
+        0.8019697160751451
+      ],
+      "success_rate_ci": [
+        0.8182064050807318,
+        0.9182064050807319
+      ],
+      "pareto_rank": null,
+      "champion_status": "candidate",
+      "validation_status": "valid",
+      "metadata": {
+        "total_episodes": 0,
+        "total_suites": 0
+      }
+    },
+    {
+      "rank": 3,
+      "model_id": "custom_model_c",
+      "composite_score": 0.7559439069004038,
+      "success_rate": 0.8302297051169529,
+      "mean_reward": 0.6619073043680751,
+      "lateral_deviation": 0.07775610858017959,
+      "smoothness": 0.06875176481674806,
+      "stability": 0.8339969146668801,
+      "composite_score_ci": [
+        0.7359439069004038,
+        0.7759439069004038
+      ],
+      "success_rate_ci": [
+        0.7802297051169529,
+        0.880229705116953
+      ],
+      "pareto_rank": null,
+      "champion_status": "candidate",
+      "validation_status": "valid",
+      "metadata": {
+        "total_episodes": 0,
+        "total_suites": 0
+      }
+    }
+  ],
+  "performance_tables": {
+    "per_map_success_rate": {
+      "metric_name": "success_rate_per_map",
+      "table_data": "            custom_model_a custom_model_b custom_model_c\nhuge_loop              1.0       0.800255       0.846216\nloop_empty        0.877337       0.861191       0.801692\nmulti_track       0.896831       0.891437       0.781351\ntechtrack         0.967036       0.831793       0.741979\nzigzag            0.942129       0.887734       0.787914",
+      "confidence_intervals": "             custom_model_a  custom_model_b  custom_model_c\nhuge_loop    [0.920, 1.000]  [0.720, 0.880]  [0.766, 0.926]\nloop_empty   [0.797, 0.957]  [0.781, 0.941]  [0.722, 0.882]\nmulti_track  [0.817, 0.977]  [0.811, 0.971]  [0.701, 0.861]\ntechtrack    [0.887, 1.000]  [0.752, 0.912]  [0.662, 0.822]\nzigzag       [0.862, 1.000]  [0.808, 0.968]  [0.708, 0.868]",
+      "statistical_significance": null,
+      "best_performers": {
+        "huge_loop": "custom_model_a",
+        "loop_empty": "custom_model_a",
+        "multi_track": "custom_model_a",
+        "techtrack": "custom_model_a",
+        "zigzag": "custom_model_a"
+      }
+    },
+    "per_map_lateral_deviation": {
+      "metric_name": "lateral_deviation_per_map",
+      "table_data": "            custom_model_a custom_model_b custom_model_c\nhuge_loop         0.082824       0.066908       0.092931\nloop_empty        0.046052       0.093977       0.111425\nmulti_track       0.051632       0.062276       0.107596\ntechtrack         0.050783       0.046051       0.092715\nzigzag            0.076598       0.110867       0.082541",
+      "confidence_intervals": "            custom_model_a custom_model_b custom_model_c\nhuge_loop              NaN            NaN            NaN\nloop_empty             NaN            NaN            NaN\nmulti_track            NaN            NaN            NaN\ntechtrack              NaN            NaN            NaN\nzigzag                 NaN            NaN            NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "huge_loop": "custom_model_b",
+        "loop_empty": "custom_model_a",
+        "multi_track": "custom_model_a",
+        "techtrack": "custom_model_b",
+        "zigzag": "custom_model_a"
+      }
+    },
+    "per_suite_success_rate": {
+      "metric_name": "success_rate_per_suite",
+      "table_data": "       custom_model_a custom_model_b custom_model_c\nbase         0.889263       0.868206        0.83023\nhard         0.755873       0.737975       0.705695\nood          0.666947       0.651155       0.622672\nstress       0.533558       0.520924       0.498138",
+      "confidence_intervals": "       custom_model_a custom_model_b custom_model_c\nbase              NaN            NaN            NaN\nhard              NaN            NaN            NaN\nood               NaN            NaN            NaN\nstress            NaN            NaN            NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "base": "custom_model_a",
+        "hard": "custom_model_a",
+        "ood": "custom_model_a",
+        "stress": "custom_model_a"
+      }
+    },
+    "per_suite_mean_reward": {
+      "metric_name": "mean_reward_per_suite",
+      "table_data": "       custom_model_a custom_model_b custom_model_c\nbase         0.710832       0.687556       0.661907\nhard         0.639749         0.6188       0.595717\nood          0.568666       0.550044       0.529526\nstress       0.497582       0.481289       0.463335",
+      "confidence_intervals": "       custom_model_a custom_model_b custom_model_c\nbase              NaN            NaN            NaN\nhard              NaN            NaN            NaN\nood               NaN            NaN            NaN\nstress            NaN            NaN            NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "base": "custom_model_a",
+        "hard": "custom_model_a",
+        "ood": "custom_model_a",
+        "stress": "custom_model_a"
+      }
+    },
+    "overall_metrics": {
+      "metric_name": "overall_metrics",
+      "table_data": "                  custom_model_a custom_model_b custom_model_c\nsuccess_rate            0.889263       0.868206        0.83023\nmean_reward             0.710832       0.687556       0.661907\nlateral_deviation       0.068309       0.073039       0.077756\nsmoothness              0.061503       0.065175       0.068752\nstability               0.887968        0.85781       0.833997",
+      "confidence_intervals": "                   custom_model_a  custom_model_b  custom_model_c\nsuccess_rate       [0.839, 0.939]  [0.818, 0.918]  [0.780, 0.880]\nmean_reward        [0.681, 0.741]  [0.658, 0.718]  [0.632, 0.692]\nlateral_deviation             NaN             NaN             NaN\nsmoothness                    NaN             NaN             NaN\nstability                     NaN             NaN             NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "success_rate": "custom_model_a",
+        "mean_reward": "custom_model_a",
+        "lateral_deviation": "custom_model_a",
+        "smoothness": "custom_model_a",
+        "stability": "custom_model_a"
+      }
+    }
+  },
+  "statistical_comparisons": {
+    "comparisons": [
+      {
+        "model_a_id": "custom_model_a",
+        "model_b_id": "custom_model_b",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8001621204483929,
+        "model_b_mean": 0.7819697160751451,
+        "difference": -0.01819240437324776,
+        "p_value": 0.09818075956267523,
+        "adjusted_p_value": 0.09818075956267523,
+        "is_significant": false,
+        "effect_size": 0.1819240437324776,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "custom_model_a",
+        "model_b_id": "custom_model_c",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8001621204483929,
+        "model_b_mean": 0.7559439069004038,
+        "difference": -0.04421821354798905,
+        "p_value": 0.0955781786452011,
+        "adjusted_p_value": 0.09818075956267523,
+        "is_significant": false,
+        "effect_size": 0.4421821354798905,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "custom_model_b",
+        "model_b_id": "custom_model_c",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.7819697160751451,
+        "model_b_mean": 0.7559439069004038,
+        "difference": -0.026025809174741288,
+        "p_value": 0.09739741908252587,
+        "adjusted_p_value": 0.09818075956267523,
+        "is_significant": false,
+        "effect_size": 0.2602580917474129,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      }
+    ],
+    "correction_method": "benjamini_hochberg",
+    "alpha": 0.05,
+    "num_significant_before": 0,
+    "num_significant_after": 0,
+    "rejected_hypotheses": [
+      false,
+      false,
+      false
+    ]
+  },
+  "pareto_analysis": null,
+  "robustness_analysis": null,
+  "failure_analysis": null,
+  "plots": {
+    "leaderboard": "logs/evaluation_reports/detailed_custom_report/leaderboard.pdf",
+    "heatmap_per_map_success_rate": "logs/evaluation_reports/detailed_custom_report/heatmap_per_map_success_rate.pdf",
+    "heatmap_per_map_lateral_deviation": "logs/evaluation_reports/detailed_custom_report/heatmap_per_map_lateral_deviation.pdf",
+    "heatmap_per_suite_success_rate": "logs/evaluation_reports/detailed_custom_report/heatmap_per_suite_success_rate.pdf",
+    "heatmap_per_suite_mean_reward": "logs/evaluation_reports/detailed_custom_report/heatmap_per_suite_mean_reward.pdf",
+    "heatmap_overall_metrics": "logs/evaluation_reports/detailed_custom_report/heatmap_overall_metrics.pdf",
+    "statistical_comparisons": "logs/evaluation_reports/detailed_custom_report/statistical_comparisons.pdf"
+  },
+  "metadata": {
+    "total_models": 3,
+    "generation_time": "2025-08-16T15:44:55.383709",
+    "config_used": {
+      "include_confidence_intervals": true,
+      "include_statistical_tests": true,
+      "include_pareto_analysis": true,
+      "include_robustness_analysis": true,
+      "include_failure_analysis": true,
+      "plot_style": "ggplot",
+      "plot_dpi": 300,
+      "plot_format": "pdf",
+      "color_palette": "viridis",
+      "figure_size": [
+        14,
+        10
+      ],
+      "font_size": 12,
+      "save_plots": true,
+      "generate_html": true,
+      "generate_pdf": false
+    }
+  }
+}

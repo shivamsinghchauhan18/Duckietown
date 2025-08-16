@@ -1,0 +1,101 @@
+{
+  "model_id": "visualization_model",
+  "overall_robustness_score": 0.6635993886146103,
+  "robustness_ranking": null,
+  "sensitivity_summary": {
+    "lighting_intensity": 0.4
+  },
+  "operating_ranges": {
+    "lighting_intensity": [
+      0.6000000000000001,
+      1.2000000000000002
+    ]
+  },
+  "recommendations": [],
+  "parameter_curves": {
+    "lighting_intensity": {
+      "parameter_type": "lighting_intensity",
+      "parameter_name": "lighting_intensity",
+      "auc_success_rate": 0.7022222222222223,
+      "auc_reward": 0.5838995012289905,
+      "auc_stability": 0.6865921356740102,
+      "sensitivity_threshold": 0.4,
+      "operating_range": [
+        0.6000000000000001,
+        1.2000000000000002
+      ],
+      "sweep_points": [
+        {
+          "parameter_value": 0.4,
+          "success_rate": 0.68,
+          "mean_reward": 0.5823357239781403,
+          "stability": 8.708491376606593,
+          "sample_size": 25
+        },
+        {
+          "parameter_value": 0.6000000000000001,
+          "success_rate": 0.84,
+          "mean_reward": 0.6372391053742907,
+          "stability": 6.979617701743826,
+          "sample_size": 25
+        },
+        {
+          "parameter_value": 0.8,
+          "success_rate": 0.88,
+          "mean_reward": 0.6548712902654,
+          "stability": 6.254612969911645,
+          "sample_size": 25
+        },
+        {
+          "parameter_value": 1.0,
+          "success_rate": 0.84,
+          "mean_reward": 0.6585353230177347,
+          "stability": 5.742856273286589,
+          "sample_size": 25
+        },
+        {
+          "parameter_value": 1.2000000000000002,
+          "success_rate": 0.84,
+          "mean_reward": 0.6612494038290545,
+          "stability": 5.639427061384995,
+          "sample_size": 25
+        },
+        {
+          "parameter_value": 1.4000000000000004,
+          "success_rate": 0.72,
+          "mean_reward": 0.6087082420730059,
+          "stability": 6.19190940474153,
+          "sample_size": 25
+        },
+        {
+          "parameter_value": 1.6,
+          "success_rate": 0.56,
+          "mean_reward": 0.5662143446649519,
+          "stability": 6.152585010305499,
+          "sample_size": 25
+        },
+        {
+          "parameter_value": 1.8000000000000003,
+          "success_rate": 0.52,
+          "mean_reward": 0.4943253125237589,
+          "stability": 5.998944276089263,
+          "sample_size": 25
+        },
+        {
+          "parameter_value": 2.0000000000000004,
+          "success_rate": 0.48,
+          "mean_reward": 0.47354389652298906,
+          "stability": 4.6843374223279035,
+          "sample_size": 25
+        },
+        {
+          "parameter_value": 2.2,
+          "success_rate": 0.6,
+          "mean_reward": 0.41848146160131866,
+          "stability": 3.6281988535453413,
+          "sample_size": 25
+        }
+      ]
+    }
+  }
+}

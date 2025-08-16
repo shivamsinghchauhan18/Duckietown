@@ -1,0 +1,10 @@
+{
+  "episode_id": "demo_model_v1_loop_empty_43",
+  "model_id": "demo_model_v1",
+  "map_name": "loop_empty",
+  "suite": "base",
+  "seed": 43,
+  "success": false,
+  "failure_events": [
+    {
+      "failure_type": 

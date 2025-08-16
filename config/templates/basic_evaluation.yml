@@ -1,0 +1,103 @@
+# Basic Evaluation Configuration Template
+# Minimal configuration for quick testing and development
+
+# Global evaluation settings
+parallel_evaluation: false
+max_parallel_workers: 1
+evaluation_timeout_hours: 2.0
+
+# Evaluation suites
+suites:
+  base:
+    enabled: true
+    seeds_per_map: 10
+    maps:
+      - loop_empty
+    policy_modes:
+      - deterministic
+    timeout_steps: 1000
+    environmental_noise: 0.0
+    traffic_density: 0.0
+    lighting_variation: 0.0
+    texture_variation: 0.0
+    camera_noise: 0.0
+    friction_variation: 0.0
+
+# Metrics configuration
+metrics:
+  compute_confidence_intervals: false
+  confidence_level: 0.95
+  bootstrap_resamples: 1000
+  min_episodes_for_ci: 5
+  
+  # Composite score weights
+  success_rate_weight: 0.45
+  reward_weight: 0.25
+  episode_length_weight: 0.10
+  lateral_deviation_weight: 0.08
+  heading_error_weight: 0.06
+  smoothness_weight: 0.06
+  
+  normalization_scope: per_map_suite
+  use_composite_score: true
+
+# Statistical analysis
+statistical:
+  significance_level: 0.05
+  multiple_comparison_correction: benjamini_hochberg
+  min_effect_size: 0.1
+  paired_tests: true
+  use_parametric_tests: false
+  bootstrap_comparisons: false
+
+# Failure analysis
+failure_analysis:
+  enabled: true
+  record_failure_videos: false
+  max_failure_videos: 5
+  generate_heatmaps: false
+  save_episode_traces: true
+  stuck_threshold_steps: 100
+  oscillation_threshold: 0.5
+  overspeed_threshold: 2.0
+
+# Robustness analysis
+robustness:
+  enabled: false
+  parameter_sweeps:
+    lighting_intensity: [0.8, 1.0, 1.2]
+    friction_coefficient: [0.8, 1.0, 1.2]
+  min_success_rate_threshold: 0.75
+  sensitivity_threshold: 0.1
+
+# Champion selection
+champion_selection:
+  enabled: true
+  min_maps_passing: 0.8
+  min_success_rate: 0.70
+  max_regression_threshold: 0.10
+  max_smoothness_increase: 0.30
+  pareto_axes:
+    - [success_rate, -lateral_deviation, -smoothness]
+
+# Artifacts and outputs
+artifacts:
+  output_directory: evaluation_results_basic
+  keep_top_k_models: 3
+  export_csv: true
+  export_json: true
+  export_plots: false
+  export_videos: false
+  compress_artifacts: false
+  cleanup_intermediate: true
+  max_artifact_age_days: 7
+
+# Reproducibility
+reproducibility:
+  fix_seed_list: true
+  seed_base: 42
+  cudnn_deterministic: false
+  log_git_sha: false
+  log_environment_info: false
+  track_model_versions: false
+  track_config_versions: false

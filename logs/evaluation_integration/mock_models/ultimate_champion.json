@@ -1,0 +1,10 @@
+{
+  "model_type": "ultimate_champion",
+  "training_episodes": 5000,
+  "final_score": 92.5,
+  "policy_params": {
+    "steering_bias": 0.02,
+    "throttle_bias": 0.7,
+    "epsilon": 0.01
+  }
+}

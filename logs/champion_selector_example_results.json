@@ -1,0 +1,186 @@
+{
+  "champion_selection": {
+    "new_champion_id": "super_elite_v1",
+    "previous_champion_id": "elite_model_v3",
+    "total_candidates": 8,
+    "selection_metadata": {
+      "total_candidates": 8,
+      "selection_timestamp": "2025-08-16T15:21:01.383200",
+      "ranking_criteria_used": [
+        "global_composite_score",
+        "base_suite_success_rate",
+        "smoothness",
+        "lateral_deviation",
+        "stability",
+        "ood_success_rate",
+        "episode_length"
+      ],
+      "pareto_axes_analyzed": [
+        [
+          "success_rate",
+          "lateral_deviation",
+          "smoothness"
+        ],
+        [
+          "success_rate",
+          "episode_length"
+        ],
+        [
+          "composite_score",
+          "stability"
+        ]
+      ]
+    }
+  },
+  "rankings": [
+    {
+      "model_id": "super_elite_v1",
+      "rank": 1,
+      "global_composite_score": 0.8431635546364356,
+      "validation_status": "valid",
+      "pareto_rank": 1,
+      "tie_breaker_used": null
+    },
+    {
+      "model_id": "elite_model_v3",
+      "rank": 2,
+      "global_composite_score": 0.8285222618159045,
+      "validation_status": "valid",
+      "pareto_rank": 2,
+      "tie_breaker_used": null
+    },
+    {
+      "model_id": "advanced_model_v2",
+      "rank": 3,
+      "global_composite_score": 0.798361543037299,
+      "validation_status": "valid",
+      "pareto_rank": 2,
+      "tie_breaker_used": null
+    },
+    {
+      "model_id": "standard_model_v4",
+      "rank": 4,
+      "global_composite_score": 0.7670665573059323,
+      "validation_status": "valid",
+      "pareto_rank": 2,
+      "tie_breaker_used": null
+    },
+    {
+      "model_id": "regression_model",
+      "rank": 5,
+      "global_composite_score": 0.7510672517026313,
+      "validation_status": "valid",
+      "pareto_rank": 2,
+      "tie_breaker_used": null
+    },
+    {
+      "model_id": "experimental_v1",
+      "rank": 6,
+      "global_composite_score": 0.7275841102886802,
+      "validation_status": "valid",
+      "pareto_rank": 2,
+      "tie_breaker_used": null
+    },
+    {
+      "model_id": "baseline_model_v1",
+      "rank": 7,
+      "global_composite_score": 0.7244808021573669,
+      "validation_status": "low_success_rate",
+      "pareto_rank": 2,
+      "tie_breaker_used": null
+    },
+    {
+      "model_id": "legacy_model",
+      "rank": 8,
+      "global_composite_score": 0.6210740141767106,
+      "validation_status": "insufficient_maps",
+      "pareto_rank": 2,
+      "tie_breaker_used": null
+    }
+  ],
+  "pareto_fronts": [
+    {
+      "axes": [
+        "success_rate",
+        "lateral_deviation",
+        "smoothness"
+      ],
+      "non_dominated_models": [
+        "super_elite_v1"
+      ],
+      "dominated_models": [
+        "elite_model_v3",
+        "advanced_model_v2",
+        "standard_model_v4",
+        "baseline_model_v1",
+        "experimental_v1",
+        "legacy_model",
+        "regression_model"
+      ],
+      "trade_off_analysis": {
+        "trade_offs": "insufficient_points"
+      }
+    },
+    {
+      "axes": [
+        "success_rate",
+        "episode_length"
+      ],
+      "non_dominated_models": [
+        "super_elite_v1"
+      ],
+      "dominated_models": [
+        "elite_model_v3",
+        "advanced_model_v2",
+        "standard_model_v4",
+        "baseline_model_v1",
+        "experimental_v1",
+        "legacy_model",
+        "regression_model"
+      ],
+      "trade_off_analysis": {
+        "trade_offs": "insufficient_points"
+      }
+    },
+    {
+      "axes": [
+        "composite_score",
+        "stability"
+      ],
+      "non_dominated_models": [
+        "super_elite_v1"
+      ],
+      "dominated_models": [
+        "elite_model_v3",
+        "advanced_model_v2",
+        "standard_model_v4",
+        "baseline_model_v1",
+        "experimental_v1",
+        "legacy_model",
+        "regression_model"
+      ],
+      "trade_off_analysis": {
+        "trade_offs": "insufficient_points"
+      }
+    }
+  ],
+  "summary": {
+    "champion_id": "super_elite_v1",
+    "previous_champion_id": "elite_model_v3",
+    "champion_changed": true,
+    "total_candidates": 8,
+    "champion_rank": 1,
+    "champion_score": 0.8431635546364356,
+    "pareto_fronts_analyzed": 3,
+    "statistical_comparisons": 28,
+    "champion_validation": {
+      "status": "valid",
+      "maps_meeting_threshold": 5,
+      "total_maps": 5
+    },
+    "regression_analysis": {
+      "is_regression": false,
+      "regression_reasons": []
+    }
+  }
+}

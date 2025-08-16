@@ -1,0 +1,80 @@
+{
+  "base": {
+    "suite_name": "base",
+    "suite_type": "base",
+    "description": "Clean environmental conditions with default parameters for baseline evaluation",
+    "maps": [
+      "LF-norm-loop",
+      "LF-norm-small_loop",
+      "LF-norm-zigzag",
+      "LF-norm-techtrack"
+    ],
+    "episodes_per_map": 5,
+    "timeout_per_episode": 120.0,
+    "environment_config_keys": 27,
+    "evaluation_config_keys": 10
+  },
+  "hard_randomization": {
+    "suite_name": "hard_randomization",
+    "suite_type": "hard_randomization",
+    "description": "Heavy environmental noise, texture variation, and moderate traffic for robustness testing",
+    "maps": [
+      "LF-norm-loop",
+      "LF-norm-zigzag",
+      "huge_loop",
+      "huge_loop2",
+      "multi_track"
+    ],
+    "episodes_per_map": 4,
+    "timeout_per_episode": 120.0,
+    "environment_config_keys": 35,
+    "evaluation_config_keys": 12
+  },
+  "law_intersection": {
+    "suite_name": "law_intersection",
+    "suite_type": "law_intersection",
+    "description": "Traffic rule compliance testing with intersections, stop signs, and right-of-way scenarios",
+    "maps": [
+      "ETHZ_autolab_technical_track",
+      "multi_track",
+      "multi_track2",
+      "_custom_technical_floor"
+    ],
+    "episodes_per_map": 3,
+    "timeout_per_episode": 150.0,
+    "environment_config_keys": 29,
+    "evaluation_config_keys": 10
+  },
+  "out_of_distribution": {
+    "suite_name": "out_of_distribution",
+    "suite_type": "out_of_distribution",
+    "description": "Unseen environmental conditions, novel textures, and sensor noise for generalization testing",
+    "maps": [
+      "_custom_technical_floor",
+      "_huge_C_floor",
+      "_huge_V_floor",
+      "_plus_floor",
+      "_myTestA"
+    ],
+    "episodes_per_map": 35,
+    "timeout_per_episode": 120.0,
+    "environment_config_keys": 33,
+    "evaluation_config_keys": 12
+  },
+  "stress_adversarial": {
+    "suite_name": "stress_adversarial",
+    "suite_type": "stress_adversarial",
+    "description": "Extreme stress testing with sensor failures, adversarial conditions, and safety-critical scenarios",
+    "maps": [
+      "huge_loop2",
+      "multi_track2",
+      "_loop_dyn_duckiebots",
+      "_loop_duckies",
+      "ETHZ_autolab_technical_track"
+    ],
+    "episodes_per_map": 25,
+    "timeout_per_episode": 180.0,
+    "environment_config_keys": 39,
+    "evaluation_config_keys": 15
+  }
+}

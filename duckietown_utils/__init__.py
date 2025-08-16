@@ -9,8 +9,24 @@ from .yolo_utils import (
     create_yolo_inference_system
 )
 
+# Statistical analysis utilities
+from .statistical_analyzer import (
+    StatisticalAnalyzer,
+    SignificanceTest,
+    EffectSizeMethod,
+    ComparisonResult,
+    MultipleComparisonResult,
+    BootstrapResult
+)
+
 __all__ = [
     'YOLOModelLoader',
     'YOLOInferenceWrapper', 
-    'create_yolo_inference_system'
+    'create_yolo_inference_system',
+    'StatisticalAnalyzer',
+    'SignificanceTest',
+    'EffectSizeMethod',
+    'ComparisonResult',
+    'MultipleComparisonResult',
+    'BootstrapResult'
 ]

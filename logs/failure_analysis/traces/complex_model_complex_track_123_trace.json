@@ -1,0 +1,10 @@
+{
+  "episode_id": "complex_model_complex_track_123",
+  "model_id": "complex_model",
+  "map_name": "complex_track",
+  "suite": "stress",
+  "seed": 123,
+  "success": false,
+  "failure_events": [
+    {
+      "failure_type": 

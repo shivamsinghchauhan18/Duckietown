@@ -89,3 +89,75 @@ This feature enhances the existing Duckietown Reinforcement Learning model by ad
 3. WHEN configuring lane changing THEN the system SHALL allow adjustment of lane change criteria and timing
 4. WHEN configuring training THEN the system SHALL allow modification of reward function weights
 5. WHEN using configuration files THEN the system SHALL validate all parameters and provide meaningful error messages for invalid values
+
+### Requirement 8
+
+**User Story:** As a researcher, I want a rigorous evaluation orchestrator that can systematically evaluate multiple trained models across diverse scenarios, so that I can make data-driven decisions about model performance and deployment readiness.
+
+#### Acceptance Criteria
+
+1. WHEN evaluating multiple models THEN the system SHALL run standardized test suites across all candidate models using identical seed sets
+2. WHEN running evaluations THEN the system SHALL test both deterministic and stochastic policy modes for each model
+3. WHEN computing metrics THEN the system SHALL calculate Success Rate, Mean Reward, Episode Length, Lateral Deviation, Heading Error, Smoothness, and Stability with 95% confidence intervals
+4. WHEN comparing models THEN the system SHALL perform statistical significance testing with Benjamini-Hochberg correction
+5. WHEN generating composite scores THEN the system SHALL use weighted scoring: 45% Success Rate + 25% Reward + 10% Episode Length + 8% Lateral Deviation + 6% Heading Error + 6% Smoothness
+
+### Requirement 9
+
+**User Story:** As a researcher, I want comprehensive evaluation suites that test model robustness across different environmental conditions, so that I can assess real-world deployment readiness and identify failure modes.
+
+#### Acceptance Criteria
+
+1. WHEN running base evaluation suite THEN the system SHALL test models under clean conditions with default lighting and textures
+2. WHEN running hard randomization suite THEN the system SHALL test with heavy lighting/texture/camera/friction noise and moderate traffic
+3. WHEN running law/intersection suite THEN the system SHALL test traffic rule compliance including stop lines and right-of-way scenarios
+4. WHEN running out-of-distribution suite THEN the system SHALL test with unseen textures, night/rain conditions, and sensor noise
+5. WHEN running stress/adversarial suite THEN the system SHALL test with sensor dropouts, wheel bias, and moving obstacles
+
+### Requirement 10
+
+**User Story:** As a researcher, I want detailed failure analysis and diagnostics, so that I can understand why models fail and guide improvements to training or architecture.
+
+#### Acceptance Criteria
+
+1. WHEN episodes fail THEN the system SHALL classify failure causes including collision, off-lane, stuck, oscillation, over-speed, missed stop, sensor glitch, and slip/oversteer
+2. WHEN failures occur THEN the system SHALL capture state traces, action histograms, and lane-deviation timelines
+3. WHEN generating failure reports THEN the system SHALL create video recordings of worst-performing episodes for visual analysis
+4. WHEN analyzing spatial patterns THEN the system SHALL produce heatmaps of lateral deviation and contact points over track layouts
+5. WHEN computing failure statistics THEN the system SHALL report failure type distributions and correlations with environmental conditions
+
+### Requirement 11
+
+**User Story:** As a researcher, I want robustness analysis across environmental parameter sweeps, so that I can understand model sensitivity and operating boundaries.
+
+#### Acceptance Criteria
+
+1. WHEN performing robustness sweeps THEN the system SHALL test top-performing models across lighting intensity, texture domain, camera angles, friction coefficients, and traffic density variations
+2. WHEN generating robustness curves THEN the system SHALL plot Success Rate vs environmental factor with Area Under Curve (AUC) robustness metrics
+3. WHEN comparing robustness THEN the system SHALL rank models by AUC-Robustness scores across all tested factors
+4. WHEN identifying sensitivity THEN the system SHALL flag environmental factors that cause >10% Success Rate degradation
+5. WHEN reporting robustness THEN the system SHALL provide operating range recommendations for each environmental parameter
+
+### Requirement 12
+
+**User Story:** As a researcher, I want automated model ranking and champion selection, so that I can systematically identify the best-performing models for deployment or further development.
+
+#### Acceptance Criteria
+
+1. WHEN ranking models THEN the system SHALL use Global Composite Score as primary ranking criterion with statistical significance validation
+2. WHEN breaking ties THEN the system SHALL use secondary criteria: Base-suite Success Rate, lower Smoothness, lower Lateral Deviation, higher Stability, higher OOD Success Rate, shorter Episode Length
+3. WHEN updating champions THEN the system SHALL maintain Pareto fronts for Success Rate vs Lateral Deviation vs Smoothness trade-offs
+4. WHEN detecting regressions THEN the system SHALL flag models with >5% Success Rate decrease or >20% Smoothness increase compared to current champion
+5. WHEN validating champions THEN the system SHALL require ≥90% of maps meet acceptance thresholds and no map has Success Rate <75%
+
+### Requirement 13
+
+**User Story:** As a researcher, I want comprehensive evaluation artifacts and reproducible results, so that I can share findings, reproduce experiments, and make informed decisions about model deployment.
+
+#### Acceptance Criteria
+
+1. WHEN generating reports THEN the system SHALL produce leaderboards with confidence intervals, per-map performance tables, and executive summaries
+2. WHEN creating artifacts THEN the system SHALL generate Pareto plots, robustness curves, failure analysis videos, and statistical comparison matrices
+3. WHEN ensuring reproducibility THEN the system SHALL log git SHA, environment configuration, seed lists, container hashes, and evaluation parameters
+4. WHEN exporting data THEN the system SHALL provide episode-level CSV/JSON logs with all metrics, traces, and metadata
+5. WHEN archiving results THEN the system SHALL maintain versioned evaluation history with champion progression and performance trends

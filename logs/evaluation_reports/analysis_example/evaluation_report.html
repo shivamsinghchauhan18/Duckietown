@@ -1,0 +1,135 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Evaluation Report - analysis_example</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 40px; }
+                .header { background-color: #f0f0f0; padding: 20px; border-radius: 5px; }
+                .section { margin: 20px 0; }
+                .metric { display: inline-block; margin: 10px; padding: 10px; background-color: #e8f4f8; border-radius: 3px; }
+                table { border-collapse: collapse; width: 100%; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                th { background-color: #f2f2f2; }
+                .champion { background-color: #ffd700; }
+                .plot { text-align: center; margin: 20px 0; }
+                .recommendation { background-color: #e8f5e8; padding: 10px; margin: 5px 0; border-left: 4px solid #4CAF50; }
+                .risk-high { background-color: #ffebee; border-left: 4px solid #f44336; }
+                .risk-medium { background-color: #fff3e0; border-left: 4px solid #ff9800; }
+                .risk-low { background-color: #e8f5e8; border-left: 4px solid #4CAF50; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>Evaluation Report: analysis_example</h1>
+                <p><strong>Generated:</strong> 2025-08-16T15:45:02.652526</p>
+                <p><strong>Champion Model:</strong> analysis_model_1</p>
+                <p><strong>Deployment Readiness:</strong> conditional</p>
+            </div>
+            
+            <div class="section">
+                <h2>Executive Summary</h2>
+                <div class="metric">
+                    <strong>Total Models:</strong> 3
+                </div>
+                <div class="metric">
+                    <strong>Champion Score:</strong> 0.808
+                </div>
+                <div class="metric">
+                    <strong>Champion Success Rate:</strong> 89.9%
+                </div>
+                
+                <h3>Key Findings</h3>
+                <ul>
+        <li>Champion model 'analysis_model_1' achieved 0.808 composite score with 89.9% success rate</li><li>Performance spread: 0.082 composite score difference between best and worst models</li><li>Statistical analysis: 0/3 (0.0%) model comparisons show significant differences</li>
+                </ul>
+                
+                <h3>Recommendations</h3>
+        <div class="recommendation">Champion model shows good performance but requires additional validation</div>
+                <h3>Risk Assessment</h3>
+        <div class="risk-low"><strong>Performance:</strong> Low - Good success rate achieved</div><div class="risk-low"><strong>Validation:</strong> Low - Model passes validation criteria</div>
+            </div>
+            
+            <div class="section">
+                <h2>Leaderboard</h2>
+                <table>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Model ID</th>
+                        <th>Composite Score</th>
+                        <th>Success Rate</th>
+                        <th>Status</th>
+                        <th>Validation</th>
+                    </tr>
+        
+                    <tr class="">
+                        <td>1</td>
+                        <td>analysis_model_1</td>
+                        <td>0.808</td>
+                        <td>89.9%</td>
+                        <td>candidate</td>
+                        <td>valid</td>
+                    </tr>
+            
+                    <tr class="">
+                        <td>2</td>
+                        <td>analysis_model_2</td>
+                        <td>0.786</td>
+                        <td>88.2%</td>
+                        <td>candidate</td>
+                        <td>valid</td>
+                    </tr>
+            
+                    <tr class="">
+                        <td>3</td>
+                        <td>analysis_model_3</td>
+                        <td>0.726</td>
+                        <td>78.0%</td>
+                        <td>candidate</td>
+                        <td>valid</td>
+                    </tr>
+            
+                </table>
+            </div>
+        
+            <div class="section">
+                <h2>Visualizations</h2>
+            
+                <div class="plot">
+                    <h3>Leaderboard</h3>
+                    <img src="leaderboard.png" alt="leaderboard" style="max-width: 100%; height: auto;">
+                </div>
+                
+                <div class="plot">
+                    <h3>Heatmap Per Map Success Rate</h3>
+                    <img src="heatmap_per_map_success_rate.png" alt="heatmap_per_map_success_rate" style="max-width: 100%; height: auto;">
+                </div>
+                
+                <div class="plot">
+                    <h3>Heatmap Per Map Lateral Deviation</h3>
+                    <img src="heatmap_per_map_lateral_deviation.png" alt="heatmap_per_map_lateral_deviation" style="max-width: 100%; height: auto;">
+                </div>
+                
+                <div class="plot">
+                    <h3>Heatmap Per Suite Success Rate</h3>
+                    <img src="heatmap_per_suite_success_rate.png" alt="heatmap_per_suite_success_rate" style="max-width: 100%; height: auto;">
+                </div>
+                
+                <div class="plot">
+                    <h3>Heatmap Per Suite Mean Reward</h3>
+                    <img src="heatmap_per_suite_mean_reward.png" alt="heatmap_per_suite_mean_reward" style="max-width: 100%; height: auto;">
+                </div>
+                
+                <div class="plot">
+                    <h3>Heatmap Overall Metrics</h3>
+                    <img src="heatmap_overall_metrics.png" alt="heatmap_overall_metrics" style="max-width: 100%; height: auto;">
+                </div>
+                
+                <div class="plot">
+                    <h3>Statistical Comparisons</h3>
+                    <img src="statistical_comparisons.png" alt="statistical_comparisons" style="max-width: 100%; height: auto;">
+                </div>
+                </div>
+        </body>
+        </html>
+        

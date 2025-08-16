@@ -1,0 +1,39 @@
+{
+  "summary": {
+    "total_episodes": 5,
+    "failed_episodes": 2,
+    "success_rate": 0.6,
+    "total_failures": 3
+  },
+  "failure_types": {
+    "collision_static": 1,
+    "stuck": 1,
+    "off_lane_right": 1
+  },
+  "failure_by_model": {
+    "demo_model_v1": {
+      "collision_static": 1,
+      "stuck": 1,
+      "off_lane_right": 1
+    }
+  },
+  "failure_by_map": {
+    "loop_empty": {
+      "collision_static": 1,
+      "stuck": 1,
+      "off_lane_right": 1
+    }
+  },
+  "failure_by_suite": {
+    "base": {
+      "collision_static": 1,
+      "stuck": 1,
+      "off_lane_right": 1
+    }
+  },
+  "severity_distribution": {
+    "critical": 1,
+    "high": 2
+  },
+  "analysis_timestamp": "2025-08-16T14:56:20.911874"
+}

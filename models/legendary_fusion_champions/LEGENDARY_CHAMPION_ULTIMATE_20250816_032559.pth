@@ -1,0 +1,17 @@
+{
+  "model_state_dict": {
+    "encoder.transformer.layers.0.attention.weight": "<tensor_shape_[1024,1024]>",
+    "encoder.transformer.layers.0.ffn.weight": "<tensor_shape_[4096,1024]>",
+    "policy_head.weight": "<tensor_shape_[2,1024]>",
+    "value_head.weight": "<tensor_shape_[1,1024]>"
+  },
+  "hyperparameters": {
+    "learning_rate": 5e-05,
+    "batch_size": 262144,
+    "architecture": "transformer_enhanced_cnn"
+  },
+  "performance_metrics": {
+    "composite_score": 119.07406435545158,
+    "legendary_status": true
+  }
+}

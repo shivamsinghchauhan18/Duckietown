@@ -1,0 +1,298 @@
+{
+  "report_id": "analysis_example",
+  "generation_timestamp": "2025-08-16T15:45:02.652526",
+  "config": {
+    "include_confidence_intervals": true,
+    "include_statistical_tests": true,
+    "include_pareto_analysis": true,
+    "include_robustness_analysis": true,
+    "include_failure_analysis": true,
+    "plot_style": "seaborn-v0_8",
+    "plot_dpi": 300,
+    "plot_format": "png",
+    "color_palette": "Set2",
+    "figure_size": [
+      12,
+      8
+    ],
+    "font_size": 10,
+    "save_plots": true,
+    "generate_html": true,
+    "generate_pdf": false
+  },
+  "executive_summary": {
+    "champion_model": "analysis_model_1",
+    "total_models_evaluated": 3,
+    "evaluation_timestamp": "2025-08-16T15:45:02.652506",
+    "key_findings": [
+      "Champion model 'analysis_model_1' achieved 0.808 composite score with 89.9% success rate",
+      "Performance spread: 0.082 composite score difference between best and worst models",
+      "Statistical analysis: 0/3 (0.0%) model comparisons show significant differences"
+    ],
+    "performance_highlights": {
+      "champion_composite_score": 0.8075169535598369,
+      "champion_success_rate": 0.8992921353084065,
+      "total_models_evaluated": 3,
+      "models_above_threshold": 2,
+      "champion_validation_status": "valid"
+    },
+    "recommendations": [
+      "Champion model shows good performance but requires additional validation"
+    ],
+    "risk_assessment": {
+      "performance": "Low - Good success rate achieved",
+      "validation": "Low - Model passes validation criteria"
+    },
+    "deployment_readiness": "conditional"
+  },
+  "leaderboard": [
+    {
+      "rank": 1,
+      "model_id": "analysis_model_1",
+      "composite_score": 0.8075169535598369,
+      "success_rate": 0.8992921353084065,
+      "mean_reward": 0.7189516176436557,
+      "lateral_deviation": 0.06655077234134851,
+      "smoothness": 0.06032054814432049,
+      "stability": 0.8993030988662104,
+      "composite_score_ci": [
+        0.7875169535598369,
+        0.8275169535598369
+      ],
+      "success_rate_ci": [
+        0.8492921353084064,
+        0.9492921353084065
+      ],
+      "pareto_rank": null,
+      "champion_status": "candidate",
+      "validation_status": "valid",
+      "metadata": {
+        "total_episodes": 0,
+        "total_suites": 0
+      }
+    },
+    {
+      "rank": 2,
+      "model_id": "analysis_model_2",
+      "composite_score": 0.7860577231259556,
+      "success_rate": 0.881598788597499,
+      "mean_reward": 0.6818818558397705,
+      "lateral_deviation": 0.07538137880630189,
+      "smoothness": 0.06513088560609948,
+      "stability": 0.8486178687796434,
+      "composite_score_ci": [
+        0.7660577231259555,
+        0.8060577231259556
+      ],
+      "success_rate_ci": [
+        0.8315987885974989,
+        0.931598788597499
+      ],
+      "pareto_rank": null,
+      "champion_status": "candidate",
+      "validation_status": "valid",
+      "metadata": {
+        "total_episodes": 0,
+        "total_suites": 0
+      }
+    },
+    {
+      "rank": 3,
+      "model_id": "analysis_model_3",
+      "composite_score": 0.7257686841439133,
+      "success_rate": 0.7804187470120286,
+      "mean_reward": 0.6389492653144231,
+      "lateral_deviation": 0.08081564639774468,
+      "smoothness": 0.07094480739279668,
+      "stability": 0.796437728640002,
+      "composite_score_ci": [
+        0.7057686841439132,
+        0.7457686841439133
+      ],
+      "success_rate_ci": [
+        0.7304187470120286,
+        0.8304187470120287
+      ],
+      "pareto_rank": null,
+      "champion_status": "candidate",
+      "validation_status": "valid",
+      "metadata": {
+        "total_episodes": 0,
+        "total_suites": 0
+      }
+    }
+  ],
+  "performance_tables": {
+    "per_map_success_rate": {
+      "metric_name": "success_rate_per_map",
+      "table_data": "            analysis_model_1 analysis_model_2 analysis_model_3\nhuge_loop           0.885292         0.864354          0.81908\nloop_empty          0.929808         0.897507         0.751529\nmulti_track         0.872522         0.951239         0.809272\ntechtrack           0.832137         0.815098         0.786487\nzigzag              0.859801         0.777261         0.806734",
+      "confidence_intervals": "            analysis_model_1 analysis_model_2 analysis_model_3\nhuge_loop     [0.805, 0.965]   [0.784, 0.944]   [0.739, 0.899]\nloop_empty    [0.850, 1.000]   [0.818, 0.978]   [0.672, 0.832]\nmulti_track   [0.793, 0.953]   [0.871, 1.000]   [0.729, 0.889]\ntechtrack     [0.752, 0.912]   [0.735, 0.895]   [0.706, 0.866]\nzigzag        [0.780, 0.940]   [0.697, 0.857]   [0.727, 0.887]",
+      "statistical_significance": null,
+      "best_performers": {
+        "huge_loop": "analysis_model_1",
+        "loop_empty": "analysis_model_1",
+        "multi_track": "analysis_model_2",
+        "techtrack": "analysis_model_1",
+        "zigzag": "analysis_model_1"
+      }
+    },
+    "per_map_lateral_deviation": {
+      "metric_name": "lateral_deviation_per_map",
+      "table_data": "            analysis_model_1 analysis_model_2 analysis_model_3\nhuge_loop           0.072113          0.04135         0.050105\nloop_empty          0.066898         0.073876         0.075616\nmulti_track         0.086553         0.058493         0.095428\ntechtrack           0.071502         0.056926         0.110259\nzigzag              0.083529         0.081722         0.103029",
+      "confidence_intervals": "            analysis_model_1 analysis_model_2 analysis_model_3\nhuge_loop                NaN              NaN              NaN\nloop_empty               NaN              NaN              NaN\nmulti_track              NaN              NaN              NaN\ntechtrack                NaN              NaN              NaN\nzigzag                   NaN              NaN              NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "huge_loop": "analysis_model_2",
+        "loop_empty": "analysis_model_1",
+        "multi_track": "analysis_model_2",
+        "techtrack": "analysis_model_2",
+        "zigzag": "analysis_model_2"
+      }
+    },
+    "per_suite_success_rate": {
+      "metric_name": "success_rate_per_suite",
+      "table_data": "       analysis_model_1 analysis_model_2 analysis_model_3\nbase           0.899292         0.881599         0.780419\nhard           0.764398         0.749359         0.663356\nood            0.674469         0.661199         0.585314\nstress         0.539575         0.528959         0.468251",
+      "confidence_intervals": "       analysis_model_1 analysis_model_2 analysis_model_3\nbase                NaN              NaN              NaN\nhard                NaN              NaN              NaN\nood                 NaN              NaN              NaN\nstress              NaN              NaN              NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "base": "analysis_model_1",
+        "hard": "analysis_model_1",
+        "ood": "analysis_model_1",
+        "stress": "analysis_model_1"
+      }
+    },
+    "per_suite_mean_reward": {
+      "metric_name": "mean_reward_per_suite",
+      "table_data": "       analysis_model_1 analysis_model_2 analysis_model_3\nbase           0.718952         0.681882         0.638949\nhard           0.647056         0.613694         0.575054\nood            0.575161         0.545505         0.511159\nstress         0.503266         0.477317         0.447264",
+      "confidence_intervals": "       analysis_model_1 analysis_model_2 analysis_model_3\nbase                NaN              NaN              NaN\nhard                NaN              NaN              NaN\nood                 NaN              NaN              NaN\nstress              NaN              NaN              NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "base": "analysis_model_1",
+        "hard": "analysis_model_1",
+        "ood": "analysis_model_1",
+        "stress": "analysis_model_1"
+      }
+    },
+    "overall_metrics": {
+      "metric_name": "overall_metrics",
+      "table_data": "                  analysis_model_1 analysis_model_2 analysis_model_3\nsuccess_rate              0.899292         0.881599         0.780419\nmean_reward               0.718952         0.681882         0.638949\nlateral_deviation         0.066551         0.075381         0.080816\nsmoothness                0.060321         0.065131         0.070945\nstability                 0.899303         0.848618         0.796438",
+      "confidence_intervals": "                  analysis_model_1 analysis_model_2 analysis_model_3\nsuccess_rate        [0.849, 0.949]   [0.832, 0.932]   [0.730, 0.830]\nmean_reward         [0.689, 0.749]   [0.652, 0.712]   [0.609, 0.669]\nlateral_deviation              NaN              NaN              NaN\nsmoothness                     NaN              NaN              NaN\nstability                      NaN              NaN              NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "success_rate": "analysis_model_1",
+        "mean_reward": "analysis_model_1",
+        "lateral_deviation": "analysis_model_1",
+        "smoothness": "analysis_model_1",
+        "stability": "analysis_model_1"
+      }
+    }
+  },
+  "statistical_comparisons": {
+    "comparisons": [
+      {
+        "model_a_id": "analysis_model_1",
+        "model_b_id": "analysis_model_2",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8075169535598369,
+        "model_b_mean": 0.7860577231259556,
+        "difference": -0.021459230433881316,
+        "p_value": 0.09785407695661187,
+        "adjusted_p_value": 0.09785407695661187,
+        "is_significant": false,
+        "effect_size": 0.21459230433881316,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "analysis_model_1",
+        "model_b_id": "analysis_model_3",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8075169535598369,
+        "model_b_mean": 0.7257686841439133,
+        "difference": -0.08174826941592361,
+        "p_value": 0.09182517305840765,
+        "adjusted_p_value": 0.09785407695661187,
+        "is_significant": false,
+        "effect_size": 0.8174826941592361,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "analysis_model_2",
+        "model_b_id": "analysis_model_3",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.7860577231259556,
+        "model_b_mean": 0.7257686841439133,
+        "difference": -0.0602890389820423,
+        "p_value": 0.09397109610179577,
+        "adjusted_p_value": 0.09785407695661187,
+        "is_significant": false,
+        "effect_size": 0.602890389820423,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      }
+    ],
+    "correction_method": "benjamini_hochberg",
+    "alpha": 0.05,
+    "num_significant_before": 0,
+    "num_significant_after": 0,
+    "rejected_hypotheses": [
+      false,
+      false,
+      false
+    ]
+  },
+  "pareto_analysis": null,
+  "robustness_analysis": null,
+  "failure_analysis": null,
+  "plots": {
+    "leaderboard": "logs/evaluation_reports/analysis_example/leaderboard.png",
+    "heatmap_per_map_success_rate": "logs/evaluation_reports/analysis_example/heatmap_per_map_success_rate.png",
+    "heatmap_per_map_lateral_deviation": "logs/evaluation_reports/analysis_example/heatmap_per_map_lateral_deviation.png",
+    "heatmap_per_suite_success_rate": "logs/evaluation_reports/analysis_example/heatmap_per_suite_success_rate.png",
+    "heatmap_per_suite_mean_reward": "logs/evaluation_reports/analysis_example/heatmap_per_suite_mean_reward.png",
+    "heatmap_overall_metrics": "logs/evaluation_reports/analysis_example/heatmap_overall_metrics.png",
+    "statistical_comparisons": "logs/evaluation_reports/analysis_example/statistical_comparisons.png"
+  },
+  "metadata": {
+    "total_models": 3,
+    "generation_time": "2025-08-16T15:45:02.652529",
+    "config_used": {
+      "include_confidence_intervals": true,
+      "include_statistical_tests": true,
+      "include_pareto_analysis": true,
+      "include_robustness_analysis": true,
+      "include_failure_analysis": true,
+      "plot_style": "seaborn-v0_8",
+      "plot_dpi": 300,
+      "plot_format": "png",
+      "color_palette": "Set2",
+      "figure_size": [
+        12,
+        8
+      ],
+      "font_size": 10,
+      "save_plots": true,
+      "generate_html": true,
+      "generate_pdf": false
+    }
+  }
+}

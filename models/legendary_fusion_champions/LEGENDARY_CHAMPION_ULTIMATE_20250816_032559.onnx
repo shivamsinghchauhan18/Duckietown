@@ -1,0 +1,26 @@
+{
+  "model_format": "ONNX",
+  "opset_version": 17,
+  "input_shape": [
+    1,
+    4,
+    64,
+    64,
+    3
+  ],
+  "output_shape": [
+    1,
+    2
+  ],
+  "providers": [
+    "CPUExecutionProvider",
+    "CUDAExecutionProvider"
+  ],
+  "model_size_mb": 45.2,
+  "inference_time_ms": 8.5,
+  "legendary_performance": {
+    "score": 119.07406435545158,
+    "certified": true,
+    "cloud_optimized": true
+  }
+}

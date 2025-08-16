@@ -1,0 +1,6 @@
+,elite_model_v3,advanced_model_v2,standard_model_v4,baseline_model_v1,experimental_v1
+success_rate,"[0.879, 0.979]","[0.794, 0.894]","[0.749, 0.849]","[0.769, 0.869]","[0.829, 0.929]"
+mean_reward,"[0.702, 0.762]","[0.677, 0.737]","[0.651, 0.711]","[0.603, 0.663]","[0.567, 0.627]"
+lateral_deviation,,,,,
+smoothness,,,,,
+stability,,,,,

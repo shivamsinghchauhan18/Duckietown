@@ -1,0 +1,179 @@
+# Comprehensive Evaluation Configuration Template
+# Full-featured configuration for thorough model assessment
+
+# Global evaluation settings
+parallel_evaluation: true
+max_parallel_workers: 4
+evaluation_timeout_hours: 24.0
+
+# Evaluation suites
+suites:
+  base:
+    enabled: true
+    seeds_per_map: 50
+    maps:
+      - loop_empty
+      - small_loop
+      - zigzag_dists
+    policy_modes:
+      - deterministic
+      - stochastic
+    timeout_steps: 2000
+    environmental_noise: 0.0
+    traffic_density: 0.0
+    lighting_variation: 0.0
+    texture_variation: 0.0
+    camera_noise: 0.0
+    friction_variation: 0.0
+
+  hard:
+    enabled: true
+    seeds_per_map: 50
+    maps:
+      - loop_empty
+      - small_loop
+      - zigzag_dists
+    policy_modes:
+      - deterministic
+      - stochastic
+    timeout_steps: 2000
+    environmental_noise: 0.7
+    traffic_density: 0.3
+    lighting_variation: 0.5
+    texture_variation: 0.4
+    camera_noise: 0.2
+    friction_variation: 0.2
+
+  law:
+    enabled: true
+    seeds_per_map: 30
+    maps:
+      - 4way
+      - udem1
+      - regress_4way_adam
+    policy_modes:
+      - deterministic
+      - stochastic
+    timeout_steps: 2500
+    environmental_noise: 0.1
+    traffic_density: 0.2
+    lighting_variation: 0.1
+    texture_variation: 0.1
+    camera_noise: 0.05
+    friction_variation: 0.1
+
+  ood:
+    enabled: true
+    seeds_per_map: 40
+    maps:
+      - loop_empty
+      - small_loop
+      - zigzag_dists
+    policy_modes:
+      - deterministic
+      - stochastic
+    timeout_steps: 2000
+    environmental_noise: 0.8
+    traffic_density: 0.1
+    lighting_variation: 0.8
+    texture_variation: 0.9
+    camera_noise: 0.5
+    friction_variation: 0.3
+
+  stress:
+    enabled: true
+    seeds_per_map: 20
+    maps:
+      - loop_empty
+      - small_loop
+    policy_modes:
+      - deterministic
+    timeout_steps: 1500
+    environmental_noise: 1.0
+    traffic_density: 0.8
+    lighting_variation: 1.0
+    texture_variation: 1.0
+    camera_noise: 0.8
+    friction_variation: 0.5
+
+# Metrics configuration
+metrics:
+  compute_confidence_intervals: true
+  confidence_level: 0.95
+  bootstrap_resamples: 10000
+  min_episodes_for_ci: 10
+  
+  # Composite score weights (must sum to 1.0)
+  success_rate_weight: 0.45
+  reward_weight: 0.25
+  episode_length_weight: 0.10
+  lateral_deviation_weight: 0.08
+  heading_error_weight: 0.06
+  smoothness_weight: 0.06
+  
+  normalization_scope: per_map_suite
+  use_composite_score: true
+
+# Statistical analysis
+statistical:
+  significance_level: 0.05
+  multiple_comparison_correction: benjamini_hochberg
+  min_effect_size: 0.1
+  paired_tests: true
+  use_parametric_tests: false
+  bootstrap_comparisons: true
+
+# Failure analysis
+failure_analysis:
+  enabled: true
+  record_failure_videos: true
+  max_failure_videos: 20
+  generate_heatmaps: true
+  save_episode_traces: true
+  stuck_threshold_steps: 100
+  oscillation_threshold: 0.5
+  overspeed_threshold: 2.0
+
+# Robustness analysis
+robustness:
+  enabled: true
+  parameter_sweeps:
+    lighting_intensity: [0.5, 0.7, 0.9, 1.0, 1.1, 1.3, 1.5]
+    texture_domain: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
+    camera_pitch: [-0.2, -0.1, 0.0, 0.1, 0.2]
+    friction_coefficient: [0.6, 0.8, 1.0, 1.2, 1.4]
+    traffic_density: [0.0, 0.1, 0.3, 0.5, 0.7]
+  min_success_rate_threshold: 0.75
+  sensitivity_threshold: 0.1
+
+# Champion selection
+champion_selection:
+  enabled: true
+  min_maps_passing: 0.9
+  min_success_rate: 0.75
+  max_regression_threshold: 0.05
+  max_smoothness_increase: 0.20
+  pareto_axes:
+    - [success_rate, -lateral_deviation, -smoothness]
+
+# Artifacts and outputs
+artifacts:
+  output_directory: evaluation_results
+  keep_top_k_models: 5
+  export_csv: true
+  export_json: true
+  export_plots: true
+  export_videos: true
+  compress_artifacts: true
+  cleanup_intermediate: true
+  max_artifact_age_days: 30
+
+# Reproducibility
+reproducibility:
+  fix_seed_list: true
+  seed_base: 42
+  cudnn_deterministic: true
+  log_git_sha: true
+  log_environment_info: true
+  track_model_versions: true
+  track_config_versions: true

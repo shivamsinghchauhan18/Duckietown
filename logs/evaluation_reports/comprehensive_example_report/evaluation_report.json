@@ -1,0 +1,800 @@
+{
+  "report_id": "comprehensive_example_report",
+  "generation_timestamp": "2025-08-16T15:44:51.482114",
+  "config": {
+    "include_confidence_intervals": true,
+    "include_statistical_tests": true,
+    "include_pareto_analysis": true,
+    "include_robustness_analysis": true,
+    "include_failure_analysis": true,
+    "plot_style": "seaborn-v0_8",
+    "plot_dpi": 200,
+    "plot_format": "png",
+    "color_palette": "Set2",
+    "figure_size": [
+      12,
+      8
+    ],
+    "font_size": 10,
+    "save_plots": true,
+    "generate_html": true,
+    "generate_pdf": false
+  },
+  "executive_summary": {
+    "champion_model": "champion_model_v5",
+    "total_models_evaluated": 6,
+    "evaluation_timestamp": "2025-08-16T15:44:51.482087",
+    "key_findings": [
+      "Champion model 'champion_model_v5' achieved 0.834 composite score with 93.2% success rate",
+      "Performance spread: 0.129 composite score difference between best and worst models",
+      "Statistical analysis: 0/15 (0.0%) model comparisons show significant differences",
+      "Average robustness score across all models: 0.741"
+    ],
+    "performance_highlights": {
+      "champion_composite_score": 0.8343365902869967,
+      "champion_success_rate": 0.9318631021144003,
+      "total_models_evaluated": 6,
+      "models_above_threshold": 4,
+      "champion_validation_status": "valid"
+    },
+    "recommendations": [
+      "Champion model meets deployment criteria and is ready for production",
+      "Consider ensemble methods combining top models: champion_model_v5 and runner_up_v3"
+    ],
+    "risk_assessment": {
+      "performance": "Low - Good success rate achieved",
+      "validation": "Low - Model passes validation criteria",
+      "robustness": "Low - Good robustness demonstrated"
+    },
+    "deployment_readiness": "ready"
+  },
+  "leaderboard": [
+    {
+      "rank": 1,
+      "model_id": "champion_model_v5",
+      "composite_score": 0.8343365902869967,
+      "success_rate": 0.9318631021144003,
+      "mean_reward": 0.7526145404501576,
+      "lateral_deviation": 0.05912032528669163,
+      "smoothness": 0.056050228586087415,
+      "stability": 0.9395792195821341,
+      "composite_score_ci": [
+        0.8143365902869967,
+        0.8543365902869967
+      ],
+      "success_rate_ci": [
+        0.8818631021144002,
+        0.9818631021144003
+      ],
+      "pareto_rank": 1,
+      "champion_status": "champion",
+      "validation_status": "valid",
+      "metadata": {
+        "total_episodes": 0,
+        "total_suites": 0
+      }
+    },
+    {
+      "rank": 2,
+      "model_id": "runner_up_v3",
+      "composite_score": 0.8037970066956803,
+      "success_rate": 0.8843258413900795,
+      "mean_reward": 0.7270064515084651,
+      "lateral_deviation": 0.06378356162713962,
+      "smoothness": 0.05905537805438679,
+      "stability": 0.9095038873751221,
+      "composite_score_ci": [
+        0.7837970066956803,
+        0.8237970066956803
+      ],
+      "success_rate_ci": [
+        0.8343258413900795,
+        0.9343258413900796
+      ],
+      "pareto_rank": 2,
+      "champion_status": "candidate",
+      "validation_status": "valid",
+      "metadata": {
+        "total_episodes": 0,
+        "total_suites": 0
+      }
+    },
+    {
+      "rank": 3,
+      "model_id": "solid_performer_v2",
+      "composite_score": 0.7759830717669063,
+      "success_rate": 0.8490222626417375,
+      "mean_reward": 0.694065801762896,
+      "lateral_deviation": 0.07150865188180934,
+      "smoothness": 0.06300759661727738,
+      "stability": 0.8724479349764311,
+      "composite_score_ci": [
+        0.7559830717669063,
+        0.7959830717669063
+      ],
+      "success_rate_ci": [
+        0.7990222626417375,
+        0.8990222626417376
+      ],
+      "pareto_rank": 2,
+      "champion_status": "candidate",
+      "validation_status": "valid",
+      "metadata": {
+        "total_episodes": 0,
+        "total_suites": 0
+      }
+    },
+    {
+      "rank": 4,
+      "model_id": "baseline_v4",
+      "composite_score": 0.7662900433347034,
+      "success_rate": 0.859951654945408,
+      "mean_reward": 0.6531814583777327,
+      "lateral_deviation": 0.07925578662320251,
+      "smoothness": 0.07037852385372384,
+      "stability": 0.819499785540716,
+      "composite_score_ci": [
+        0.7462900433347034,
+        0.7862900433347034
+      ],
+      "success_rate_ci": [
+        0.809951654945408,
+        0.9099516549454081
+      ],
+      "pareto_rank": 2,
+      "champion_status": "candidate",
+      "validation_status": "valid",
+      "metadata": {
+        "total_episodes": 0,
+        "total_suites": 0
+      }
+    },
+    {
+      "rank": 5,
+      "model_id": "experimental_v2",
+      "composite_score": 0.7256626122625408,
+      "success_rate": 0.7918421827194922,
+      "mean_reward": 0.6260357438364408,
+      "lateral_deviation": 0.08357998325800213,
+      "smoothness": 0.07383647418442896,
+      "stability": 0.7729539285886077,
+      "composite_score_ci": [
+        0.7056626122625408,
+        0.7456626122625408
+      ],
+      "success_rate_ci": [
+        0.7418421827194922,
+        0.8418421827194923
+      ],
+      "pareto_rank": 2,
+      "champion_status": "candidate",
+      "validation_status": "insufficient_maps",
+      "metadata": {
+        "total_episodes": 0,
+        "total_suites": 0
+      }
+    },
+    {
+      "rank": 6,
+      "model_id": "legacy_model",
+      "composite_score": 0.7051749261706411,
+      "success_rate": 0.7788349594793703,
+      "mean_reward": 0.5860748154849751,
+      "lateral_deviation": 0.09151860343357539,
+      "smoothness": 0.07760226567942251,
+      "stability": 0.7243787705655571,
+      "composite_score_ci": [
+        0.6851749261706411,
+        0.7251749261706412
+      ],
+      "success_rate_ci": [
+        0.7288349594793703,
+        0.8288349594793704
+      ],
+      "pareto_rank": 2,
+      "champion_status": "candidate",
+      "validation_status": "insufficient_maps",
+      "metadata": {
+        "total_episodes": 0,
+        "total_suites": 0
+      }
+    }
+  ],
+  "performance_tables": {
+    "per_map_success_rate": {
+      "metric_name": "success_rate_per_map",
+      "table_data": "            champion_model_v5 runner_up_v3 solid_performer_v2 baseline_v4 experimental_v2 legacy_model\nhuge_loop            0.929054     0.959648           0.764529    0.915201        0.831229     0.845602\nloop_empty           0.844912     0.947277           0.899551    0.756302        0.829818     0.755087\nmulti_track          0.881588     0.952646           0.868832    0.863956         0.79606     0.754532\ntechtrack            0.823201      0.94529           0.841926     0.87991        0.743273     0.746033\nzigzag               0.843497     0.921249           0.845005     0.90232        0.776741     0.787556",
+      "confidence_intervals": "            champion_model_v5    runner_up_v3 solid_performer_v2     baseline_v4 experimental_v2    legacy_model\nhuge_loop      [0.849, 1.000]  [0.880, 1.000]     [0.685, 0.845]  [0.835, 0.995]  [0.751, 0.911]  [0.766, 0.926]\nloop_empty     [0.765, 0.925]  [0.867, 1.000]     [0.820, 0.980]  [0.676, 0.836]  [0.750, 0.910]  [0.675, 0.835]\nmulti_track    [0.802, 0.962]  [0.873, 1.000]     [0.789, 0.949]  [0.784, 0.944]  [0.716, 0.876]  [0.675, 0.835]\ntechtrack      [0.743, 0.903]  [0.865, 1.000]     [0.762, 0.922]  [0.800, 0.960]  [0.663, 0.823]  [0.666, 0.826]\nzigzag         [0.763, 0.923]  [0.841, 1.000]     [0.765, 0.925]  [0.822, 0.982]  [0.697, 0.857]  [0.708, 0.868]",
+      "statistical_significance": null,
+      "best_performers": {
+        "huge_loop": "runner_up_v3",
+        "loop_empty": "runner_up_v3",
+        "multi_track": "runner_up_v3",
+        "techtrack": "runner_up_v3",
+        "zigzag": "runner_up_v3"
+      }
+    },
+    "per_map_lateral_deviation": {
+      "metric_name": "lateral_deviation_per_map",
+      "table_data": "            champion_model_v5 runner_up_v3 solid_performer_v2 baseline_v4 experimental_v2 legacy_model\nhuge_loop            0.076127     0.069017           0.047696     0.07203        0.060488      0.08429\nloop_empty           0.047517     0.061009           0.057181    0.064226         0.08958     0.099957\nmulti_track          0.058716     0.057744           0.120305    0.082239        0.101368     0.102281\ntechtrack            0.021198     0.081709           0.098803     0.07325        0.079424     0.062249\nzigzag               0.039925     0.072838           0.088871    0.047243        0.107243     0.122556",
+      "confidence_intervals": "            champion_model_v5 runner_up_v3 solid_performer_v2 baseline_v4 experimental_v2 legacy_model\nhuge_loop                 NaN          NaN                NaN         NaN             NaN          NaN\nloop_empty                NaN          NaN                NaN         NaN             NaN          NaN\nmulti_track               NaN          NaN                NaN         NaN             NaN          NaN\ntechtrack                 NaN          NaN                NaN         NaN             NaN          NaN\nzigzag                    NaN          NaN                NaN         NaN             NaN          NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "huge_loop": "solid_performer_v2",
+        "loop_empty": "champion_model_v5",
+        "multi_track": "runner_up_v3",
+        "techtrack": "champion_model_v5",
+        "zigzag": "champion_model_v5"
+      }
+    },
+    "per_suite_success_rate": {
+      "metric_name": "success_rate_per_suite",
+      "table_data": "       champion_model_v5 runner_up_v3 solid_performer_v2 baseline_v4 experimental_v2 legacy_model\nbase            0.931863     0.884326           0.849022    0.859952        0.791842     0.778835\nhard            0.792084     0.751677           0.721669    0.730959        0.673066      0.66201\nood             0.698897     0.663244           0.636767    0.644964        0.593882     0.584126\nstress          0.559118     0.530596           0.509413    0.515971        0.475105     0.467301",
+      "confidence_intervals": "       champion_model_v5 runner_up_v3 solid_performer_v2 baseline_v4 experimental_v2 legacy_model\nbase                 NaN          NaN                NaN         NaN             NaN          NaN\nhard                 NaN          NaN                NaN         NaN             NaN          NaN\nood                  NaN          NaN                NaN         NaN             NaN          NaN\nstress               NaN          NaN                NaN         NaN             NaN          NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "base": "champion_model_v5",
+        "hard": "champion_model_v5",
+        "ood": "champion_model_v5",
+        "stress": "champion_model_v5"
+      }
+    },
+    "per_suite_mean_reward": {
+      "metric_name": "mean_reward_per_suite",
+      "table_data": "       champion_model_v5 runner_up_v3 solid_performer_v2 baseline_v4 experimental_v2 legacy_model\nbase            0.752615     0.727006           0.694066    0.653181        0.626036     0.586075\nhard            0.677353     0.654306           0.624659    0.587863        0.563432     0.527467\nood             0.602092     0.581605           0.555253    0.522545        0.500829      0.46886\nstress           0.52683     0.508905           0.485846    0.457227        0.438225     0.410252",
+      "confidence_intervals": "       champion_model_v5 runner_up_v3 solid_performer_v2 baseline_v4 experimental_v2 legacy_model\nbase                 NaN          NaN                NaN         NaN             NaN          NaN\nhard                 NaN          NaN                NaN         NaN             NaN          NaN\nood                  NaN          NaN                NaN         NaN             NaN          NaN\nstress               NaN          NaN                NaN         NaN             NaN          NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "base": "champion_model_v5",
+        "hard": "champion_model_v5",
+        "ood": "champion_model_v5",
+        "stress": "champion_model_v5"
+      }
+    },
+    "overall_metrics": {
+      "metric_name": "overall_metrics",
+      "table_data": "                  champion_model_v5 runner_up_v3 solid_performer_v2 baseline_v4 experimental_v2 legacy_model\nsuccess_rate               0.931863     0.884326           0.849022    0.859952        0.791842     0.778835\nmean_reward                0.752615     0.727006           0.694066    0.653181        0.626036     0.586075\nlateral_deviation           0.05912     0.063784           0.071509    0.079256         0.08358     0.091519\nsmoothness                  0.05605     0.059055           0.063008    0.070379        0.073836     0.077602\nstability                  0.939579     0.909504           0.872448      0.8195        0.772954     0.724379",
+      "confidence_intervals": "                  champion_model_v5    runner_up_v3 solid_performer_v2     baseline_v4 experimental_v2    legacy_model\nsuccess_rate         [0.882, 0.982]  [0.834, 0.934]     [0.799, 0.899]  [0.810, 0.910]  [0.742, 0.842]  [0.729, 0.829]\nmean_reward          [0.723, 0.783]  [0.697, 0.757]     [0.664, 0.724]  [0.623, 0.683]  [0.596, 0.656]  [0.556, 0.616]\nlateral_deviation               NaN             NaN                NaN             NaN             NaN             NaN\nsmoothness                      NaN             NaN                NaN             NaN             NaN             NaN\nstability                       NaN             NaN                NaN             NaN             NaN             NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "success_rate": "champion_model_v5",
+        "mean_reward": "champion_model_v5",
+        "lateral_deviation": "champion_model_v5",
+        "smoothness": "champion_model_v5",
+        "stability": "champion_model_v5"
+      }
+    }
+  },
+  "statistical_comparisons": {
+    "comparisons": [
+      {
+        "model_a_id": "champion_model_v5",
+        "model_b_id": "runner_up_v3",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8343365902869967,
+        "model_b_mean": 0.8037970066956803,
+        "difference": -0.030539583591316366,
+        "p_value": 0.09694604164086837,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.30539583591316366,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "champion_model_v5",
+        "model_b_id": "solid_performer_v2",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8343365902869967,
+        "model_b_mean": 0.7759830717669063,
+        "difference": -0.05835351852009041,
+        "p_value": 0.09416464814799097,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.5835351852009041,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "champion_model_v5",
+        "model_b_id": "baseline_v4",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8343365902869967,
+        "model_b_mean": 0.7662900433347034,
+        "difference": -0.06804654695229329,
+        "p_value": 0.09319534530477068,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.6804654695229329,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "champion_model_v5",
+        "model_b_id": "experimental_v2",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8343365902869967,
+        "model_b_mean": 0.7256626122625408,
+        "difference": -0.10867397802445589,
+        "p_value": 0.08913260219755442,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 1.0867397802445589,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "champion_model_v5",
+        "model_b_id": "legacy_model",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8343365902869967,
+        "model_b_mean": 0.7051749261706411,
+        "difference": -0.12916166411635555,
+        "p_value": 0.08708383358836445,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 1.2916166411635555,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "runner_up_v3",
+        "model_b_id": "solid_performer_v2",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8037970066956803,
+        "model_b_mean": 0.7759830717669063,
+        "difference": -0.027813934928774042,
+        "p_value": 0.0972186065071226,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.2781393492877404,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "runner_up_v3",
+        "model_b_id": "baseline_v4",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8037970066956803,
+        "model_b_mean": 0.7662900433347034,
+        "difference": -0.03750696336097692,
+        "p_value": 0.09624930366390232,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.3750696336097692,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "runner_up_v3",
+        "model_b_id": "experimental_v2",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8037970066956803,
+        "model_b_mean": 0.7256626122625408,
+        "difference": -0.07813439443313952,
+        "p_value": 0.09218656055668606,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.7813439443313952,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "runner_up_v3",
+        "model_b_id": "legacy_model",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.8037970066956803,
+        "model_b_mean": 0.7051749261706411,
+        "difference": -0.09862208052503918,
+        "p_value": 0.09013779194749609,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.9862208052503918,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "solid_performer_v2",
+        "model_b_id": "baseline_v4",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.7759830717669063,
+        "model_b_mean": 0.7662900433347034,
+        "difference": -0.009693028432202877,
+        "p_value": 0.09903069715677972,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.09693028432202877,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "solid_performer_v2",
+        "model_b_id": "experimental_v2",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.7759830717669063,
+        "model_b_mean": 0.7256626122625408,
+        "difference": -0.05032045950436548,
+        "p_value": 0.09496795404956346,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.5032045950436548,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "solid_performer_v2",
+        "model_b_id": "legacy_model",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.7759830717669063,
+        "model_b_mean": 0.7051749261706411,
+        "difference": -0.07080814559626514,
+        "p_value": 0.09291918544037349,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.7080814559626514,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "baseline_v4",
+        "model_b_id": "experimental_v2",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.7662900433347034,
+        "model_b_mean": 0.7256626122625408,
+        "difference": -0.0406274310721626,
+        "p_value": 0.09593725689278375,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.406274310721626,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "baseline_v4",
+        "model_b_id": "legacy_model",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.7662900433347034,
+        "model_b_mean": 0.7051749261706411,
+        "difference": -0.06111511716406226,
+        "p_value": 0.09388848828359378,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.6111511716406226,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      },
+      {
+        "model_a_id": "experimental_v2",
+        "model_b_id": "legacy_model",
+        "metric_name": "composite_score",
+        "model_a_mean": 0.7256626122625408,
+        "model_b_mean": 0.7051749261706411,
+        "difference": -0.02048768609189966,
+        "p_value": 0.09795123139081004,
+        "adjusted_p_value": 0.09903069715677972,
+        "is_significant": false,
+        "effect_size": 0.2048768609189966,
+        "effect_size_method": "cohens_d",
+        "test_method": "mock_test",
+        "confidence_interval": null,
+        "sample_size_a": 0,
+        "sample_size_b": 0,
+        "metadata": {
+          "correction_method": "benjamini_hochberg"
+        }
+      }
+    ],
+    "correction_method": "benjamini_hochberg",
+    "alpha": 0.05,
+    "num_significant_before": 0,
+    "num_significant_after": 0,
+    "rejected_hypotheses": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "pareto_analysis": {
+    "total_fronts_analyzed": 3,
+    "fronts": [
+      {
+        "front_id": 1,
+        "axes": [
+          "success_rate",
+          "lateral_deviation",
+          "smoothness"
+        ],
+        "non_dominated_models": [
+          "champion_model_v5"
+        ],
+        "dominated_models": [
+          "runner_up_v3",
+          "solid_performer_v2",
+          "baseline_v4",
+          "experimental_v2",
+          "legacy_model"
+        ],
+        "trade_off_analysis": {
+          "trade_offs": "insufficient_points"
+        }
+      },
+      {
+        "front_id": 2,
+        "axes": [
+          "success_rate",
+          "episode_length"
+        ],
+        "non_dominated_models": [
+          "champion_model_v5"
+        ],
+        "dominated_models": [
+          "runner_up_v3",
+          "solid_performer_v2",
+          "baseline_v4",
+          "experimental_v2",
+          "legacy_model"
+        ],
+        "trade_off_analysis": {
+          "trade_offs": "insufficient_points"
+        }
+      },
+      {
+        "front_id": 3,
+        "axes": [
+          "composite_score",
+          "stability"
+        ],
+        "non_dominated_models": [
+          "champion_model_v5"
+        ],
+        "dominated_models": [
+          "runner_up_v3",
+          "solid_performer_v2",
+          "baseline_v4",
+          "experimental_v2",
+          "legacy_model"
+        ],
+        "trade_off_analysis": {
+          "trade_offs": "insufficient_points"
+        }
+      }
+    ]
+  },
+  "robustness_analysis": {
+    "total_models_analyzed": 6,
+    "overall_rankings": [
+      [
+        "champion_model_v5",
+        0.8134784529172135
+      ],
+      [
+        "runner_up_v3",
+        0.7719803646012378
+      ],
+      [
+        "baseline_v4",
+        0.7507026946997923
+      ],
+      [
+        "solid_performer_v2",
+        0.741161781316333
+      ],
+      [
+        "experimental_v2",
+        0.6912459054250261
+      ],
+      [
+        "legacy_model",
+        0.6798911304434707
+      ]
+    ],
+    "parameter_analysis": {
+      "lighting_intensity": {
+        "rankings": [
+          [
+            "champion_model_v5",
+            0.8134784529172135
+          ],
+          [
+            "runner_up_v3",
+            0.7719803646012378
+          ],
+          [
+            "baseline_v4",
+            0.7507026946997923
+          ],
+          [
+            "solid_performer_v2",
+            0.741161781316333
+          ],
+          [
+            "experimental_v2",
+            0.6912459054250261
+          ],
+          [
+            "legacy_model",
+            0.6798911304434707
+          ]
+        ],
+        "best_model": "champion_model_v5"
+      }
+    },
+    "summary_statistics": {
+      "mean_robustness_score": 0.7414100549005121,
+      "std_robustness_score": 0.04567244351731472,
+      "min_robustness_score": 0.6798911304434707,
+      "max_robustness_score": 0.8134784529172135
+    }
+  },
+  "failure_analysis": {
+    "total_models_analyzed": 6,
+    "failure_patterns": {
+      "collision": 46.590909090909086,
+      "off_lane": 27.27272727272727,
+      "stuck": 18.181818181818183,
+      "oscillation": 7.954545454545454
+    },
+    "common_failure_modes": [
+      "collision",
+      "off_lane",
+      "stuck"
+    ],
+    "model_specific_issues": {
+      "champion_model_v5": [
+        "High collision rate: 66.7%"
+      ],
+      "runner_up_v3": [
+        "High collision rate: 45.5%",
+        "High off_lane rate: 27.3%"
+      ],
+      "solid_performer_v2": [
+        "High collision rate: 46.7%",
+        "High off_lane rate: 26.7%"
+      ],
+      "baseline_v4": [
+        "High collision rate: 50.0%",
+        "High off_lane rate: 28.6%"
+      ],
+      "experimental_v2": [
+        "High collision rate: 40.0%",
+        "High off_lane rate: 30.0%"
+      ],
+      "legacy_model": [
+        "High collision rate: 45.5%",
+        "High off_lane rate: 27.3%"
+      ]
+    }
+  },
+  "plots": {
+    "leaderboard": "logs/evaluation_reports/comprehensive_example_report/leaderboard.png",
+    "heatmap_per_map_success_rate": "logs/evaluation_reports/comprehensive_example_report/heatmap_per_map_success_rate.png",
+    "heatmap_per_map_lateral_deviation": "logs/evaluation_reports/comprehensive_example_report/heatmap_per_map_lateral_deviation.png",
+    "heatmap_per_suite_success_rate": "logs/evaluation_reports/comprehensive_example_report/heatmap_per_suite_success_rate.png",
+    "heatmap_per_suite_mean_reward": "logs/evaluation_reports/comprehensive_example_report/heatmap_per_suite_mean_reward.png",
+    "heatmap_overall_metrics": "logs/evaluation_reports/comprehensive_example_report/heatmap_overall_metrics.png",
+    "pareto_front_1": "logs/evaluation_reports/comprehensive_example_report/pareto_front_1.png",
+    "pareto_front_2": "logs/evaluation_reports/comprehensive_example_report/pareto_front_2.png",
+    "pareto_front_3": "logs/evaluation_reports/comprehensive_example_report/pareto_front_3.png",
+    "robustness_analysis": "logs/evaluation_reports/comprehensive_example_report/robustness_analysis.png",
+    "statistical_comparisons": "logs/evaluation_reports/comprehensive_example_report/statistical_comparisons.png"
+  },
+  "metadata": {
+    "total_models": 6,
+    "generation_time": "2025-08-16T15:44:51.482261",
+    "config_used": {
+      "include_confidence_intervals": true,
+      "include_statistical_tests": true,
+      "include_pareto_analysis": true,
+      "include_robustness_analysis": true,
+      "include_failure_analysis": true,
+      "plot_style": "seaborn-v0_8",
+      "plot_dpi": 200,
+      "plot_format": "png",
+      "color_palette": "Set2",
+      "figure_size": [
+        12,
+        8
+      ],
+      "font_size": 10,
+      "save_plots": true,
+      "generate_html": true,
+      "generate_pdf": false
+    }
+  }
+}
