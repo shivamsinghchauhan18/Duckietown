@@ -1026,6 +1026,34 @@ class FailureAnalyzer:
             )
         
         return recommendations
+    
+    def analyze_failures(self, episode_results: List[EpisodeResult]) -> Dict[str, Any]:
+        """
+        Analyze failure patterns across episode results.
+        
+        This method provides the expected API interface as documented in the 
+        Evaluation Orchestrator API Documentation. It processes episode results
+        and returns comprehensive failure analysis.
+        
+        Args:
+            episode_results: List of episode results to analyze
+            
+        Returns:
+            Comprehensive failure analysis including failure types, patterns,
+            and statistics
+        """
+        # Process each episode result
+        for episode_result in episode_results:
+            self.analyze_episode(episode_result)
+        
+        # Generate comprehensive failure statistics
+        failure_analysis = self.generate_failure_statistics()
+        
+        # Add additional analysis specific to this method call
+        failure_analysis['episode_count'] = len(episode_results)
+        failure_analysis['analysis_timestamp'] = datetime.now().isoformat()
+        
+        return failure_analysis
 
 # Export main classes and functions
 __all__ = [

@@ -471,16 +471,23 @@ class EvaluationSystemIntegrator:
                 'confidence_level': 0.95
             }
             
-            # Initialize all components
+            # Initialize all components with proper config objects
             orchestrator = EvaluationOrchestrator(eval_config)
             suite_manager = SuiteManager(eval_config)
             metrics_calculator = MetricsCalculator(eval_config)
             statistical_analyzer = StatisticalAnalyzer(eval_config)
-            failure_analyzer = FailureAnalyzer(eval_config)
+            
+            # Components that need specific config objects
+            from duckietown_utils.failure_analyzer import FailureAnalysisConfig
+            from duckietown_utils.artifact_manager import ArtifactManagerConfig
+            
+            failure_analyzer = FailureAnalyzer(FailureAnalysisConfig())
             robustness_analyzer = RobustnessAnalyzer(eval_config)
             champion_selector = ChampionSelector(eval_config)
             report_generator = ReportGenerator(eval_config)
-            artifact_manager = ArtifactManager(eval_config)
+            artifact_manager = ArtifactManager(ArtifactManagerConfig(
+                base_path=eval_config['results_dir']
+            ))
             
             # Test component integration
             components = {
@@ -1030,7 +1037,7 @@ class EvaluationSystemIntegrator:
             
             # Verify champion selection
             assert champion_result is not None
-            assert champion_result.champion_model_id == 'champion'  # Highest performance
+            assert champion_result.new_champion_id == 'champion'  # Highest performance
             
             duration = time.time() - start_time
             end_memory = psutil.Process().memory_info().rss / 1024 / 1024
@@ -1043,7 +1050,7 @@ class EvaluationSystemIntegrator:
                 memory_usage_mb=memory_usage,
                 details={
                     'models_evaluated': len(model_metrics_list),
-                    'champion_selected': champion_result.champion_model_id,
+                    'champion_selected': champion_result.new_champion_id,
                     'selection_criteria_applied': True
                 }
             )
@@ -1094,9 +1101,9 @@ class EvaluationSystemIntegrator:
             }
             
             # Generate report
-            report_path = generator.generate_evaluation_report(
-                mock_results,
-                report_name="integration_test_report"
+            report_path = generator.generate_comprehensive_report(
+                [mock_results],  # method expects list of model metrics
+                output_name="integration_test_report"
             )
             
             # Verify report was created
@@ -1150,11 +1157,12 @@ class EvaluationSystemIntegrator:
         try:
             self.logger.info("Testing artifact management...")
             
-            config = {
-                'results_dir': str(self.results_dir / 'artifact_test'),
-                'compression_enabled': True,
-                'max_artifacts': 1000
-            }
+            from duckietown_utils.artifact_manager import ArtifactManagerConfig
+            config = ArtifactManagerConfig(
+                base_path=str(self.results_dir / 'artifact_test'),
+                compression_enabled=True,
+                max_artifacts_per_type=1000
+            )
             manager = ArtifactManager(config)
             
             # Test artifact storage
