@@ -467,33 +467,6 @@ class EvaluationSystemIntegrator:
             # Create complete evaluation pipeline with proper configs
             base_dir = self.results_dir / 'pipeline_test'
             
-<<<<<<< HEAD
-            # Initialize all components with proper config objects
-            orchestrator = EvaluationOrchestrator(eval_config)
-            suite_manager = SuiteManager(eval_config)
-            metrics_calculator = MetricsCalculator(eval_config)
-            statistical_analyzer = StatisticalAnalyzer(eval_config)
-            
-            # Components that need specific config objects
-            from duckietown_utils.failure_analyzer import FailureAnalysisConfig
-            from duckietown_utils.artifact_manager import ArtifactManagerConfig
-            
-            failure_analyzer = FailureAnalyzer(FailureAnalysisConfig())
-            robustness_analyzer = RobustnessAnalyzer(eval_config)
-            champion_selector = ChampionSelector(eval_config)
-            
-            # ReportGenerator needs ReportConfig parameters
-            report_config = {
-                'include_confidence_intervals': True,
-                'include_statistical_tests': True,
-                'plot_format': 'png'
-            }
-            report_generator = ReportGenerator(report_config)
-            
-            artifact_manager = ArtifactManager(ArtifactManagerConfig(
-                base_path=eval_config['results_dir']
-            ))
-=======
             # Import configuration classes
             from duckietown_utils.failure_analyzer import FailureAnalysisConfig
             from duckietown_utils.artifact_manager import ArtifactManagerConfig
@@ -510,7 +483,6 @@ class EvaluationSystemIntegrator:
             champion_selector = ChampionSelector()
             report_generator = ReportGenerator({'generate_html': True})
             artifact_manager = ArtifactManager(ArtifactManagerConfig(base_path=str(base_dir)))
->>>>>>> copilot/fix-5c99ef62-a3c4-4f69-accc-4b47113ee7c8
             
             # Test component integration
             components = {
