@@ -1112,15 +1112,9 @@ class EvaluationSystemIntegrator:
             
             # Use correct ReportConfig parameters
             config = {
-<<<<<<< HEAD
-                'include_confidence_intervals': True,
-                'include_statistical_tests': True,
-                'plot_format': 'png'
-=======
                 'generate_plots': True,
                 'generate_html': True,
                 'save_plots': True
->>>>>>> copilot/fix-5c99ef62-a3c4-4f69-accc-4b47113ee7c8
             }
             generator = ReportGenerator(config)
             
@@ -1132,12 +1126,6 @@ class EvaluationSystemIntegrator:
                 'mean_reward': MetricResult('mean_reward', 0.78, sample_size=100)
             }
             
-<<<<<<< HEAD
-            # Generate report
-            report_path = generator.generate_comprehensive_report(
-                [mock_results],  # method expects list of model metrics
-                output_name="integration_test_report"
-=======
             secondary_metrics = {
                 'lateral_deviation': MetricResult('lateral_deviation', 0.15, sample_size=100),
                 'heading_error': MetricResult('heading_error', 5.2, sample_size=100)
@@ -1157,7 +1145,6 @@ class EvaluationSystemIntegrator:
             report = generator.generate_comprehensive_report(
                 model_metrics_list=[model_metrics],
                 report_id="integration_test_report"
->>>>>>> copilot/fix-5c99ef62-a3c4-4f69-accc-4b47113ee7c8
             )
             
             # Verify report was created
@@ -1210,10 +1197,7 @@ class EvaluationSystemIntegrator:
             self.logger.info("Testing artifact management...")
             
             from duckietown_utils.artifact_manager import ArtifactManagerConfig
-<<<<<<< HEAD
-=======
             
->>>>>>> copilot/fix-5c99ef62-a3c4-4f69-accc-4b47113ee7c8
             config = ArtifactManagerConfig(
                 base_path=str(self.results_dir / 'artifact_test'),
                 compression_enabled=True,
