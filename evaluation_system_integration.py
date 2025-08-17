@@ -949,7 +949,7 @@ class EvaluationSystemIntegrator:
             
             # Create sweep config
             sweep_config = ParameterSweepConfig(
-                parameter_type=ParameterType.ENVIRONMENTAL,
+                parameter_type=ParameterType.LIGHTING_INTENSITY,
                 parameter_name="lighting_intensity",
                 baseline_value=1.0,
                 sweep_range=(0.5, 1.5),
@@ -1112,9 +1112,9 @@ class EvaluationSystemIntegrator:
             
             # Use correct ReportConfig parameters
             config = {
-                'generate_plots': True,
                 'generate_html': True,
-                'save_plots': True
+                'save_plots': True,
+                'include_confidence_intervals': True
             }
             generator = ReportGenerator(config)
             
@@ -1164,11 +1164,7 @@ class EvaluationSystemIntegrator:
                 memory_usage_mb=memory_usage,
                 details={
                     'report_generated': True,
-                    'leaderboard_entries': len(report.leaderboard),
-                    'report_sections': ['leaderboard', 'performance_tables', 'executive_summary']
-                }
                     'report_path': str(report_path),
-                    'report_size_bytes': report_path.stat().st_size,
                     'content_verified': True
                 }
             )
@@ -1212,15 +1208,31 @@ class EvaluationSystemIntegrator:
                 'timestamp': datetime.now().isoformat()
             }
             
-            # Store artifact
+            # Create a temporary file for the artifact
+            import tempfile
+            from duckietown_utils.artifact_manager import ArtifactType
+            
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+                json.dump(test_data, f)
+                temp_file_path = f.name
+            
+            # Store artifact with correct parameters
             artifact_id = manager.store_artifact(
-                'evaluation_result',
-                test_data,
+                temp_file_path,
+                ArtifactType.EVALUATION_RESULT,
+                model_id='test_model',
                 metadata={'test': True}
             )
             
             # Retrieve artifact
-            retrieved_data = manager.get_artifact(artifact_id)
+            retrieved_path = manager.retrieve_artifact(artifact_id)
+            
+            # Read the retrieved data
+            with open(retrieved_path, 'r') as f:
+                retrieved_data = json.load(f)
+            
+            # Clean up temp file
+            os.unlink(temp_file_path)
             
             # Verify artifact integrity
             assert retrieved_data is not None
@@ -1228,9 +1240,9 @@ class EvaluationSystemIntegrator:
             assert retrieved_data['evaluation_results']['success_rate'] == 0.85
             
             # Test artifact listing
-            artifacts = manager.list_artifacts(artifact_type='evaluation_result')
+            artifacts = manager.get_artifacts(artifact_type=ArtifactType.EVALUATION_RESULT)
             assert len(artifacts) >= 1
-            assert artifact_id in [a['artifact_id'] for a in artifacts]
+            assert artifact_id in [a.artifact_id for a in artifacts]
             
             duration = time.time() - start_time
             end_memory = psutil.Process().memory_info().rss / 1024 / 1024
