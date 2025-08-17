@@ -1,0 +1,118 @@
+{
+  "report_id": "integration_test_report",
+  "generation_timestamp": "2025-08-18T00:45:10.723962",
+  "config": {
+    "include_confidence_intervals": true,
+    "include_statistical_tests": true,
+    "include_pareto_analysis": true,
+    "include_robustness_analysis": true,
+    "include_failure_analysis": true,
+    "plot_style": "seaborn-v0_8",
+    "plot_dpi": 300,
+    "plot_format": "png",
+    "color_palette": "Set2",
+    "figure_size": [
+      12,
+      8
+    ],
+    "font_size": 10,
+    "save_plots": true,
+    "generate_html": true,
+    "generate_pdf": false
+  },
+  "executive_summary": {
+    "champion_model": "test_model",
+    "total_models_evaluated": 1,
+    "evaluation_timestamp": "2025-08-18T00:45:10.723950",
+    "key_findings": [
+      "Champion model 'test_model' achieved 0.000 composite score with 85.0% success rate"
+    ],
+    "performance_highlights": {
+      "champion_composite_score": 0.0,
+      "champion_success_rate": 0.85,
+      "total_models_evaluated": 1,
+      "models_above_threshold": 1,
+      "champion_validation_status": "valid"
+    },
+    "recommendations": [
+      "Champion model shows good performance but requires additional validation"
+    ],
+    "risk_assessment": {
+      "performance": "Low - Good success rate achieved",
+      "validation": "Low - Model passes validation criteria"
+    },
+    "deployment_readiness": "conditional"
+  },
+  "leaderboard": [
+    {
+      "rank": 1,
+      "model_id": "test_model",
+      "composite_score": 0.0,
+      "success_rate": 0.85,
+      "mean_reward": 0.78,
+      "lateral_deviation": 0.0,
+      "smoothness": 0.0,
+      "stability": 0.0,
+      "composite_score_ci": null,
+      "success_rate_ci": null,
+      "pareto_rank": null,
+      "champion_status": "candidate",
+      "validation_status": "valid",
+      "metadata": {
+        "total_episodes": 100,
+        "total_suites": 0
+      }
+    }
+  ],
+  "performance_tables": {
+    "overall_metrics": {
+      "metric_name": "overall_metrics",
+      "table_data": "                  test_model\nsuccess_rate            0.85\nmean_reward             0.78\nlateral_deviation       0.15\nsmoothness               NaN\nstability                NaN",
+      "confidence_intervals": "                  test_model\nsuccess_rate             NaN\nmean_reward              NaN\nlateral_deviation        NaN\nsmoothness               NaN\nstability                NaN",
+      "statistical_significance": null,
+      "best_performers": {
+        "success_rate": "test_model",
+        "mean_reward": "test_model",
+        "lateral_deviation": "test_model"
+      }
+    }
+  },
+  "statistical_comparisons": {
+    "comparisons": [],
+    "correction_method": "none",
+    "alpha": 0.05,
+    "num_significant_before": 0,
+    "num_significant_after": 0,
+    "rejected_hypotheses": []
+  },
+  "pareto_analysis": null,
+  "robustness_analysis": null,
+  "failure_analysis": null,
+  "plots": {
+    "leaderboard": "logs/evaluation_reports/integration_test_report/leaderboard.png",
+    "heatmap_overall_metrics": "logs/evaluation_reports/integration_test_report/heatmap_overall_metrics.png"
+  },
+  "metadata": {
+    "total_models": 1,
+    "generation_time": "2025-08-18T00:45:10.723965",
+    "config_used": {
+      "include_confidence_intervals": true,
+      "include_statistical_tests": true,
+      "include_pareto_analysis": true,
+      "include_robustness_analysis": true,
+      "include_failure_analysis": true,
+      "plot_style": "seaborn-v0_8",
+      "plot_dpi": 300,
+      "plot_format": "png",
+      "color_palette": "Set2",
+      "figure_size": [
+        12,
+        8
+      ],
+      "font_size": 10,
+      "save_plots": true,
+      "generate_html": true,
+      "generate_pdf": false
+    }
+  }
+}

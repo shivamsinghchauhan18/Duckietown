@@ -1,0 +1,13 @@
+{
+  "report_id": "integration_test_report",
+  "generation_timestamp": "2025-08-18T00:45:10.723962",
+  "leaderboard": [
+    {
+      "model_id": "test_model",
+      "composite_score": 0.0,
+      "success_rate": 0.85,
+      "mean_reward": 0.78,
+      "rank": 1
+    }
+  ]
+}

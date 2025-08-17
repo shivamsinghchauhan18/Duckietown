@@ -952,7 +952,8 @@ class EvaluationSystemIntegrator:
                 parameter_type=ParameterType.LIGHTING_INTENSITY,
                 parameter_name="lighting_intensity",
                 baseline_value=1.0,
-                sweep_range=(0.5, 1.5),
+                min_value=0.5,
+                max_value=1.5,
                 num_points=5,
                 sweep_method="linear"
             )
@@ -965,16 +966,17 @@ class EvaluationSystemIntegrator:
                 for i in range(10):  # 10 episodes per parameter value
                     episode = EpisodeResult(
                         episode_id=f"ep_{i}",
-                        model_id="test_model",
-                        suite_name="test",
                         map_name="test_map",
                         seed=i,
                         success=i < (success_rate * 10),
                         episode_length=100,
                         reward=success_rate * 0.8,
-                        termination_reason="success" if i < (success_rate * 10) else "failure",
-                        completion_time=10.0,
-                        metrics={}
+                        lateral_deviation=0.1,
+                        heading_error=2.0,
+                        jerk=0.5,
+                        stability=0.9,
+                        collision=False,
+                        off_lane=False
                     )
                     episodes.append(episode)
                 parameter_results[lighting] = episodes
@@ -1152,6 +1154,24 @@ class EvaluationSystemIntegrator:
             assert report.leaderboard is not None
             assert len(report.leaderboard) == 1
             assert report.leaderboard[0].model_id == 'test_model'
+            
+            # Save report to file for testing
+            report_path = self.results_dir / "integration_test_report.json"
+            report_dict = {
+                'report_id': report.report_id,
+                'generation_timestamp': report.generation_timestamp,
+                'leaderboard': [
+                    {
+                        'model_id': model.model_id,
+                        'composite_score': model.composite_score,
+                        'success_rate': model.success_rate,
+                        'mean_reward': model.mean_reward,
+                        'rank': model.rank
+                    } for model in report.leaderboard
+                ]
+            }
+            with open(report_path, 'w') as f:
+                json.dump(report_dict, f, indent=2)
             
             duration = time.time() - start_time
             end_memory = psutil.Process().memory_info().rss / 1024 / 1024

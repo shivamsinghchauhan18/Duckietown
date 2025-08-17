@@ -1,0 +1,2 @@
+rank,model_id,composite_score,success_rate,mean_reward,lateral_deviation,smoothness,stability,composite_score_ci,success_rate_ci,pareto_rank,champion_status,validation_status,metadata
+1,test_model,0.0,0.85,0.78,0.0,0.0,0.0,,,,candidate,valid,"{'total_episodes': 100, 'total_suites': 0}"
