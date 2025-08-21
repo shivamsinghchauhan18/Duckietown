@@ -1,0 +1,326 @@
+{
+  "model_path": "champion_model.pth",
+  "timestamp": "20250821_160237",
+  "model_info": {
+    "model_type": "pytorch_custom",
+    "has_get_action": true,
+    "has_compute_action": false,
+    "is_pytorch_module": true,
+    "input_shape": [
+      3,
+      120,
+      160
+    ]
+  },
+  "tests": {
+    "basic_functionality": {
+      "input_format_tests": {
+        "HWC_uint8": {
+          "success": true,
+          "action": [
+            0.0004133201437070966,
+            0.29178494215011597
+          ],
+          "valid_output": "True"
+        },
+        "CHW_float32": {
+          "success": true,
+          "action": [
+            0.00028191186720505357,
+            0.2918924391269684
+          ],
+          "valid_output": "True"
+        },
+        "HWC_float32": {
+          "success": true,
+          "action": [
+            0.0003337470698170364,
+            0.29190370440483093
+          ],
+          "valid_output": "True"
+        },
+        "normalized": {
+          "success": true,
+          "action": [
+            0.00033544335747137666,
+            0.2918034493923187
+          ],
+          "valid_output": "True"
+        },
+        "high_values": {
+          "success": true,
+          "action": [
+            0.00044319682638160884,
+            0.29182377457618713
+          ],
+          "valid_output": "True"
+        },
+        "low_values": {
+          "success": true,
+          "action": [
+            5.87723043281585e-05,
+            0.2914189100265503
+          ],
+          "valid_output": "True"
+        }
+      },
+      "output_validation": {
+        "consistency_test": {
+          "steering_std": "0.0",
+          "throttle_std": "0.0",
+          "consistent": "True"
+        },
+        "range_validation": {
+          "steering_in_range": true,
+          "throttle_in_range": true
+        }
+      },
+      "error_handling": {}
+    },
+    "performance": {
+      "inference_speed": {
+        "mean_time_ms": 1.4798974990844727,
+        "std_time_ms": 0.5507726756384935,
+        "min_time_ms": 1.2133121490478516,
+        "max_time_ms": 6.3838958740234375,
+        "fps_estimate": 675.7224744407247
+      },
+      "model_size": {
+        "parameters": 502755,
+        "estimated_memory_mb": 1.9178581237792969
+      },
+      "real_time_capable": "True"
+    },
+    "robustness": {
+      "noise_robustness": {
+        "level_0.1": {
+          "mean_deviation": "8.994315e-05",
+          "max_deviation": "0.00016619304"
+        },
+        "level_0.2": {
+          "mean_deviation": "0.00016878507",
+          "max_deviation": "0.00020730367"
+        },
+        "level_0.3": {
+          "mean_deviation": "0.00031150313",
+          "max_deviation": "0.0003601921"
+        },
+        "level_0.4": {
+          "mean_deviation": "0.00027489432",
+          "max_deviation": "0.00039974175"
+        },
+        "level_0.5": {
+          "mean_deviation": "0.00034193514",
+          "max_deviation": "0.00048635644"
+        }
+      },
+      "lighting_robustness": {
+        "brightness_0.3": {
+          "deviation": "0.00029853126",
+          "action": [
+            3.417013067519292e-05,
+            0.2914355397224426
+          ]
+        },
+        "brightness_0.5": {
+          "deviation": "0.0002134049",
+          "action": [
+            5.437860090751201e-05,
+            0.2915182411670685
+          ]
+        },
+        "brightness_0.7": {
+          "deviation": "0.0001296388",
+          "action": [
+            7.560334779554978e-05,
+            0.2915992736816406
+          ]
+        },
+        "brightness_1.0": {
+          "deviation": "0.0",
+          "action": [
+            0.000108451655250974,
+            0.29172468185424805
+          ]
+        },
+        "brightness_1.3": {
+          "deviation": "0.00012643206",
+          "action": [
+            0.00014137435937300324,
+            0.29184675216674805
+          ]
+        },
+        "brightness_1.7": {
+          "deviation": "0.00019773384",
+          "action": [
+            0.00019731988140847534,
+            0.2919013202190399
+          ]
+        },
+        "brightness_2.0": {
+          "deviation": "0.00025274398",
+          "action": [
+            0.0002737665199674666,
+            0.2919158637523651
+          ]
+        }
+      },
+      "blur_robustness": {}
+    },
+    "scenarios": {
+      "straight_road": {
+        "action": [
+          0.0013740769354626536,
+          0.2916959822177887
+        ],
+        "steering_magnitude": "0.0013740769",
+        "throttle_value": "0.29169598",
+        "appropriate_response": {
+          "appropriate": true,
+          "reasons": [
+            "Response appears appropriate"
+          ]
+        }
+      },
+      "left_curve": {
+        "action": [
+          0.0005965005257166922,
+          0.2914483845233917
+        ],
+        "steering_magnitude": "0.0005965005",
+        "throttle_value": "0.29144838",
+        "appropriate_response": {
+          "appropriate": false,
+          "reasons": [
+            "Insufficient steering for curve",
+            "Wrong steering direction for left curve"
+          ]
+        }
+      },
+      "right_curve": {
+        "action": [
+          0.0007469202391803265,
+          0.29175302386283875
+        ],
+        "steering_magnitude": "0.00074692024",
+        "throttle_value": "0.29175302",
+        "appropriate_response": {
+          "appropriate": false,
+          "reasons": [
+            "Insufficient steering for curve"
+          ]
+        }
+      },
+      "intersection": {
+        "action": [
+          0.0005264105857349932,
+          0.2915492653846741
+        ],
+        "steering_magnitude": "0.0005264106",
+        "throttle_value": "0.29154927",
+        "appropriate_response": {
+          "appropriate": true,
+          "reasons": [
+            "Response appears appropriate"
+          ]
+        }
+      },
+      "narrow_lane": {
+        "action": [
+          0.0007732866797596216,
+          0.2918086349964142
+        ],
+        "steering_magnitude": "0.0007732867",
+        "throttle_value": "0.29180863",
+        "appropriate_response": {
+          "appropriate": true,
+          "reasons": [
+            "Response appears appropriate"
+          ]
+        }
+      },
+      "wide_road": {
+        "action": [
+          0.0007628135499544442,
+          0.29143375158309937
+        ],
+        "steering_magnitude": "0.00076281355",
+        "throttle_value": "0.29143375",
+        "appropriate_response": {
+          "appropriate": true,
+          "reasons": [
+            "Response appears appropriate"
+          ]
+        }
+      }
+    },
+    "safety": {
+      "emergency_scenarios": {
+        "obstacle_ahead": {
+          "action": [
+            0.0013375221751630306,
+            0.2914222478866577
+          ],
+          "safe_response": true,
+          "notes": []
+        },
+        "sharp_turn": {
+          "action": [
+            0.00030195119325071573,
+            0.29148069024086
+          ],
+          "safe_response": false,
+          "notes": [
+            "Insufficient steering for sharp turn"
+          ]
+        },
+        "poor_visibility": {
+          "action": [
+            0.00031544885132461786,
+            0.29150789976119995
+          ],
+          "safe_response": true,
+          "notes": []
+        }
+      },
+      "speed_control": {
+        "average_throttle": "0.291696",
+        "throttle_stability": "2.9802322e-08",
+        "reasonable_speed": "True",
+        "stable_control": "True"
+      },
+      "stability": {}
+    },
+    "deployment": {
+      "model_loading": true,
+      "inference_interface": true,
+      "performance_requirements": {
+        "real_time_capable": "True",
+        "memory_efficient": true,
+        "fps": 587.9810469061038,
+        "memory_mb": 1.9178581237792969
+      },
+      "compatibility": {
+        "compute_action_interface": true,
+        "action_format": true,
+        "action_range": "True"
+      }
+    }
+  },
+  "overall_assessment": {
+    "overall_score": 88.3,
+    "rating": "GOOD",
+    "emoji": "\u2705",
+    "component_scores": {
+      "functionality": 100.0,
+      "performance": 100.0,
+      "scenarios": 66.7,
+      "safety": 83.3,
+      "deployment": 100.0
+    },
+    "summary": "Good model suitable for deployment with strong performance in most areas.",
+    "recommendations": [
+      "Improve safety responses for: sharp_turn"
+    ]
+  }
+}

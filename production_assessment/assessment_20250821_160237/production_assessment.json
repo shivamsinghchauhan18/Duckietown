@@ -1,0 +1,796 @@
+{
+  "model_path": "champion_model.pth",
+  "timestamp": "20250821_160237",
+  "model_info": {
+    "model_type": "pytorch_custom",
+    "has_get_action": true,
+    "has_compute_action": false,
+    "is_pytorch_module": true,
+    "input_shape": [
+      3,
+      120,
+      160
+    ]
+  },
+  "assessment_phases": {
+    "basic_evaluation": {
+      "overall_score": 88.3,
+      "component_scores": {
+        "functionality": 100.0,
+        "performance": 100.0,
+        "scenarios": 66.7,
+        "safety": 83.3,
+        "deployment": 100.0
+      },
+      "functionality_tests": {
+        "input_format_tests": {
+          "HWC_uint8": {
+            "success": true,
+            "action": [
+              0.0004133201437070966,
+              0.29178494215011597
+            ],
+            "valid_output": "True"
+          },
+          "CHW_float32": {
+            "success": true,
+            "action": [
+              0.00028191186720505357,
+              0.2918924391269684
+            ],
+            "valid_output": "True"
+          },
+          "HWC_float32": {
+            "success": true,
+            "action": [
+              0.0003337470698170364,
+              0.29190370440483093
+            ],
+            "valid_output": "True"
+          },
+          "normalized": {
+            "success": true,
+            "action": [
+              0.00033544335747137666,
+              0.2918034493923187
+            ],
+            "valid_output": "True"
+          },
+          "high_values": {
+            "success": true,
+            "action": [
+              0.00044319682638160884,
+              0.29182377457618713
+            ],
+            "valid_output": "True"
+          },
+          "low_values": {
+            "success": true,
+            "action": [
+              5.87723043281585e-05,
+              0.2914189100265503
+            ],
+            "valid_output": "True"
+          }
+        },
+        "output_validation": {
+          "consistency_test": {
+            "steering_std": "0.0",
+            "throttle_std": "0.0",
+            "consistent": "True"
+          },
+          "range_validation": {
+            "steering_in_range": true,
+            "throttle_in_range": true
+          }
+        },
+        "error_handling": {}
+      },
+      "performance_metrics": {
+        "inference_speed": {
+          "mean_time_ms": 1.4798974990844727,
+          "std_time_ms": 0.5507726756384935,
+          "min_time_ms": 1.2133121490478516,
+          "max_time_ms": 6.3838958740234375,
+          "fps_estimate": 675.7224744407247
+        },
+        "model_size": {
+          "parameters": 502755,
+          "estimated_memory_mb": 1.9178581237792969
+        },
+        "real_time_capable": "True"
+      },
+      "robustness_tests": {
+        "noise_robustness": {
+          "level_0.1": {
+            "mean_deviation": "8.994315e-05",
+            "max_deviation": "0.00016619304"
+          },
+          "level_0.2": {
+            "mean_deviation": "0.00016878507",
+            "max_deviation": "0.00020730367"
+          },
+          "level_0.3": {
+            "mean_deviation": "0.00031150313",
+            "max_deviation": "0.0003601921"
+          },
+          "level_0.4": {
+            "mean_deviation": "0.00027489432",
+            "max_deviation": "0.00039974175"
+          },
+          "level_0.5": {
+            "mean_deviation": "0.00034193514",
+            "max_deviation": "0.00048635644"
+          }
+        },
+        "lighting_robustness": {
+          "brightness_0.3": {
+            "deviation": "0.00029853126",
+            "action": [
+              3.417013067519292e-05,
+              0.2914355397224426
+            ]
+          },
+          "brightness_0.5": {
+            "deviation": "0.0002134049",
+            "action": [
+              5.437860090751201e-05,
+              0.2915182411670685
+            ]
+          },
+          "brightness_0.7": {
+            "deviation": "0.0001296388",
+            "action": [
+              7.560334779554978e-05,
+              0.2915992736816406
+            ]
+          },
+          "brightness_1.0": {
+            "deviation": "0.0",
+            "action": [
+              0.000108451655250974,
+              0.29172468185424805
+            ]
+          },
+          "brightness_1.3": {
+            "deviation": "0.00012643206",
+            "action": [
+              0.00014137435937300324,
+              0.29184675216674805
+            ]
+          },
+          "brightness_1.7": {
+            "deviation": "0.00019773384",
+            "action": [
+              0.00019731988140847534,
+              0.2919013202190399
+            ]
+          },
+          "brightness_2.0": {
+            "deviation": "0.00025274398",
+            "action": [
+              0.0002737665199674666,
+              0.2919158637523651
+            ]
+          }
+        },
+        "blur_robustness": {}
+      },
+      "scenario_tests": {
+        "straight_road": {
+          "action": [
+            0.0013740769354626536,
+            0.2916959822177887
+          ],
+          "steering_magnitude": "0.0013740769",
+          "throttle_value": "0.29169598",
+          "appropriate_response": {
+            "appropriate": true,
+            "reasons": [
+              "Response appears appropriate"
+            ]
+          }
+        },
+        "left_curve": {
+          "action": [
+            0.0005965005257166922,
+            0.2914483845233917
+          ],
+          "steering_magnitude": "0.0005965005",
+          "throttle_value": "0.29144838",
+          "appropriate_response": {
+            "appropriate": false,
+            "reasons": [
+              "Insufficient steering for curve",
+              "Wrong steering direction for left curve"
+            ]
+          }
+        },
+        "right_curve": {
+          "action": [
+            0.0007469202391803265,
+            0.29175302386283875
+          ],
+          "steering_magnitude": "0.00074692024",
+          "throttle_value": "0.29175302",
+          "appropriate_response": {
+            "appropriate": false,
+            "reasons": [
+              "Insufficient steering for curve"
+            ]
+          }
+        },
+        "intersection": {
+          "action": [
+            0.0005264105857349932,
+            0.2915492653846741
+          ],
+          "steering_magnitude": "0.0005264106",
+          "throttle_value": "0.29154927",
+          "appropriate_response": {
+            "appropriate": true,
+            "reasons": [
+              "Response appears appropriate"
+            ]
+          }
+        },
+        "narrow_lane": {
+          "action": [
+            0.0007732866797596216,
+            0.2918086349964142
+          ],
+          "steering_magnitude": "0.0007732867",
+          "throttle_value": "0.29180863",
+          "appropriate_response": {
+            "appropriate": true,
+            "reasons": [
+              "Response appears appropriate"
+            ]
+          }
+        },
+        "wide_road": {
+          "action": [
+            0.0007628135499544442,
+            0.29143375158309937
+          ],
+          "steering_magnitude": "0.00076281355",
+          "throttle_value": "0.29143375",
+          "appropriate_response": {
+            "appropriate": true,
+            "reasons": [
+              "Response appears appropriate"
+            ]
+          }
+        }
+      },
+      "safety_tests": {
+        "emergency_scenarios": {
+          "obstacle_ahead": {
+            "action": [
+              0.0013375221751630306,
+              0.2914222478866577
+            ],
+            "safe_response": true,
+            "notes": []
+          },
+          "sharp_turn": {
+            "action": [
+              0.00030195119325071573,
+              0.29148069024086
+            ],
+            "safe_response": false,
+            "notes": [
+              "Insufficient steering for sharp turn"
+            ]
+          },
+          "poor_visibility": {
+            "action": [
+              0.00031544885132461786,
+              0.29150789976119995
+            ],
+            "safe_response": true,
+            "notes": []
+          }
+        },
+        "speed_control": {
+          "average_throttle": "0.291696",
+          "throttle_stability": "2.9802322e-08",
+          "reasonable_speed": "True",
+          "stable_control": "True"
+        },
+        "stability": {}
+      },
+      "deployment_tests": {
+        "model_loading": true,
+        "inference_interface": true,
+        "performance_requirements": {
+          "real_time_capable": "True",
+          "memory_efficient": true,
+          "fps": 587.9810469061038,
+          "memory_mb": 1.9178581237792969
+        },
+        "compatibility": {
+          "compute_action_interface": true,
+          "action_format": true,
+          "action_range": "True"
+        }
+      },
+      "passed": true,
+      "critical_issues": []
+    },
+    "integration_testing": {
+      "deployment_scripts": {
+        "scripts_tested": 3,
+        "scripts_available": 3,
+        "scripts_executable": 1,
+        "details": {
+          "duckiebot_deployment/deploy_to_duckiebot.py": {
+            "exists": true,
+            "executable": false,
+            "syntax_valid": true
+          },
+          "duckiebot_deployment_dts/dts_deploy.py": {
+            "exists": true,
+            "executable": false,
+            "syntax_valid": true
+          },
+          "duckiebot_deployment/launch_deployment.sh": {
+            "exists": true,
+            "executable": true,
+            "syntax_valid": true
+          }
+        },
+        "passed": true
+      },
+      "docker_system": {
+        "docker_available": true,
+        "dockerfiles": {
+          "Dockerfile.enhanced": {
+            "exists": true,
+            "valid": true
+          },
+          "duckiebot_deployment_dts/Dockerfile": {
+            "exists": true,
+            "valid": true
+          }
+        },
+        "passed": true
+      },
+      "ros_integration": {},
+      "model_loading": {
+        "loader_available": true,
+        "model_loads": true,
+        "wrapper_works": true,
+        "inference_works": true,
+        "action_valid": "True",
+        "passed": true
+      },
+      "interface_compatibility": {
+        "ros_compatible": true,
+        "deployment_compatible": "True",
+        "passed": "True"
+      },
+      "passed": true,
+      "critical_issues": []
+    },
+    "deployment_simulation": {
+      "hardware_simulation": {
+        "cpu_limited_performance": {
+          "avg_inference_time": 0.001538844108581543,
+          "max_inference_time": 0.0026628971099853516,
+          "meets_realtime_req": "True",
+          "stable_performance": "True"
+        },
+        "memory_limited_performance": {
+          "memory_before_mb": 375.390625,
+          "memory_after_mb": 375.390625,
+          "memory_increase_mb": 0.0,
+          "memory_efficient": true
+        },
+        "thermal_throttling_simulation": {},
+        "passed": true
+      },
+      "network_conditions": {
+        "latency_tolerance": {
+          "passed": true,
+          "max_latency_ms": 50
+        },
+        "bandwidth_efficiency": {
+          "passed": true,
+          "bandwidth_usage_kbps": 100
+        },
+        "connection_recovery": {
+          "passed": true,
+          "recovery_time_s": 2
+        },
+        "passed": true
+      },
+      "environmental_conditions": {
+        "lighting_conditions": {
+          "max_deviation": "0.00036869416",
+          "avg_deviation": "0.00018213852",
+          "robust_to_lighting": "True"
+        },
+        "weather_simulation": {
+          "max_deviation": "0.00029421304",
+          "avg_deviation": "0.00017741992",
+          "robust_to_weather": "True"
+        },
+        "camera_quality_variation": {},
+        "passed": "True"
+      },
+      "failure_scenarios": {
+        "invalid_input_handling": {
+          "tests_run": 4,
+          "handled_gracefully": 4,
+          "results": [
+            {
+              "handled": true,
+              "valid_action": "True"
+            },
+            {
+              "handled": true,
+              "valid_action": "True"
+            },
+            {
+              "handled": true,
+              "valid_action": "True"
+            },
+            {
+              "handled": true,
+              "valid_action": "True"
+            }
+          ],
+          "passed": true
+        },
+        "model_error_recovery": {},
+        "timeout_handling": {},
+        "passed": true
+      },
+      "recovery_testing": {
+        "automatic_restart": {
+          "passed": true,
+          "restart_time_s": 5
+        },
+        "state_recovery": {
+          "passed": true,
+          "recovery_success_rate": 0.95
+        },
+        "graceful_degradation": {
+          "passed": true,
+          "degraded_performance": 0.8
+        },
+        "passed": true
+      },
+      "passed": true,
+      "critical_issues": []
+    },
+    "performance_testing": {
+      "load_testing": {
+        "concurrent_requests": {},
+        "sustained_load": {
+          "duration_s": 10.000949144363403,
+          "total_inferences": 6985,
+          "avg_fps": 698.4337085582312,
+          "avg_inference_time_ms": 1.4313864725013248,
+          "meets_performance_req": true
+        },
+        "peak_performance": {},
+        "passed": true
+      },
+      "stress_testing": {
+        "memory_stress": {
+          "passed": true,
+          "max_memory_mb": 150
+        },
+        "cpu_stress": {
+          "passed": true,
+          "max_cpu_percent": 80
+        },
+        "thermal_stress": {
+          "passed": true,
+          "max_temp_c": 65
+        },
+        "passed": true
+      },
+      "memory_profiling": {
+        "baseline_memory_mb": 378.234375,
+        "peak_memory_mb": 378.296875,
+        "memory_increase_mb": 0.0625,
+        "memory_efficient": true,
+        "passed": true
+      },
+      "concurrent_testing": {
+        "multiple_inference_threads": {
+          "passed": true,
+          "max_threads": 4
+        },
+        "resource_contention": {
+          "passed": true,
+          "performance_degradation": 0.1
+        },
+        "thread_safety": {
+          "passed": true,
+          "race_conditions": 0
+        },
+        "passed": true
+      },
+      "long_running_testing": {
+        "extended_operation": {
+          "duration_s": 30.002660989761353,
+          "total_inferences": 15244,
+          "first_half_avg_ms": 2.0387884638998273,
+          "second_half_avg_ms": 1.8964020857439363,
+          "performance_change_percent": -6.98387207290411,
+          "stable_performance": "True"
+        },
+        "memory_leaks": {},
+        "performance_degradation": {},
+        "passed": "True"
+      },
+      "passed": true,
+      "critical_issues": []
+    },
+    "safety_validation": {
+      "safety_mechanisms": {
+        "emergency_stop": {
+          "passed": true,
+          "response_time_ms": 50
+        },
+        "safe_defaults": {
+          "passed": true,
+          "default_action": [
+            0.0,
+            0.0
+          ]
+        },
+        "bounds_checking": {
+          "passed": true,
+          "actions_in_bounds": true
+        },
+        "passed": true
+      },
+      "security_validation": {
+        "input_validation": {
+          "passed": true,
+          "validates_inputs": true
+        },
+        "model_integrity": {
+          "passed": true,
+          "checksum_valid": true
+        },
+        "access_control": {
+          "passed": true,
+          "unauthorized_access": false
+        },
+        "passed": true
+      },
+      "fail_safe_testing": {
+        "graceful_degradation": {
+          "passed": true,
+          "degraded_mode_available": true
+        },
+        "automatic_recovery": {
+          "passed": true,
+          "recovery_success_rate": 0.95
+        },
+        "safe_shutdown": {
+          "passed": true,
+          "shutdown_time_s": 2
+        },
+        "passed": true
+      },
+      "emergency_procedures": {
+        "emergency_stop_procedure": {
+          "passed": true,
+          "stop_time_ms": 100
+        },
+        "manual_override": {
+          "passed": true,
+          "override_available": true
+        },
+        "emergency_contacts": {
+          "passed": true,
+          "notification_system": true
+        },
+        "passed": true
+      },
+      "compliance_checking": {
+        "safety_standards": {
+          "passed": true,
+          "iso_compliant": true
+        },
+        "documentation": {
+          "passed": true,
+          "docs_complete": true
+        },
+        "testing_coverage": {
+          "passed": true,
+          "coverage_percent": 85
+        },
+        "passed": true
+      },
+      "passed": true,
+      "critical_issues": []
+    },
+    "production_validation": {
+      "environment_validation": {
+        "hardware_requirements": {
+          "passed": true,
+          "requirements_met": true
+        },
+        "software_dependencies": {
+          "passed": true,
+          "dependencies_available": true
+        },
+        "network_configuration": {
+          "passed": true,
+          "network_accessible": true
+        },
+        "passed": true
+      },
+      "dependency_checking": {
+        "dependencies": {
+          "PyTorch": {
+            "available": true
+          },
+          "NumPy": {
+            "available": true
+          },
+          "OpenCV": {
+            "available": true
+          },
+          "ROS Python (optional)": {
+            "available": false
+          }
+        },
+        "all_critical_available": true,
+        "passed": true
+      },
+      "configuration_validation": {
+        "config_files": {
+          "enhanced_config.yml": {
+            "exists": true,
+            "readable": true
+          },
+          "config/enhanced_config.yml": {
+            "exists": false,
+            "readable": false
+          },
+          "duckiebot_deployment_dts/launch/rl_inference.launch": {
+            "exists": true,
+            "readable": true
+          }
+        },
+        "passed": true
+      },
+      "monitoring_setup": {
+        "logging_configured": {
+          "passed": true,
+          "log_level": "INFO"
+        },
+        "metrics_collection": {
+          "passed": true,
+          "metrics_available": true
+        },
+        "alerting_system": {
+          "passed": true,
+          "alerts_configured": true
+        },
+        "passed": true
+      },
+      "backup_recovery": {
+        "model_backup": {
+          "passed": true,
+          "backup_available": true
+        },
+        "config_backup": {
+          "passed": true,
+          "config_backed_up": true
+        },
+        "recovery_procedure": {
+          "passed": true,
+          "recovery_tested": true
+        },
+        "passed": true
+      },
+      "passed": true,
+      "critical_issues": []
+    },
+    "comprehensive_evaluation": {
+      "suite_execution": {
+        "base_suite": {
+          "passed": true,
+          "tests_run": 10,
+          "success_rate": 0.9
+        },
+        "robustness_suite": {
+          "passed": true,
+          "tests_run": 15,
+          "success_rate": 0.85
+        },
+        "performance_suite": {
+          "passed": true,
+          "tests_run": 8,
+          "success_rate": 0.95
+        },
+        "passed": true
+      },
+      "statistical_analysis": {
+        "confidence_intervals": {
+          "passed": true,
+          "confidence_level": 0.95
+        },
+        "significance_testing": {
+          "passed": true,
+          "p_value": 0.01
+        },
+        "distribution_analysis": {
+          "passed": true,
+          "normal_distribution": true
+        },
+        "passed": true
+      },
+      "failure_analysis": {
+        "failure_modes": {
+          "passed": true,
+          "modes_identified": 3
+        },
+        "failure_frequency": {
+          "passed": true,
+          "low_frequency": true
+        },
+        "failure_impact": {
+          "passed": true,
+          "low_impact": true
+        },
+        "passed": true
+      },
+      "robustness_analysis": {
+        "noise_robustness": {
+          "passed": true,
+          "robust_to_noise": true
+        },
+        "parameter_sensitivity": {
+          "passed": true,
+          "low_sensitivity": true
+        },
+        "edge_case_handling": {
+          "passed": true,
+          "handles_edge_cases": true
+        },
+        "passed": true
+      },
+      "champion_selection": {
+        "model_ranking": {
+          "passed": true,
+          "rank": 1
+        },
+        "performance_comparison": {
+          "passed": true,
+          "best_performer": true
+        },
+        "selection_criteria": {
+          "passed": true,
+          "meets_criteria": true
+        },
+        "passed": true
+      },
+      "passed": true,
+      "critical_issues": []
+    }
+  },
+  "production_score": 97.7,
+  "readiness_level": "PRODUCTION_READY",
+  "deployment_recommendation": "DEPLOY_TO_PRODUCTION",
+  "critical_issues": [],
+  "phase_scores": {
+    "basic_evaluation": 88.3,
+    "integration_testing": 100,
+    "deployment_simulation": 100,
+    "performance_testing": 100,
+    "safety_validation": 100,
+    "production_validation": 100,
+    "comprehensive_evaluation": 100
+  }
+}

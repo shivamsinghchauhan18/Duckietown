@@ -1,0 +1,23 @@
+{
+  "model_type": "DuckiebotRLModel",
+  "input_shape": [
+    3,
+    120,
+    160
+  ],
+  "output_shape": [
+    2
+  ],
+  "hidden_dim": 256,
+  "architecture": "CNN + FC",
+  "training_info": {
+    "algorithm": "Simulated Lane Following",
+    "episodes": "N/A (Hand-crafted weights)",
+    "performance": "Basic lane following capability"
+  },
+  "usage": {
+    "inference_method": "model.get_action(observation)",
+    "input_format": "numpy array (120, 160, 3) or (3, 120, 160)",
+    "output_format": "numpy array (2,) [steering, throttle]"
+  }
+}
