@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  rl-inference:
+    build: .
+    container_name: rl-inference
+    network_mode: host
+    privileged: true
+    environment:
+      - ROBOT_NAME=${ROBOT_NAME:-duckiebot}
+      - ROS_MASTER_URI=http://localhost:11311
+    volumes:
+      - /data/models:/data/models:ro
+      - /data/config:/data/config:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rostopic", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s

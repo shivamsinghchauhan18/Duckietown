@@ -1,0 +1,316 @@
+# Enhanced Duckietown RL Deployment Configuration
+# Optimized for Duckiebot deployment with YOLO integration
+
+# Deployment Information
+deployment:
+  name: "Enhanced Duckietown RL with YOLO"
+  version: "1.0.0"
+  model_file: "champion_model.pth"
+  target_platform: "duckiebot"
+  inference_mode: "real_time"
+
+# Model Configuration
+model:
+  # Model architecture
+  type: "PPO"
+  framework: "pytorch"
+  
+  # Input specifications
+  observation_space:
+    type: "dict"
+    components:
+      image:
+        shape: [64, 64, 3]
+        dtype: "uint8"
+        range: [0, 255]
+      detections:
+        shape: [10, 9]  # max_detections=10, 9 features per detection
+        dtype: "float32"
+        features: ["class_id", "confidence", "x1", "y1", "x2", "y2", "rel_x", "rel_y", "distance"]
+      detection_count:
+        shape: [1]
+        dtype: "int32"
+      safety_critical:
+        shape: [1]
+        dtype: "int32"
+      inference_time:
+        shape: [1]
+        dtype: "float32"
+  
+  # Action specifications
+  action_space:
+    type: "continuous"
+    shape: [2]
+    range: [-1.0, 1.0]
+    components: ["steering", "throttle"]
+
+# YOLO Integration
+yolo:
+  enabled: true
+  model_path: "yolov5s.pt"
+  device: "cpu"  # Use CPU for Duckiebot compatibility
+  confidence_threshold: 0.5
+  max_detections: 10
+  safety_distance_threshold: 1.0
+  detection_timeout: 0.1
+  include_image_in_obs: true
+  flatten_detections: false
+
+# Environment Wrappers
+wrappers:
+  # YOLO Object Detection
+  yolo_detection:
+    enabled: true
+    class: "YOLOObjectDetectionWrapper"
+    config:
+      model_path: "yolov5s.pt"
+      confidence_threshold: 0.5
+      device: "cpu"
+      max_detections: 10
+      safety_distance_threshold: 1.0
+      include_image_in_obs: true
+      flatten_detections: false
+      detection_timeout: 0.1
+  
+  # Enhanced Observation Processing
+  enhanced_observation:
+    enabled: true
+    class: "EnhancedObservationWrapper"
+    config:
+      normalize_detections: true
+      detection_feature_scaling: true
+      safety_monitoring: true
+  
+  # Object Avoidance
+  object_avoidance:
+    enabled: true
+    class: "ObjectAvoidanceActionWrapper"
+    config:
+      avoidance_strength: 0.8
+      safety_distance: 1.0
+      max_steering_adjustment: 0.3
+      smooth_transitions: true
+      emergency_brake_distance: 0.5
+  
+  # Multi-Objective Reward
+  multi_objective_reward:
+    enabled: true
+    class: "MultiObjectiveRewardWrapper"
+    config:
+      lane_following_weight: 0.4
+      object_avoidance_weight: 0.3
+      speed_maintenance_weight: 0.2
+      safety_weight: 0.1
+      collision_penalty: -10.0
+      off_lane_penalty: -2.0
+
+# Inference Configuration
+inference:
+  # Performance settings
+  batch_size: 1
+  max_inference_time: 0.05  # 50ms max for real-time performance
+  use_gpu: false  # CPU-only for Duckiebot
+  
+  # Preprocessing
+  image_preprocessing:
+    resize: [64, 64]
+    normalize: true
+    mean: [0.485, 0.456, 0.406]
+    std: [0.229, 0.224, 0.225]
+  
+  # Postprocessing
+  action_postprocessing:
+    clip_actions: true
+    smooth_actions: true
+    smoothing_factor: 0.1
+    emergency_stop_enabled: true
+
+# Safety Configuration
+safety:
+  # Emergency stop conditions
+  emergency_stop:
+    enabled: true
+    conditions:
+      - "collision_imminent"
+      - "off_road_detected"
+      - "inference_timeout"
+      - "safety_critical_detection"
+    
+    # Safety thresholds
+    min_safety_distance: 0.3  # meters
+    max_steering_rate: 2.0    # rad/s
+    max_acceleration: 2.0     # m/s²
+    max_deceleration: -3.0    # m/s²
+  
+  # Monitoring
+  monitoring:
+    enabled: true
+    log_safety_events: true
+    safety_override_enabled: true
+    human_takeover_enabled: true
+
+# Performance Optimization
+performance:
+  # Model optimization
+  model_optimization:
+    quantization: false  # Disable for compatibility
+    pruning: false
+    tensorrt: false
+    onnx_runtime: false
+  
+  # Memory management
+  memory:
+    max_memory_usage: "512MB"
+    garbage_collection: true
+    memory_monitoring: true
+  
+  # Threading
+  threading:
+    inference_threads: 1
+    preprocessing_threads: 1
+    postprocessing_threads: 1
+
+# Logging Configuration
+logging:
+  # Log levels
+  level: "INFO"
+  
+  # Log destinations
+  destinations:
+    console: true
+    file: true
+    remote: false
+  
+  # Log content
+  log_components:
+    inference_time: true
+    detection_results: true
+    action_decisions: true
+    safety_events: true
+    performance_metrics: true
+  
+  # Log files
+  files:
+    main_log: "/data/logs/enhanced_rl.log"
+    safety_log: "/data/logs/safety_events.log"
+    performance_log: "/data/logs/performance.log"
+    detection_log: "/data/logs/detections.log"
+
+# Communication Configuration
+communication:
+  # ROS integration
+  ros:
+    enabled: true
+    node_name: "enhanced_rl_inference"
+    
+    # Topics
+    topics:
+      camera_input: "/camera_node/image/compressed"
+      action_output: "/enhanced_rl/action"
+      detection_output: "/enhanced_rl/detections"
+      safety_status: "/enhanced_rl/safety_status"
+      performance_metrics: "/enhanced_rl/metrics"
+    
+    # Message types
+    message_types:
+      camera: "sensor_msgs/CompressedImage"
+      action: "geometry_msgs/Twist"
+      detection: "enhanced_rl_msgs/DetectionArray"
+      safety: "enhanced_rl_msgs/SafetyStatus"
+      metrics: "enhanced_rl_msgs/PerformanceMetrics"
+  
+  # Network settings
+  network:
+    timeout: 1.0
+    retry_attempts: 3
+    heartbeat_interval: 5.0
+
+# Hardware Configuration
+hardware:
+  # Camera settings
+  camera:
+    resolution: [640, 480]
+    fps: 30
+    auto_exposure: true
+    auto_white_balance: true
+  
+  # Motor settings
+  motors:
+    max_speed: 1.0
+    acceleration_limit: 2.0
+    steering_limit: 1.0
+    
+  # Sensors
+  sensors:
+    imu_enabled: true
+    wheel_encoders_enabled: true
+    tof_sensors_enabled: false
+
+# Calibration
+calibration:
+  # Camera calibration
+  camera_matrix: null  # Will be loaded from robot-specific calibration
+  distortion_coefficients: null
+  
+  # Motor calibration
+  steering_calibration:
+    left_limit: -1.0
+    right_limit: 1.0
+    center_offset: 0.0
+  
+  throttle_calibration:
+    forward_limit: 1.0
+    reverse_limit: -1.0
+    deadzone: 0.1
+
+# Deployment Validation
+validation:
+  # Pre-deployment checks
+  pre_deployment:
+    model_integrity: true
+    config_validation: true
+    hardware_check: true
+    communication_test: true
+    safety_system_test: true
+  
+  # Runtime validation
+  runtime:
+    performance_monitoring: true
+    safety_monitoring: true
+    model_drift_detection: false
+    automatic_recovery: true
+  
+  # Success criteria
+  success_criteria:
+    max_inference_time: 0.05  # 50ms
+    min_fps: 20
+    max_memory_usage: "512MB"
+    safety_system_response_time: 0.01  # 10ms
+
+# Debugging and Development
+debug:
+  enabled: false
+  
+  # Debug outputs
+  save_debug_images: false
+  save_detection_visualizations: false
+  log_detailed_timing: false
+  
+  # Development features
+  simulation_mode: false
+  mock_camera_input: false
+  record_sessions: false
+
+# Metadata
+metadata:
+  created_by: "Enhanced Duckietown RL System"
+  creation_date: "2025-01-17"
+  model_training_date: "2025-01-16"
+  config_version: "1.0.0"
+  compatible_duckiebot_versions: ["DT21", "DT19"]
+  required_packages:
+    - "duckietown-utils"
+    - "ultralytics"
+    - "torch"
+    - "opencv-python"
+    - "numpy"
