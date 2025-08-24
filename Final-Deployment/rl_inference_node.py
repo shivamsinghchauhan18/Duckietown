@@ -63,7 +63,7 @@ class SimpleRLNode:
             rospy.loginfo(f"Loading model: {model_path}")
             
             # Load checkpoint
-            checkpoint = torch.load(model_path, map_location='cpu', weights_only=False)
+            checkpoint = torch.load(model_path, map_location='cpu')
             
             # Create model (simplified version)
             model = SimpleDuckiebotModel()

@@ -1,0 +1,439 @@
+# Enhanced RL Champion Configuration
+# Complete configuration for training the ultimate autonomous driving agent
+
+# Experiment Configuration
+experiment:
+  name: "enhanced_rl_champion"
+  description: "Ultimate RL agent with YOLO detection, object avoidance, and lane changing"
+  version: "1.0.0"
+  tags: ["yolo", "object_avoidance", "lane_changing", "metal", "production"]
+
+# Training Configuration
+training:
+  # Core training parameters
+  total_timesteps: 5_000_000
+  learning_rate: 3.0e-4
+  batch_size: 256
+  buffer_size: 1_000_000
+  learning_starts: 50_000
+  train_freq: 4
+  target_update_interval: 10_000
+  
+  # Optimization
+  optimizer: "adam"
+  gradient_clipping: 1.0
+  weight_decay: 1.0e-5
+  
+  # Exploration
+  epsilon_start: 1.0
+  epsilon_end: 0.01
+  epsilon_decay: 0.995
+  
+  # Evaluation
+  eval_freq: 50_000
+  eval_episodes: 20
+  
+  # Logging and checkpointing
+  log_interval: 1000
+  save_freq: 100_000
+  
+  # Curriculum learning
+  curriculum:
+    enabled: true
+    stages:
+      - name: "foundation"
+        maps: ["loop_empty"]
+        timesteps: 1_000_000
+        success_criteria:
+          avg_reward: 150
+          success_rate: 0.8
+      
+      - name: "intermediate"
+        maps: ["loop_empty", "small_loop"]
+        timesteps: 1_500_000
+        success_criteria:
+          avg_reward: 200
+          success_rate: 0.85
+      
+      - name: "advanced"
+        maps: ["loop_empty", "small_loop", "zigzag_dists"]
+        timesteps: 1_500_000
+        success_criteria:
+          avg_reward: 250
+          success_rate: 0.9
+      
+      - name: "expert"
+        maps: ["loop_empty", "small_loop", "zigzag_dists", "loop_obstacles"]
+        timesteps: 1_000_000
+        success_criteria:
+          avg_reward: 300
+          success_rate: 0.95
+
+# Enhanced Features Configuration
+features:
+  # YOLO Object Detection
+  yolo:
+    enabled: true
+    model_path: "yolov5s.pt"
+    confidence_threshold: 0.5
+    device: "auto"  # auto, cpu, cuda, mps
+    input_size: [640, 640]
+    max_detections: 10
+    classes: ["person", "bicycle", "car", "motorcycle", "bus", "truck", "traffic light", "stop sign"]
+    
+    # Performance optimization
+    half_precision: false
+    batch_inference: false
+    tensorrt: false
+    
+    # Safety configuration
+    safety_distance_threshold: 1.0
+    critical_classes: ["person", "bicycle", "car", "motorcycle", "bus", "truck"]
+  
+  # Object Avoidance
+  object_avoidance:
+    enabled: true
+    safety_distance: 0.5
+    min_clearance: 0.2
+    avoidance_strength: 1.0
+    max_avoidance_action: 0.8
+    smoothing_factor: 0.7
+    lane_attraction_strength: 0.3
+    emergency_brake_distance: 0.15
+    detection_field_width: 1.0
+    enable_emergency_brake: true
+    
+    # Advanced parameters
+    potential_field:
+      repulsive_gain: 2.0
+      attractive_gain: 1.0
+      distance_threshold: 1.0
+    
+    priority_weights:
+      person: 3.0
+      bicycle: 2.5
+      car: 2.0
+      motorcycle: 2.0
+      bus: 1.5
+      truck: 1.5
+      default: 1.0
+  
+  # Lane Changing
+  lane_changing:
+    enabled: true
+    lane_change_threshold: 0.3
+    safety_margin: 2.0
+    max_lane_change_time: 3.0
+    min_lane_change_time: 1.0
+    lane_width: 0.6
+    num_lanes: 2
+    evaluation_time: 0.5
+    trajectory_smoothness: 0.8
+    safety_check_frequency: 0.1
+    emergency_abort_distance: 0.3
+    lane_change_speed_factor: 0.8
+    
+    # Decision making
+    decision_criteria:
+      obstacle_distance_weight: 0.4
+      lane_occupancy_weight: 0.3
+      safety_margin_weight: 0.2
+      efficiency_weight: 0.1
+  
+  # Multi-Objective Reward
+  multi_objective_reward:
+    enabled: true
+    weights:
+      lane_following: 1.0
+      object_avoidance: 0.5
+      lane_changing: 0.3
+      efficiency: 0.2
+      safety_penalty: -2.0
+      collision_penalty: -5.0
+      
+    # Reward shaping
+    reward_shaping:
+      alpha: 0.6  # Lane following weight
+      beta: 0.3   # Heading alignment weight
+      gamma: 0.02 # Jerk penalty weight
+      delta: 0.02 # Steering change penalty weight
+      sigma_d: 0.25    # Distance tolerance
+      sigma_theta: 10.0 # Angle tolerance (degrees)
+
+# Environment Configuration
+environment:
+  # Base environment settings
+  simulator: "duckietown-gym"
+  action_space: "continuous"
+  observation_space: "enhanced"  # enhanced, standard
+  
+  # Image processing
+  image_size: [120, 160]  # [height, width]
+  channels: 3
+  normalize: true
+  crop_top: true
+  top_crop_ratio: 0.3
+  
+  # Frame processing
+  frame_stacking: false
+  frame_skip: 1
+  
+  # Domain randomization
+  domain_randomization:
+    enabled: true
+    camera_noise: 0.1
+    lighting_variation: 0.2
+    texture_variation: 0.15
+    dynamics_noise: 0.05
+  
+  # Episode configuration
+  max_episode_steps: 1000
+  reset_on_collision: true
+  reset_on_out_of_lane: true
+  
+  # Maps for training
+  training_maps:
+    - "loop_empty"
+    - "small_loop"
+    - "zigzag_dists"
+    - "loop_obstacles"
+    - "loop_pedestrians"
+    - "4way"
+    - "udem1"
+
+# Model Architecture Configuration
+model:
+  # Network architecture
+  architecture: "enhanced_dqn"
+  
+  # Image encoder (CNN)
+  image_encoder:
+    conv_layers:
+      - {filters: 32, kernel_size: 8, stride: 4, padding: 2}
+      - {filters: 64, kernel_size: 4, stride: 2, padding: 1}
+      - {filters: 64, kernel_size: 3, stride: 1, padding: 1}
+    activation: "relu"
+    pooling: "adaptive_avg_pool"
+    output_size: [4, 5]
+  
+  # Detection encoder (MLP)
+  detection_encoder:
+    hidden_layers: [128, 64]
+    activation: "relu"
+    dropout: 0.1
+  
+  # Safety encoder (MLP)
+  safety_encoder:
+    hidden_layers: [32, 16]
+    activation: "relu"
+    dropout: 0.1
+  
+  # Fusion layer
+  fusion_layer:
+    hidden_layers: [512, 256]
+    activation: "relu"
+    dropout: [0.2, 0.1]
+  
+  # Value and advantage heads
+  value_head:
+    hidden_layers: [128]
+    activation: "relu"
+  
+  advantage_head:
+    hidden_layers: [128]
+    activation: "relu"
+  
+  # Dueling DQN
+  dueling: true
+
+# Hardware Configuration
+hardware:
+  # Device selection
+  device: "auto"  # auto, cpu, cuda, mps
+  
+  # Metal Performance Shaders (macOS)
+  metal:
+    enabled: true
+    device: "mps"
+    fallback_to_cpu: true
+  
+  # CUDA configuration
+  cuda:
+    enabled: true
+    device_id: 0
+    mixed_precision: false
+    cudnn_benchmark: true
+    cudnn_deterministic: false
+  
+  # CPU configuration
+  cpu:
+    num_threads: 4
+    mkl_num_threads: 4
+
+# Evaluation Configuration
+evaluation:
+  # Test suites
+  suites:
+    - "base"
+    - "hard"
+    - "law"
+    - "ood"
+    - "stress"
+  
+  # Evaluation parameters
+  seeds_per_map: 50
+  policy_modes: ["deterministic", "stochastic"]
+  compute_ci: true
+  bootstrap_resamples: 10000
+  significance_correction: "benjamini_hochberg"
+  
+  # Scoring
+  use_composite: true
+  normalization_scope: "per_map_suite"
+  composite_weights:
+    success_rate: 0.45
+    mean_reward: 0.25
+    episode_length: 0.10
+    lateral_deviation: 0.08
+    heading_error: 0.06
+    smoothness: 0.06
+  
+  # Artifacts
+  keep_top_k: 5
+  export_csv_json: true
+  export_plots: true
+  record_videos: true
+  save_worst_k: 5
+  
+  # Reproducibility
+  fix_seed_list: true
+  cudnn_deterministic: true
+  log_git_sha: true
+  
+  # Map-specific thresholds
+  map_thresholds:
+    loop_empty:
+      success_rate: 0.95
+      mean_reward: 0.85
+      lateral_deviation: 0.12
+      heading_error: 8.0
+      smoothness: 0.08
+    
+    small_loop:
+      success_rate: 0.95
+      mean_reward: 0.85
+      lateral_deviation: 0.12
+      heading_error: 8.0
+      smoothness: 0.08
+    
+    zigzag_dists:
+      success_rate: 0.90
+      mean_reward: 0.80
+      lateral_deviation: 0.15
+      heading_error: 10.0
+      smoothness: 0.10
+    
+    loop_obstacles:
+      success_rate: 0.85
+      mean_reward: 0.75
+      lateral_deviation: 0.18
+      heading_error: 12.0
+      smoothness: 0.12
+    
+    4way:
+      success_rate: 0.80
+      mean_reward: 0.70
+      lateral_deviation: 0.20
+      heading_error: 15.0
+      smoothness: 0.15
+
+# Logging Configuration
+logging:
+  # Log levels
+  level: "INFO"
+  console_level: "INFO"
+  file_level: "DEBUG"
+  
+  # Log destinations
+  log_to_console: true
+  log_to_file: true
+  log_to_tensorboard: true
+  log_to_wandb: false
+  
+  # Log content
+  log_rewards: true
+  log_actions: true
+  log_detections: true
+  log_performance: true
+  log_model_weights: false
+  
+  # Log frequency
+  log_interval: 1000
+  save_interval: 10000
+  
+  # Tensorboard
+  tensorboard:
+    log_dir: "logs/tensorboard"
+    log_graph: true
+    log_images: true
+    log_histograms: false
+  
+  # Weights & Biases
+  wandb:
+    project: "enhanced-duckietown-rl"
+    entity: null
+    tags: ["yolo", "object_avoidance", "lane_changing"]
+    notes: "Enhanced RL training with full capabilities"
+
+# Deployment Configuration
+deployment:
+  # Model export formats
+  export_formats:
+    - "pytorch"
+    - "torchscript"
+    - "onnx"
+    - "tflite"
+  
+  # Optimization for deployment
+  quantization:
+    enabled: false
+    method: "dynamic"  # dynamic, static, qat
+  
+  pruning:
+    enabled: false
+    sparsity: 0.5
+  
+  # DTS compatibility
+  dts:
+    compatible: true
+    daffy_version: "1.2.2"
+    ros_version: "melodic"
+  
+  # Safety configuration
+  safety:
+    enable_override: true
+    emergency_stop: true
+    max_failures: 5
+    failsafe_action: [0.0, 0.0]  # [steering, throttle]
+  
+  # Performance monitoring
+  monitoring:
+    enabled: true
+    log_frequency: 10.0  # Hz
+    save_logs: true
+    alert_on_failure: true
+
+# Debug Configuration
+debug:
+  enabled: false
+  save_debug_images: false
+  save_detection_videos: false
+  verbose_logging: false
+  profile_performance: false
+  
+  # Visualization
+  visualization:
+    show_detections: false
+    show_avoidance_forces: false
+    show_lane_change_trajectory: false
+    save_plots: true
