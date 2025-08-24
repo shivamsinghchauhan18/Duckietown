@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  duckietown-rl:
+    build:
+      context: .
+      dockerfile: Dockerfile.wsl
+    image: duckietown-rl-enhanced:latest
+    container_name: duckietown-rl-container
+    
+    # GPU support (requires nvidia-docker)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    
+    # Environment variables
+    environment:
+      - DISPLAY=${DISPLAY:-:0}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,display
+      - PYTHONUNBUFFERED=1
+      - CUDA_VISIBLE_DEVICES=0
+    
+    # Volume mounts
+    volumes:
+      - .:/workspace
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - duckietown-models:/workspace/models
+      - duckietown-logs:/workspace/logs
+      - duckietown-results:/workspace/pipeline_results
+    
+    # Network
+    network_mode: host
+    
+    # Keep container running
+    stdin_open: true
+    tty: true
+    
+    # Working directory
+    working_dir: /workspace
+
+volumes:
+  duckietown-models:
+  duckietown-logs:
+  duckietown-results:
