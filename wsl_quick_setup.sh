@@ -26,11 +26,32 @@ fi
 # Step 1: Install system dependencies
 print_status "Installing system dependencies..."
 sudo apt update -qq
-sudo apt install -y \
-    mesa-utils libgl1-mesa-glx libgl1-mesa-dri \
-    xorg-dev freeglut3-dev xvfb \
-    libglib2.0-0 libsm6 libxext6 libxrender-dev \
-    libgomp1 git curl wget
+
+# Detect Ubuntu version and install appropriate packages
+UBUNTU_VERSION=$(lsb_release -rs 2>/dev/null || echo "20.04")
+print_status "Detected Ubuntu version: $UBUNTU_VERSION"
+
+if [[ $(echo "$UBUNTU_VERSION >= 22.04" | bc -l 2>/dev/null || echo "0") == "1" ]]; then
+    # Ubuntu 22.04+ (newer package names)
+    print_status "Installing packages for Ubuntu 22.04+..."
+    sudo apt install -y \
+        mesa-utils libgl1-mesa-dev libgl1-mesa-dri \
+        libegl1-mesa-dev libgles2-mesa-dev \
+        xorg-dev freeglut3-dev xvfb \
+        libglib2.0-0 libsm6 libxext6 libxrender-dev \
+        libgomp1 git curl wget build-essential \
+        python3-dev python3-pip || print_warning "Some packages may not be available"
+else
+    # Ubuntu 20.04 and older
+    print_status "Installing packages for Ubuntu 20.04..."
+    sudo apt install -y \
+        mesa-utils libgl1-mesa-glx libgl1-mesa-dri \
+        xorg-dev freeglut3-dev xvfb \
+        libglib2.0-0 libsm6 libxext6 libxrender-dev \
+        libgomp1 git curl wget build-essential \
+        python3-dev python3-pip || print_warning "Some packages may not be available"
+fi
+
 print_success "System dependencies installed"
 
 # Step 2: Setup conda with fast solver

@@ -4,8 +4,9 @@
 
 ## 🎯 Quick Start
 
-### For WSL2 Ubuntu (Recommended - Fastest Setup)
+### For WSL2 Ubuntu (Recommended)
 
+**Option A: Full Setup (if no package conflicts)**
 ```bash
 # 1. Clone the repository
 git clone <your-repo-url>
@@ -23,6 +24,26 @@ python test_wsl_installation.py
 
 # 5. Start training!
 python complete_enhanced_rl_pipeline.py --mode full
+```
+
+**Option B: Minimal Setup (if package conflicts occur)**
+```bash
+# 1. Clone the repository
+git clone <your-repo-url>
+cd <repo-name>
+
+# 2. Run minimal setup (handles package conflicts)
+chmod +x wsl_minimal_setup.sh
+./wsl_minimal_setup.sh
+
+# 3. Activate the environment
+source activate_wsl_minimal.sh
+
+# 4. Test basic functionality
+python test_wsl_minimal.py
+
+# 5. Start with simple training
+python train_enhanced_rl_simple.py
 ```
 
 ### For Native Ubuntu (Alternative)

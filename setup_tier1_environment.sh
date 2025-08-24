@@ -65,10 +65,25 @@ print_success "Conda optimized for WSL"
 print_status "Installing system OpenGL dependencies for WSL..."
 if command -v apt &> /dev/null; then
     sudo apt update -qq 2>/dev/null || true
-    sudo apt install -y mesa-utils libgl1-mesa-glx libgl1-mesa-dri \
-                        xorg-dev freeglut3-dev xvfb \
-                        libglib2.0-0 libsm6 libxext6 libxrender-dev \
-                        libgomp1 2>/dev/null || print_warning "Could not install system OpenGL packages"
+    
+    # Detect Ubuntu version for correct package names
+    UBUNTU_VERSION=$(lsb_release -rs 2>/dev/null || echo "20.04")
+    
+    if [[ $(echo "$UBUNTU_VERSION >= 22.04" | bc -l 2>/dev/null || echo "0") == "1" ]]; then
+        # Ubuntu 22.04+ packages
+        sudo apt install -y mesa-utils libgl1-mesa-dev libgl1-mesa-dri \
+                            libegl1-mesa-dev libgles2-mesa-dev \
+                            xorg-dev freeglut3-dev xvfb \
+                            libglib2.0-0 libsm6 libxext6 libxrender-dev \
+                            libgomp1 build-essential python3-dev 2>/dev/null || print_warning "Some packages unavailable"
+    else
+        # Ubuntu 20.04 packages
+        sudo apt install -y mesa-utils libgl1-mesa-glx libgl1-mesa-dri \
+                            xorg-dev freeglut3-dev xvfb \
+                            libglib2.0-0 libsm6 libxext6 libxrender-dev \
+                            libgomp1 build-essential python3-dev 2>/dev/null || print_warning "Some packages unavailable"
+    fi
+    
     print_success "System OpenGL dependencies installed"
 else
     print_warning "apt not available - skipping system OpenGL installation"
