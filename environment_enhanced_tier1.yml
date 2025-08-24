@@ -1,173 +1,124 @@
 name: duckietown-enhanced-tier1
 channels:
+  - conda-forge
   - pytorch
   - nvidia
-  - conda-forge
   - defaults
 
 dependencies:
-  # Python version - compatible with gym-duckietown
-  - python=3.8.16
+  # Python version - compatible with modern packages
+  - python=3.10
 
-  # Core ML/DL frameworks with CUDA support
+  # Core PyTorch stack with CUDA 11.8 (no conflicts)
   - pytorch=2.0.1
   - torchvision=0.15.2
   - torchaudio=2.0.2
   - pytorch-cuda=11.8
-  - cudatoolkit=11.8
-  - cudnn=8.7.0
 
-  # TensorFlow with GPU support
-  - tensorflow-gpu=2.10.0
+  # Core scientific computing (relaxed versions)
+  - numpy
+  - scipy
+  - pandas
+  - matplotlib
+  - seaborn
+  - scikit-learn
+  - pillow
+  - opencv
 
-  # Core scientific computing
-  - numpy=1.24.3
-  - scipy=1.10.1
-  - pandas=2.0.3
-  - matplotlib=3.7.1
-  - seaborn=0.12.2
-  - scikit-learn=1.3.0
-  - opencv=4.8.0
-  - pillow=10.0.0
-
-  # Gym and RL dependencies
-  - gym=0.21.0
-  - stable-baselines3=2.0.0
-  - tensorboard=2.13.0
-
-  # Ray RLLib (specific version for compatibility)
-  - ray-rllib=2.5.1
+  # RL stack - Gymnasium compatible (no gym conflicts)
+  - tensorboard
 
   # Development and testing
-  - pytest=7.4.0
-  - pytest-cov=4.1.0
-  - black=23.7.0
-  - flake8=6.0.0
-  - mypy=1.5.1
+  - pytest
+  - pytest-cov
+  - black
+  - flake8
 
   # Jupyter and visualization
-  - jupyter=1.0.0
-  - jupyterlab=4.0.5
-  - plotly=5.15.0
-  - ipywidgets=8.0.7
+  - jupyter
+  - jupyterlab
+  - ipywidgets
+  - plotly
 
   # System utilities
-  - psutil=5.9.5
-  - tqdm=4.65.0
-  - pyyaml=6.0.1
-  - click=8.1.6
-  - requests=2.31.0
-  - urllib3=2.0.4
+  - psutil
+  - tqdm
+  - pyyaml
+  - click
+  - requests
 
-  # Image processing and computer vision
-  - imageio=2.31.1
-  - scikit-image=0.21.0
+  # Image processing
+  - imageio
+  - scikit-image
 
-  # OpenGL and graphics (for gym-duckietown)
-  - mesa-libgl-cos6-x86_64
-  - mesa-dri-drivers-cos6-x86_64
-  - libselinux-cos6-x86_64
-  - libxdamage-cos6-x86_64
-  - libxxf86vm-cos6-x86_64
-  - libxext-cos6-x86_64
-  - libxfixes-cos6-x86_64
-  - libxrender-cos6-x86_64
-  - libice-cos6-x86_64
-  - libsm-cos6-x86_64
-  - libxau-cos6-x86_64
-  - libxdmcp-cos6-x86_64
-  - libxrandr-cos6-x86_64
-  - libxss-cos6-x86_64
-  - libxt-cos6-x86_64
-  - libxv-cos6-x86_64
-  - libxxf86dga-cos6-x86_64
-  - libxinerama-cos6-x86_64
-  - libxi-cos6-x86_64
-  - libxcursor-cos6-x86_64
-  - libxcomposite-cos6-x86_64
-  - libxft-cos6-x86_64
-  - fontconfig-cos6-x86_64
-  - libgcc-cos6-x86_64
+  # Git and pip
+  - git
+  - pip
 
-  # Git for version control
-  - git=2.41.0
-
-  # Pip for additional packages
-  - pip=23.2.1
-
-  # Additional dependencies via pip
+  # Additional dependencies via pip (WSL-optimized)
   - pip:
-    # YOLO v5 and Ultralytics
-    - ultralytics>=8.0.196
-    - yolov5>=7.0.13
+    # YOLO v5 and Ultralytics (latest stable)
+    - ultralytics>=8.0.0
+    
+    # Modern RL stack - Gymnasium (SB3 v2 compatible)
+    - gymnasium>=0.29.0
+    - shimmy>=1.2.0
+    - stable-baselines3>=2.0.0
     
     # gym-duckietown (specific version)
     - gym-duckietown==6.0.25
     
-    # Additional RL libraries
-    - gymnasium>=0.29.0
-    - shimmy>=1.2.0
-    
-    # ROS dependencies (for robot deployment)
-    - rospkg>=1.5.0
-    - catkin-pkg>=0.5.2
-    - empy>=3.3.4
+    # Ray RLLib (compatible with Gymnasium)
+    - "ray[rllib]>=2.5.0"
     
     # Enhanced logging and monitoring
-    - wandb>=0.15.8
-    - mlflow>=2.5.0
-    - tensorboardX>=2.6.2
+    - wandb
+    - mlflow
+    - tensorboardX
     
     # Image and video processing
-    - imageio-ffmpeg>=0.4.8
-    - av>=10.0.0
+    - imageio-ffmpeg
+    - av
     
     # Additional computer vision
-    - albumentations>=1.3.1
-    - imgaug>=0.4.0
+    - albumentations
+    - imgaug
     
     # Performance monitoring
-    - memory-profiler>=0.61.0
-    - line-profiler>=4.1.1
-    - py-spy>=0.3.14
+    - memory-profiler
+    - line-profiler
     
     # Configuration management
-    - hydra-core>=1.3.2
-    - omegaconf>=2.3.0
+    - hydra-core
+    - omegaconf
     
     # Additional utilities
-    - rich>=13.5.2
-    - typer>=0.9.0
-    - loguru>=0.7.0
+    - rich
+    - typer
+    - loguru
     
     # Testing utilities
-    - pytest-xdist>=3.3.1
-    - pytest-benchmark>=4.0.0
-    - pytest-mock>=3.11.1
-    
-    # Deployment utilities
-    - docker>=6.1.3
-    - kubernetes>=27.2.0
-    
-    # Additional ML utilities
-    - optuna>=3.3.0
-    - hyperopt>=0.2.7
-    - bayesian-optimization>=1.4.3
+    - pytest-xdist
+    - pytest-benchmark
+    - pytest-mock
     
     # Data processing
-    - h5py>=3.9.0
-    - zarr>=2.16.0
+    - h5py
+    - zarr
     
     # Networking and API
-    - fastapi>=0.101.1
-    - uvicorn>=0.23.2
-    - websockets>=11.0.3
+    - fastapi
+    - uvicorn
+    - websockets
     
     # Additional visualization
-    - bokeh>=3.2.1
-    - altair>=5.0.1
+    - bokeh
+    - altair
     
     # Development tools
-    - pre-commit>=3.3.3
-    - bandit>=1.7.5
-    - safety>=2.3.5
+    - pre-commit
+    
+    # ROS dependencies (for robot deployment)
+    - rospkg
+    - catkin-pkg
+    - empy

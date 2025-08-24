@@ -2,9 +2,30 @@
 
 **One-command setup for the complete enhanced RL system with YOLO integration**
 
-## 🎯 Quick Start (5 minutes)
+## 🎯 Quick Start
 
-Your friend just needs to run these commands:
+### For WSL2 Ubuntu (Recommended - Fastest Setup)
+
+```bash
+# 1. Clone the repository
+git clone <your-repo-url>
+cd <repo-name>
+
+# 2. Run WSL-optimized setup (5-10 minutes)
+chmod +x wsl_quick_setup.sh
+./wsl_quick_setup.sh
+
+# 3. Activate the environment
+source activate_wsl_env.sh
+
+# 4. Test everything works
+python test_wsl_installation.py
+
+# 5. Start training!
+python complete_enhanced_rl_pipeline.py --mode full
+```
+
+### For Native Ubuntu (Alternative)
 
 ```bash
 # 1. Clone the repository

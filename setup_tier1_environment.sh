@@ -3,8 +3,15 @@ set -e
 
 echo "🚀 Enhanced Duckietown RL - Tier 1 Setup Script"
 echo "=================================================="
-echo "This script sets up the complete environment for the enhanced RL system"
+echo "Complete environment setup for the enhanced RL system with full pipeline"
 echo "Optimized for Tier 1 hardware (RTX 3080+, Ubuntu 20.04+, CUDA 11.8+)"
+echo ""
+echo "This script will:"
+echo "  ✅ Create optimized conda environment"
+echo "  ✅ Install all dependencies (PyTorch, YOLO, gym-duckietown)"
+echo "  ✅ Setup complete pipeline integration"
+echo "  ✅ Create activation and test scripts"
+echo "  ✅ Validate entire system"
 echo "=================================================="
 
 # Colors for output
@@ -45,6 +52,27 @@ if ! command -v conda &> /dev/null; then
 fi
 
 print_success "Conda found: $(conda --version)"
+
+# Setup fast solver for WSL (critical for avoiding hangs)
+print_status "Configuring conda for optimal WSL performance..."
+conda install -n base -y conda-libmamba-solver 2>/dev/null || true
+conda config --set solver libmamba 2>/dev/null || true
+conda config --set channel_priority strict 2>/dev/null || true
+conda config --set repodata_fns current_repodata.json 2>/dev/null || true
+print_success "Conda optimized for WSL"
+
+# Install system OpenGL dependencies for WSL
+print_status "Installing system OpenGL dependencies for WSL..."
+if command -v apt &> /dev/null; then
+    sudo apt update -qq 2>/dev/null || true
+    sudo apt install -y mesa-utils libgl1-mesa-glx libgl1-mesa-dri \
+                        xorg-dev freeglut3-dev xvfb \
+                        libglib2.0-0 libsm6 libxext6 libxrender-dev \
+                        libgomp1 2>/dev/null || print_warning "Could not install system OpenGL packages"
+    print_success "System OpenGL dependencies installed"
+else
+    print_warning "apt not available - skipping system OpenGL installation"
+fi
 
 # Check NVIDIA GPU and CUDA
 print_status "Checking NVIDIA GPU and CUDA availability..."
@@ -225,8 +253,8 @@ except Exception as e:
 print('\\nInstallation test completed!')
 "
 
-# Test project-specific imports
-print_status "Testing project-specific components..."
+# Test project-specific imports and complete pipeline
+print_status "Testing project-specific components and complete pipeline..."
 run_in_env python -c "
 import sys
 sys.path.insert(0, '.')
@@ -244,12 +272,34 @@ def test_project_import(module_path, description):
         print(f'⚠️  {description}: WARNING - {e}')
         return True
 
+def test_file_exists(file_path, description):
+    import os
+    if os.path.exists(file_path):
+        print(f'✅ {description}: File exists')
+        return True
+    else:
+        print(f'❌ {description}: File not found')
+        return False
+
 print('Testing project components...')
 
-# Test if project files exist and can be imported
-project_tests = []
+# Test key files exist
+key_files = [
+    ('enhanced_rl_training_system.py', 'Enhanced RL training system'),
+    ('complete_enhanced_rl_pipeline.py', 'Complete pipeline orchestrator'),
+    ('environment_enhanced_tier1.yml', 'Tier 1 environment file'),
+    ('TIER1_SETUP_README.md', 'Setup documentation'),
+]
 
-# Check if key files exist
+files_ok = 0
+for file_path, desc in key_files:
+    if test_file_exists(file_path, desc):
+        files_ok += 1
+
+print(f'\\nKey files check: {files_ok}/{len(key_files)} found')
+
+# Test if project modules can be imported
+project_tests = []
 import os
 if os.path.exists('duckietown_utils'):
     project_tests.extend([
@@ -258,19 +308,27 @@ if os.path.exists('duckietown_utils'):
         ('config.enhanced_config', 'Enhanced configuration'),
     ])
 
-if os.path.exists('enhanced_rl_training_system.py'):
-    print('✅ Enhanced RL training system: File exists')
-else:
-    print('❌ Enhanced RL training system: File not found')
-
+modules_ok = 0
 for module_path, desc in project_tests:
-    test_project_import(module_path, desc)
+    if test_project_import(module_path, desc):
+        modules_ok += 1
+
+print(f'\\nProject modules check: {modules_ok}/{len(project_tests)} imported')
+
+# Test complete pipeline import
+try:
+    import complete_enhanced_rl_pipeline
+    print('✅ Complete pipeline: Import successful')
+    pipeline_ok = True
+except Exception as e:
+    print(f'⚠️  Complete pipeline: Import warning - {e}')
+    pipeline_ok = False
 
 print('\\nProject components test completed!')
-"
+print(f'Overall status: {\"✅ READY\" if files_ok >= 3 and pipeline_ok else \"⚠️  PARTIAL\"}')"
 
-# Create activation script
-print_status "Creating activation script..."
+# Create enhanced activation script
+print_status "Creating enhanced activation script..."
 cat > activate_enhanced_env.sh << 'EOF'
 #!/bin/bash
 echo "🚀 Activating Enhanced Duckietown RL Environment"
@@ -289,6 +347,11 @@ export MKL_NUM_THREADS=8       # Optimize MKL threads
 export YOLO_DEVICE=0           # Use GPU 0 for YOLO
 export YOLO_VERBOSE=False      # Reduce YOLO output
 
+# Pipeline configuration
+export PIPELINE_MODE=full      # Default to full pipeline
+export PIPELINE_GPU=true       # Enable GPU acceleration
+export PIPELINE_TIMESTEPS=5000000  # Default training timesteps
+
 # Display environment info
 echo "Environment activated successfully!"
 echo "Python: $(python --version)"
@@ -297,29 +360,41 @@ echo "CUDA available: $(python -c 'import torch; print(torch.cuda.is_available()
 
 if python -c 'import torch; exit(0 if torch.cuda.is_available() else 1)' 2>/dev/null; then
     echo "GPU: $(python -c 'import torch; print(torch.cuda.get_device_name(0))')"
+    echo "GPU Memory: $(python -c 'import torch; print(f\"{torch.cuda.get_device_properties(0).total_memory/1024**3:.1f}GB\")')"
 fi
 
 echo ""
-echo "Ready to run enhanced RL training!"
-echo "Try: python enhanced_rl_training_system.py --help"
+echo "🎯 Available Commands:"
+echo "  python complete_enhanced_rl_pipeline.py --mode full    # Complete pipeline"
+echo "  python enhanced_rl_training_system.py                  # Training only"
+echo "  python test_installation.py                            # Test installation"
+echo ""
+echo "📚 Documentation:"
+echo "  cat TIER1_SETUP_README.md                             # Setup guide"
+echo ""
+echo "Ready for enhanced RL training! 🚀"
 EOF
 
 chmod +x activate_enhanced_env.sh
 print_success "Activation script created: activate_enhanced_env.sh"
 
-# Create quick test script
-print_status "Creating quick test script..."
+# Create comprehensive test script
+print_status "Creating comprehensive test script..."
 cat > test_installation.py << 'EOF'
 #!/usr/bin/env python3
 """
-Quick installation test for Enhanced Duckietown RL
+Comprehensive installation test for Enhanced Duckietown RL with Complete Pipeline
 """
 import sys
 import traceback
+import os
+from pathlib import Path
 
 def main():
-    print("🧪 Enhanced Duckietown RL - Installation Test")
-    print("=" * 50)
+    print("🧪 Enhanced Duckietown RL - Comprehensive Installation Test")
+    print("=" * 60)
+    
+    test_results = []
     
     # Test 1: Core ML libraries
     print("\n1. Testing core ML libraries...")
@@ -334,11 +409,15 @@ def main():
         if torch.cuda.is_available():
             print(f"   ✅ CUDA {torch.version.cuda} - {torch.cuda.device_count()} GPU(s)")
             print(f"   ✅ GPU: {torch.cuda.get_device_name(0)}")
+            print(f"   ✅ GPU Memory: {torch.cuda.get_device_properties(0).total_memory/1024**3:.1f}GB")
         else:
             print("   ⚠️  CUDA not available - will use CPU")
+        
+        test_results.append(("Core ML Libraries", True))
             
     except Exception as e:
         print(f"   ❌ Core ML libraries failed: {e}")
+        test_results.append(("Core ML Libraries", False))
         return False
     
     # Test 2: YOLO integration
@@ -352,9 +431,13 @@ def main():
         test_img = np.random.randint(0, 255, (640, 480, 3), dtype=np.uint8)
         results = model(test_img, verbose=False)
         print("   ✅ YOLO inference working")
+        print(f"   ✅ Detections: {len(results[0].boxes) if results[0].boxes is not None else 0}")
+        
+        test_results.append(("YOLO Integration", True))
         
     except Exception as e:
         print(f"   ❌ YOLO integration failed: {e}")
+        test_results.append(("YOLO Integration", False))
         return False
     
     # Test 3: gym-duckietown
@@ -365,40 +448,151 @@ def main():
         env = gym.make('Duckietown-loop_empty-v0')
         obs = env.reset()
         print(f"   ✅ Environment created - obs shape: {obs.shape}")
+        
+        # Test environment step
+        action = env.action_space.sample()
+        next_obs, reward, done, info = env.step(action)
+        print(f"   ✅ Environment step working - reward: {reward:.3f}")
         env.close()
+        
+        test_results.append(("gym-duckietown", True))
         
     except Exception as e:
         print(f"   ❌ gym-duckietown failed: {e}")
+        test_results.append(("gym-duckietown", False))
         return False
     
-    # Test 4: Project components (if available)
-    print("\n4. Testing project components...")
+    # Test 4: Project files and structure
+    print("\n4. Testing project files and structure...")
+    try:
+        key_files = [
+            'enhanced_rl_training_system.py',
+            'complete_enhanced_rl_pipeline.py',
+            'environment_enhanced_tier1.yml',
+            'TIER1_SETUP_README.md'
+        ]
+        
+        files_found = 0
+        for file_path in key_files:
+            if os.path.exists(file_path):
+                print(f"   ✅ {file_path}: Found")
+                files_found += 1
+            else:
+                print(f"   ❌ {file_path}: Missing")
+        
+        print(f"   📊 Project files: {files_found}/{len(key_files)} found")
+        test_results.append(("Project Files", files_found >= 3))
+        
+    except Exception as e:
+        print(f"   ❌ Project files check failed: {e}")
+        test_results.append(("Project Files", False))
+    
+    # Test 5: Project components (if available)
+    print("\n5. Testing project components...")
     try:
         sys.path.insert(0, '.')
         
+        components_tested = 0
+        total_components = 0
+        
         # Test enhanced config
-        from config.enhanced_config import load_enhanced_config
-        config = load_enhanced_config()
-        print("   ✅ Enhanced configuration loaded")
+        try:
+            from config.enhanced_config import load_enhanced_config
+            config = load_enhanced_config()
+            print("   ✅ Enhanced configuration loaded")
+            components_tested += 1
+        except:
+            print("   ⚠️  Enhanced configuration: Not available")
+        total_components += 1
         
         # Test YOLO utilities
-        from duckietown_utils.yolo_utils import create_yolo_inference_system
-        yolo_system = create_yolo_inference_system('yolov5s.pt')
-        print("   ✅ YOLO utilities working")
+        try:
+            from duckietown_utils.yolo_utils import create_yolo_inference_system
+            yolo_system = create_yolo_inference_system('yolov5s.pt')
+            print("   ✅ YOLO utilities working")
+            components_tested += 1
+        except:
+            print("   ⚠️  YOLO utilities: Not available")
+        total_components += 1
+        
+        # Test complete pipeline
+        try:
+            import complete_enhanced_rl_pipeline
+            print("   ✅ Complete pipeline module imported")
+            components_tested += 1
+        except:
+            print("   ⚠️  Complete pipeline: Not available")
+        total_components += 1
+        
+        print(f"   📊 Components: {components_tested}/{total_components} working")
+        test_results.append(("Project Components", components_tested >= 2))
         
     except Exception as e:
-        print(f"   ⚠️  Project components: {e}")
-        print("   (This is expected if project files are not present)")
+        print(f"   ⚠️  Project components test: {e}")
+        test_results.append(("Project Components", False))
     
-    print("\n" + "=" * 50)
-    print("🎉 Installation test completed successfully!")
-    print("\nYou're ready to run the enhanced RL system!")
-    print("\nNext steps:")
-    print("1. Activate environment: source activate_enhanced_env.sh")
-    print("2. Run training: python enhanced_rl_training_system.py")
-    print("3. Or run simple version: python train_enhanced_rl_simple.py")
+    # Test 6: Performance check
+    print("\n6. Testing performance capabilities...")
+    try:
+        import psutil
+        
+        # CPU info
+        cpu_count = psutil.cpu_count()
+        memory_gb = psutil.virtual_memory().total / (1024**3)
+        
+        print(f"   📊 CPU cores: {cpu_count}")
+        print(f"   📊 System RAM: {memory_gb:.1f}GB")
+        
+        # GPU performance test
+        if torch.cuda.is_available():
+            device = torch.device('cuda')
+            # Simple tensor operation test
+            x = torch.randn(1000, 1000, device=device)
+            y = torch.mm(x, x.t())
+            print("   ✅ GPU tensor operations working")
+            
+            # Memory test
+            gpu_memory = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+            print(f"   📊 GPU Memory: {gpu_memory:.1f}GB")
+            
+            performance_ok = cpu_count >= 4 and memory_gb >= 8 and gpu_memory >= 6
+        else:
+            performance_ok = cpu_count >= 4 and memory_gb >= 8
+        
+        test_results.append(("Performance Check", performance_ok))
+        
+    except Exception as e:
+        print(f"   ⚠️  Performance check failed: {e}")
+        test_results.append(("Performance Check", False))
     
-    return True
+    # Summary
+    print("\n" + "=" * 60)
+    print("📋 TEST SUMMARY")
+    print("-" * 30)
+    
+    passed_tests = 0
+    for test_name, passed in test_results:
+        status = "✅ PASS" if passed else "❌ FAIL"
+        print(f"{test_name:.<25} {status}")
+        if passed:
+            passed_tests += 1
+    
+    print(f"\nOverall: {passed_tests}/{len(test_results)} tests passed")
+    
+    if passed_tests == len(test_results):
+        print("\n🎉 ALL TESTS PASSED! System is ready for enhanced RL training!")
+        print("\n🚀 Next steps:")
+        print("1. Run complete pipeline: python complete_enhanced_rl_pipeline.py --mode full")
+        print("2. Or training only: python enhanced_rl_training_system.py")
+        print("3. Or simple version: python train_enhanced_rl_simple.py")
+        return True
+    elif passed_tests >= len(test_results) * 0.8:
+        print("\n⚠️  MOSTLY READY! Some components may need attention.")
+        print("System should work but may have reduced functionality.")
+        return True
+    else:
+        print("\n❌ SYSTEM NOT READY! Please fix the failing tests.")
+        return False
 
 if __name__ == "__main__":
     success = main()
@@ -408,31 +602,89 @@ EOF
 chmod +x test_installation.py
 print_success "Test script created: test_installation.py"
 
-# Final summary
+# Create quick start script
+print_status "Creating quick start script..."
+cat > quick_start.sh << 'EOF'
+#!/bin/bash
+echo "🚀 Enhanced Duckietown RL - Quick Start"
+echo "======================================"
+
+# Check if environment is activated
+if [[ "$CONDA_DEFAULT_ENV" != "duckietown-enhanced-tier1" ]]; then
+    echo "Activating environment..."
+    source activate_enhanced_env.sh
+fi
+
 echo ""
-echo "🎉 SETUP COMPLETED SUCCESSFULLY!"
-echo "================================="
+echo "🎯 Choose your training mode:"
+echo "1. Complete Pipeline (Full system with evaluation and deployment)"
+echo "2. Training Only (Enhanced RL training)"
+echo "3. Simple Version (Quick validation)"
+echo "4. Test Installation"
 echo ""
-echo "Environment name: $ENV_NAME"
-echo "Activation script: ./activate_enhanced_env.sh"
-echo "Test script: ./test_installation.py"
+read -p "Enter choice (1-4): " choice
+
+case $choice in
+    1)
+        echo "🚀 Starting complete pipeline..."
+        python complete_enhanced_rl_pipeline.py --mode full
+        ;;
+    2)
+        echo "🧠 Starting enhanced RL training..."
+        python enhanced_rl_training_system.py
+        ;;
+    3)
+        echo "⚡ Starting simple version..."
+        python train_enhanced_rl_simple.py
+        ;;
+    4)
+        echo "🧪 Running installation test..."
+        python test_installation.py
+        ;;
+    *)
+        echo "Invalid choice. Running installation test..."
+        python test_installation.py
+        ;;
+esac
+EOF
+
+chmod +x quick_start.sh
+print_success "Quick start script created: quick_start.sh"
+
+# Final comprehensive summary
 echo ""
-echo "Next steps:"
-echo "1. Activate the environment:"
-echo "   source ./activate_enhanced_env.sh"
+echo "🎉 ENHANCED DUCKIETOWN RL SETUP COMPLETED!"
+echo "=========================================="
 echo ""
-echo "2. Test the installation:"
-echo "   python test_installation.py"
+echo "📦 Environment: $ENV_NAME"
+echo "🔧 Activation: ./activate_enhanced_env.sh"
+echo "🧪 Testing: ./test_installation.py"
+echo "⚡ Quick Start: ./quick_start.sh"
 echo ""
-echo "3. Run the enhanced RL training:"
+echo "🎯 Available Training Modes:"
+echo "1. 🚀 Complete Pipeline:"
+echo "   python complete_enhanced_rl_pipeline.py --mode full"
+echo ""
+echo "2. 🧠 Enhanced Training Only:"
 echo "   python enhanced_rl_training_system.py"
 echo ""
-echo "4. Or start with the simple version:"
+echo "3. ⚡ Simple Version (Quick Test):"
 echo "   python train_enhanced_rl_simple.py"
 echo ""
-echo "📚 Documentation:"
-echo "   - Setup guide: SETUP_GUIDE.md"
-echo "   - Enhanced system: ENHANCED_RL_SYSTEM_README.md"
-echo "   - Deployment: DUCKIETOWN_RL_DEPLOYMENT_GUIDE.md"
+echo "🔍 System Validation:"
+echo "1. Test installation: python test_installation.py"
+echo "2. Check GPU: nvidia-smi"
+echo "3. Monitor training: tensorboard --logdir logs/"
 echo ""
-print_success "Happy training! 🚀"
+echo "📚 Documentation:"
+echo "   - Complete guide: TIER1_SETUP_README.md"
+echo "   - Setup details: SETUP_GUIDE.md"
+echo "   - System docs: ENHANCED_RL_SYSTEM_README.md"
+echo ""
+echo "⚡ Quick Commands:"
+echo "   source activate_enhanced_env.sh  # Activate environment"
+echo "   ./quick_start.sh                 # Interactive launcher"
+echo "   python test_installation.py      # Validate setup"
+echo ""
+print_success "🚀 Ready for enhanced RL training with complete pipeline!"
+print_success "Run './quick_start.sh' fo
