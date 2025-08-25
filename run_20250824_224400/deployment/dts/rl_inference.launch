@@ -1,0 +1,14 @@
+<launch>
+    <node name="rl_inference_node" 
+          pkg="duckiebot_rl" 
+          type="rl_inference_node.py" 
+          output="screen">
+        
+        <param name="model_path" value="$(find duckiebot_rl)/models/champion_model.pth"/>
+        <param name="use_yolo" value="true"/>
+        <param name="inference_rate" value="10"/>
+        
+        <remap from="~image" to="/camera_node/image/compressed"/>
+        <remap from="~car_cmd" to="/car_cmd_switch_node/cmd"/>
+    </node>
+</launch>

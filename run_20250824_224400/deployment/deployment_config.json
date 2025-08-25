@@ -1,0 +1,23 @@
+{
+  "model_path": "champion_model.pth",
+  "model_type": "enhanced_dqn",
+  "input_shape": [
+    120,
+    160,
+    3
+  ],
+  "action_space": "continuous",
+  "features": {
+    "yolo_detection": true,
+    "object_avoidance": true,
+    "lane_changing": true
+  },
+  "performance": {
+    "best_reward": 173.85233612877198,
+    "total_episodes": 40000,
+    "model_path": "pipeline_results/run_20250824_224400/models/best_model.pth",
+    "headless_mode": true,
+    "final_step": 8000000
+  },
+  "timestamp": "20250824_224400"
+}
